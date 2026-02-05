@@ -155,6 +155,7 @@
 const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW1vcmVub0B2aXN1YWxuYWNlcnQuY29tIiwianRpIjoiZTY0NzI0MmQtODViZi00MjI1LWE4OTUtZGQzMDhlZDcxODczIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3Njk2ODg1NDAsInVzZXJJZCI6ImU2NDcyNDJkLTg1YmYtNDIyNS1hODk1LWRkMzA4ZWQ3MTg3MyIsInJvbGUiOiIifQ.Z8zZ2V46tQcyR1OhJiHmxf3yn5LxKTDHjXNqxNRVmKI";
 let estacionSeleccionadaId = null; 
 let estacionSeleccionadaMeta = null;
+let estacionSeleccionadaVars = null;
 
 // --- CONFIGURACIÓN GLOBAL CHART.JS ---
 Chart.register(ChartDataLabels);
@@ -315,24 +316,63 @@ async function encontrarMasCercana() {
             return { ...e, distanciaRealKm: d * 111 };
         }).sort((a, b) => a.distanciaRealKm - b.distanciaRealKm);
 
-        let estacionValida = null;
-        const limiteBusqueda = Math.min(5, estacionesCercanas.length);
+       let estacionValida = null;
+estacionSeleccionadaVars = null;
 
-        for (let i = 0; i < limiteBusqueda; i++) {
-            let cand = estacionesCercanas[i];
-            // Prueba rápida con el año anterior para validar la API
-            const urlTest = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/2023/aniofin/2023/estacion/${cand.indicativo}?api_key=${API_KEY}`;
-            
-            const resp = await fetch(urlTest);
-            const meta = await resp.json();
+// Usamos el mismo rango de 36 meses que usarás luego en generarPlanOro()
+const anioFin = new Date().getFullYear() - 1;
+const anioIni = anioFin - 2;
 
-            if (meta.estado === 200) {
-    estacionValida = cand;
-    estacionSeleccionadaId = cand.indicativo;
-    estacionSeleccionadaMeta = cand;   // ✅ NUEVO: guardamos latitud/altitud
-    break;
-}
+// Buscamos más allá de 5 si hace falta, hasta encontrar variables suficientes
+const limiteBusqueda = Math.min(25, estacionesCercanas.length);
+
+const cumpleVariablesPM = (datos) => {
+    if (!Array.isArray(datos) || !datos.length) return { ok: false };
+
+    let mesesOK = 0;
+
+    for (const r of datos) {
+        const tieneTemp = (r.tm_mes != null && r.tm_mes !== "") ||
+                          ((r.tm_max != null && r.tm_max !== "") && (r.tm_min != null && r.tm_min !== ""));
+        const tieneHR = (r.hr != null && r.hr !== "");
+        const tieneRad = (r.inso != null && r.inso !== "") || (r.glo != null && r.glo !== "");
+
+        if (tieneTemp && tieneHR && tieneRad) mesesOK++;
+    }
+
+    // Umbral: al menos 18 meses “útiles” dentro de los 36 (puedes subir a 24 si quieres)
+    const ok = mesesOK >= 18;
+
+    // Resumen de variables disponibles (para IU)
+    const tieneInso = datos.some(r => r.inso != null && r.inso !== "");
+    const tieneGlo  = datos.some(r => r.glo  != null && r.glo  !== "");
+    const tieneWmed = datos.some(r => r.w_med != null && r.w_med !== "");
+
+    return { ok, mesesOK, tieneInso, tieneGlo, tieneWmed };
+};
+
+for (let i = 0; i < limiteBusqueda; i++) {
+    const cand = estacionesCercanas[i];
+
+    const urlTest = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/${anioIni}/aniofin/${anioFin}/estacion/${cand.indicativo}?api_key=${API_KEY}`;
+
+    const resp = await fetch(urlTest);
+    const meta = await resp.json();
+
+    if (meta.estado === 200 && meta.datos) {
+        const respDatos = await fetch(meta.datos);
+        const datos = await respDatos.json();
+
+        const chk = cumpleVariablesPM(datos);
+        if (chk.ok) {
+            estacionValida = cand;
+            estacionSeleccionadaId = cand.indicativo;
+            estacionSeleccionadaMeta = cand;
+            estacionSeleccionadaVars = chk;
+            break;
         }
+    }
+}
 
         if (estacionValida) {
             res.innerHTML = `
@@ -342,9 +382,10 @@ async function encontrarMasCercana() {
                         <span><b>Datos Validados:</b> ${estacionValida.nombre}</span>
                     </div>
                     <div style="font-size:0.85em; color:#16a34a; padding-left:32px; font-weight:600;">
-                        📍 Distancia: ${fmtNum(estacionValida.distanciaRealKm, 1)} km | Estación lista para cálculos.<br>
-                        👉 Ya puede proceder a la SECCIÓN 2 y pulsar "Calcular Balance".
-                    </div>
+    📍 Distancia: ${fmtNum(estacionValida.distanciaRealKm, 1)} km | Estación lista para cálculos.<br>
+    👉 Ya puede proceder a la SECCIÓN 2 y pulsar "Calcular Balance".<br>
+    🧪 ETo FAO-56: Temp ✅ | HR ✅ | Rad ${estacionSeleccionadaVars?.tieneInso ? "inso ✅" : (estacionSeleccionadaVars?.tieneGlo ? "glo ✅" : "❌")} | Viento ${estacionSeleccionadaVars?.tieneWmed ? "w_med ✅" : "≈ fijo ✅"} | Meses válidos: ${estacionSeleccionadaVars?.mesesOK ?? "?"}/36
+</div>
                 </div>`;
         } else {
             res.innerHTML = "❌ No se encontraron estaciones con datos en el entorno cercano.";
