@@ -154,6 +154,7 @@
 // --- CONFIGURACIÓN API AEMET Y MEMORIA ---
 const API_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYW1vcmVub0B2aXN1YWxuYWNlcnQuY29tIiwianRpIjoiZTY0NzI0MmQtODViZi00MjI1LWE4OTUtZGQzMDhlZDcxODczIiwiaXNzIjoiQUVNRVQiLCJpYXQiOjE3Njk2ODg1NDAsInVzZXJJZCI6ImU2NDcyNDJkLTg1YmYtNDIyNS1hODk1LWRkMzA4ZWQ3MTg3MyIsInJvbGUiOiIifQ.Z8zZ2V46tQcyR1OhJiHmxf3yn5LxKTDHjXNqxNRVmKI";
 let estacionSeleccionadaId = null; 
+let estacionSeleccionadaMeta = null;
 
 // --- CONFIGURACIÓN GLOBAL CHART.JS ---
 Chart.register(ChartDataLabels);
@@ -191,6 +192,108 @@ function aemetToDec(coord) {
     let dec = g + (m/60) + (s/3600);
     return (dir === 'S' || dir === 'W') ? -dec : dec;
 }
+// =======================
+// FAO-56 Penman-Monteith (ETo) usando "día representativo" del mes
+// =======================
+function deg2rad(d) { return d * Math.PI / 180; }
+
+function satVaporPressure(T) {
+    // es(T) en kPa
+    return 0.6108 * Math.exp((17.27 * T) / (T + 237.3));
+}
+
+function slopeSVP(T) {
+    // Δ en kPa/°C
+    const es = satVaporPressure(T);
+    return (4098 * es) / Math.pow(T + 237.3, 2);
+}
+
+function atmPressure(z) {
+    // P en kPa (FAO-56)
+    return 101.3 * Math.pow((293 - 0.0065 * z) / 293, 5.26);
+}
+
+function psychrometricConstant(P) {
+    // γ en kPa/°C
+    return 0.000665 * P;
+}
+
+// Radiación extraterrestre Ra (MJ/m²/día) FAO-56
+function raMJ(latDeg, J) {
+    const Gsc = 0.0820; // MJ m−2 min−1
+    const phi = deg2rad(latDeg);
+    const dr = 1 + 0.033 * Math.cos((2 * Math.PI / 365) * J);
+    const delta = 0.409 * Math.sin((2 * Math.PI / 365) * J - 1.39);
+    const ws = Math.acos(-Math.tan(phi) * Math.tan(delta));
+    return (24 * 60 / Math.PI) * Gsc * dr *
+        (ws * Math.sin(phi) * Math.sin(delta) + Math.cos(phi) * Math.cos(delta) * Math.sin(ws));
+}
+
+// Horas máximas de sol (N) para Angström-Prescott
+function daylightHours(latDeg, J) {
+    const phi = deg2rad(latDeg);
+    const delta = 0.409 * Math.sin((2 * Math.PI / 365) * J - 1.39);
+    const ws = Math.acos(-Math.tan(phi) * Math.tan(delta));
+    return (24 / Math.PI) * ws;
+}
+
+// Viento: km/h -> m/s y ajuste a 2 m. Asumimos medida a 10 m (lo habitual).
+// Si confirmas que AEMET ya es a 2 m, cambiamos zMedida a 2 y listo.
+function windToU2(u_kmh, zMedida = 10) {
+    const uz = u_kmh / 3.6; // m/s
+    return uz * 4.87 / Math.log(67.8 * zMedida - 5.42);
+}
+
+// Rs desde insolación (Angström-Prescott): Rs = (a + b * n/N) * Ra
+function rsFromInsolation(n, N, Ra) {
+    const a = 0.25, b = 0.50;
+    const frac = Math.min(1, Math.max(0, n / N));
+    return (a + b * frac) * Ra;
+}
+
+// Si alguna estación trae "glo", la unidad puede variar según dataset.
+// Por prudencia, dejamos un factor de conversión fácil de ajustar.
+// Asumimos glo mensual en kJ/m² -> MJ/m² y dividimos entre días.
+const AEMET_GLO_KJ_M2_MONTH = true; // si no cuadra, lo ajustamos en un paso posterior
+
+function rsFromGloMonthly(gloValue, daysInMonth) {
+    if (!AEMET_GLO_KJ_M2_MONTH) return 0;
+    const MJ_month = gloValue / 1000; // kJ -> MJ
+    return MJ_month / daysInMonth;    // MJ/m²/día
+}
+
+function etoPM_Fao56_MeanDaily({ Tmean, Tmax, Tmin, RHmean, u2, Rs, z, latDeg, J }) {
+    const P = atmPressure(z);
+    const gamma = psychrometricConstant(P);
+    const Delta = slopeSVP(Tmean);
+
+    const es = (satVaporPressure(Tmax) + satVaporPressure(Tmin)) / 2;
+    const ea = (RHmean / 100) * es;
+
+    const Ra = raMJ(latDeg, J);
+    const Rso = (0.75 + 2e-5 * z) * Ra;
+
+    const albedo = 0.23;
+    const Rns = (1 - albedo) * Rs;
+
+    const sigma = 4.903e-9; // MJ K^-4 m^-2 day^-1
+    const TmaxK = Tmax + 273.16;
+    const TminK = Tmin + 273.16;
+
+    const Rs_Rso = (Rso > 0) ? Math.min(1, Math.max(0, Rs / Rso)) : 0;
+    const Rnl = sigma * ((Math.pow(TmaxK, 4) + Math.pow(TminK, 4)) / 2) *
+        (0.34 - 0.14 * Math.sqrt(Math.max(0, ea))) *
+        (1.35 * Rs_Rso - 0.35);
+
+    const Rn = Rns - Rnl;
+    const G = 0; // mensual ~ 0
+
+    const num = 0.408 * Delta * (Rn - G) + gamma * (900 / (Tmean + 273)) * u2 * (es - ea);
+    const den = Delta + gamma * (1 + 0.34 * u2);
+
+    const eto = (den !== 0) ? (num / den) : 0;
+    return Math.max(0, eto); // mm/día
+}
 
 // SECCIÓN 1: Búsqueda de Estación (Ranking de proximidad)
 async function encontrarMasCercana() {
@@ -224,10 +327,11 @@ async function encontrarMasCercana() {
             const meta = await resp.json();
 
             if (meta.estado === 200) {
-                estacionValida = cand;
-                estacionSeleccionadaId = cand.indicativo;
-                break;
-            }
+    estacionValida = cand;
+    estacionSeleccionadaId = cand.indicativo;
+    estacionSeleccionadaMeta = cand;   // ✅ NUEVO: guardamos latitud/altitud
+    break;
+}
         }
 
         if (estacionValida) {
@@ -269,25 +373,65 @@ async function generarPlanOro() {
         const metadata = await response.json();
         const dataResponse = await fetch(metadata.datos);
         const aemet = await dataResponse.json(); 
+console.log("ESTACIÓN:", estacionSeleccionadaId, estacionSeleccionadaMeta);
+console.log("AEMET ejemplo (primer registro):", aemet && aemet.length ? aemet[0] : null);
+console.log("Campos presentes (primer registro):", aemet && aemet.length ? Object.keys(aemet[0]) : []);
 
         // --- LÓGICA AGRONÓMICA ORIGINAL ---
         const cultivo = cultivosData[document.getElementById('selectCultivo').value];
         const fIni = new Date(document.getElementById('cicloIni').value);
         const fFin = new Date(document.getElementById('cicloFin').value);
 
-        const medias = Array(13).fill(0).map(() => ({ sumEto: 0, sumP: 0, count: 0 }));
+        const medias = Array(13).fill(0).map(() => ({
+    sumP: 0,
+    sumTmean: 0,
+    sumTmax: 0,
+    sumTmin: 0,
+    sumRH: 0,
+    sumWind: 0,
+    sumGlo: 0,
+    sumInso: 0,
+    count: 0
+}));
+const num = (x) => {
+    const v = parseFloat(String(x ?? "").replace(",", "."));
+    return Number.isFinite(v) ? v : null;
+};
+
         
         aemet.forEach(d => {
-            const m = parseInt(d.fecha.split('-')[1]);
-            let valEto = parseFloat(String(d.eto_mes || d.evap_mes || d.e || "0").replace(',','.'));
-            let valP = parseFloat(String(d.p_mes || d.precipitacion || "0").replace(',','.')); 
-            
-            if(m < 13) { 
-                if(valEto >= 0) medias[m].sumEto += valEto;
-                if(valP >= 0) medias[m].sumP += valP;
-                medias[m].count++; 
-            }
-        });
+    const m = parseInt(d.fecha.split('-')[1], 10);
+    if (!(m >= 1 && m <= 12)) return;
+
+    const p = num(d.p_mes || d.precipitacion);
+    const tmean = num(d.tm_mes);     // si viene
+    const tmax = num(d.tm_max);
+    const tmin = num(d.tm_min);
+    const rh = num(d.hr);
+    const wind = num(d.w_med);       // km/h
+    const glo = num(d.glo);          // si viene (radiación global)
+    const inso = num(d.inso);        // si viene (horas de sol)
+
+    // Para contar el mes necesitamos al menos temperatura + HR + viento
+    if (tmean == null && (tmax == null || tmin == null)) return;
+    if (rh == null || wind == null) return;
+
+    if (p != null && p >= 0) medias[m].sumP += p;
+
+    const TmeanEff = (tmean != null) ? tmean : (tmax + tmin) / 2;
+
+    medias[m].sumTmean += TmeanEff;
+    medias[m].sumTmax += (tmax != null ? tmax : TmeanEff);
+    medias[m].sumTmin += (tmin != null ? tmin : TmeanEff);
+    medias[m].sumRH += rh;
+    medias[m].sumWind += wind;
+
+    if (glo != null && glo >= 0) medias[m].sumGlo += glo;
+    if (inso != null && inso >= 0) medias[m].sumInso += inso;
+
+    medias[m].count += 1;
+});
+
 
         let mesesCiclo = [], sumaNHn = 0, iter = new Date(fIni.getFullYear(), fIni.getMonth(), 1);
         
@@ -298,10 +442,78 @@ async function generarPlanOro() {
             const nDiasActivos = Math.max(0, (rFin - rIni) / (86400000) + 1);
 
             if (nDiasActivos > 0) {
-                const etoMensualAvg = medias[mIdx+1].count > 0 ? (medias[mIdx+1].sumEto / medias[mIdx+1].count) : 0;
-                const pMensualAvg = medias[mIdx+1].count > 0 ? (medias[mIdx+1].sumP / medias[mIdx+1].count) : 0;
+    const pMensualAvg = medias[mIdx+1].count > 0 ? (medias[mIdx+1].sumP / medias[mIdx+1].count) : 0;
 
-                const etoDiaria = etoMensualAvg / diasMesTotal;
+    // --- ETo FAO-56 (mm/día) ---
+    let etoDiaria = 0;
+
+    const mm = medias[mIdx + 1];
+    if (mm.count > 0 && estacionSeleccionadaMeta) {
+
+        const z = parseFloat(estacionSeleccionadaMeta.altitud || "0");
+        const latDeg = aemetToDec(estacionSeleccionadaMeta.latitud);
+
+        const Tmean = mm.sumTmean / mm.count;
+        const Tmax  = mm.sumTmax / mm.count;
+        const Tmin  = mm.sumTmin / mm.count;
+        const RHmean = mm.sumRH / mm.count;
+
+        // viento medio (km/h -> m/s a 2 m)
+        const u2 = windToU2(mm.sumWind / mm.count, 10);
+
+        // Día juliano representativo: día 15 del mes
+        const J = Math.floor((new Date(anio, mIdx, 15) - new Date(anio, 0, 1)) / 86400000) + 1;
+
+        // Radiación: preferimos insolación (si existe) por fiabilidad.
+        const Ra = raMJ(latDeg, J);
+        const N = daylightHours(latDeg, J);
+
+        let Rs = 0;
+        if (mm.sumInso > 0) {
+            const n = mm.sumInso / mm.count;        // horas de sol medias
+            Rs = rsFromInsolation(n, N, Ra);        // MJ/m²/día
+        } else if (mm.sumGlo > 0) {
+            const gloAvg = mm.sumGlo / mm.count;    // valor mensual medio
+            Rs = rsFromGloMonthly(gloAvg, diasMesTotal);
+        } else {
+            Rs = 0;
+        }
+
+        if (Rs > 0) {
+            etoDiaria = etoPM_Fao56_MeanDaily({
+                Tmean, Tmax, Tmin, RHmean, u2, Rs, z, latDeg, J
+            });
+        } else {
+            etoDiaria = 0; // sin radiación/insolación no estimamos
+        }
+    }
+
+    // DEBUG (solo JULIO)
+    if (mIdx === 6) {
+        console.log("DEBUG JULIO", {
+            estacion: estacionSeleccionadaId,
+            count: mm.count,
+            Tmean: mm.count ? (mm.sumTmean / mm.count) : null,
+            RH: mm.count ? (mm.sumRH / mm.count) : null,
+            wind_kmh: mm.count ? (mm.sumWind / mm.count) : null,
+            sumInso: mm.sumInso,
+            sumGlo: mm.sumGlo,
+            etoDiaria
+        });
+    }
+
+    const kc = cultivo.kc[mIdx+1] || 0;
+    const etcDiaria = etoDiaria * kc;
+    const etcMesTotal = etcDiaria * nDiasActivos;
+
+    let peMensualTotal = (pMensualAvg < 70) ? (0.6 * pMensualAvg) - 10 : (0.8 * pMensualAvg) - 24;
+    if (peMensualTotal < 0) peMensualTotal = 0;
+
+    const peActiva = (peMensualTotal / diasMesTotal) * nDiasActivos;
+    const nhn_m3 = Math.max(0, etcMesTotal - peActiva) * 10;
+
+    // ... (el resto de tu bloque sigue igual)
+}
                 const kc = cultivo.kc[mIdx+1] || 0;
                 const etcDiaria = etoDiaria * kc;
                 const etcMesTotal = etcDiaria * nDiasActivos; 
