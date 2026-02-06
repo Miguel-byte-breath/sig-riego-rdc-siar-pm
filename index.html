@@ -546,6 +546,8 @@ const u2 = windToU2(mm.sumWind / mm.count);
 if (mIdx === 6) {
     const windAvg = mm.count ? (mm.sumWind / mm.count) : null;
     const u2Dbg = (windAvg != null) ? windToU2(windAvg) : null;
+    const gloAvg = mm.count ? (mm.sumGlo / mm.count) : null;
+    const insoAvg = mm.count ? (mm.sumInso / mm.count) : null;
 
     console.log("DEBUG JULIO", {
         estacion: estacionSeleccionadaId,
@@ -556,7 +558,9 @@ if (mIdx === 6) {
         u2_ms: u2Dbg,
         sumInso: mm.sumInso,
         sumGlo: mm.sumGlo,
-        etoDiaria
+        etoDiaria,
+        glo_avg: gloAvg,
+        inso_avg: insoAvg,
     });
 }
 
