@@ -270,10 +270,9 @@ function rsFromInsolation(n, N, Ra) {
 // Asumimos glo mensual en kJ/m² -> MJ/m² y dividimos entre días.
 const AEMET_GLO_KJ_M2_MONTH = true; // si no cuadra, lo ajustamos en un paso posterior
 
-function rsFromGloMonthly(gloValue) {
-    // AEMET: glo viene en decenas de kJ/m² (valor mensual)
-    // Convertimos directamente a MJ/m²/día
-    return (gloValue * 10) / 1000;
+function rsFromGloMonthly(gloValue, daysInMonth) {
+    // AEMET: glo en kJ/m² mensual (no "decenas") -> MJ/m²/día
+    return (gloValue / 1000) / daysInMonth;
 }
 
 function etoPM_Fao56_MeanDaily({ Tmean, Tmax, Tmin, RHmean, u2, Rs, z, latDeg, J }) {
@@ -548,20 +547,28 @@ if (mIdx === 6) {
     const u2Dbg = (windAvg != null) ? windToU2(windAvg) : null;
     const gloAvg = mm.count ? (mm.sumGlo / mm.count) : null;
     const insoAvg = mm.count ? (mm.sumInso / mm.count) : null;
+    const Rs_from_glo = (mm.sumGlo > 0) ? rsFromGloMonthly(gloAvg, diasMesTotal) : null;
+    const Rs_from_inso = (mm.sumInso > 0) ? rsFromInsolation(insoAvg, N, Ra) : null;
 
     console.log("DEBUG JULIO", {
-        estacion: estacionSeleccionadaId,
-        count: mm.count,
-        Tmean: mm.count ? (mm.sumTmean / mm.count) : null,
-        RH: mm.count ? (mm.sumRH / mm.count) : null,
-        wind_raw_kmh: windAvg,
-        u2_ms: u2Dbg,
-        sumInso: mm.sumInso,
-        sumGlo: mm.sumGlo,
-        etoDiaria,
-        glo_avg: gloAvg,
-        inso_avg: insoAvg,
-    });
+    estacion: estacionSeleccionadaId,
+    count: mm.count,
+    Tmean: mm.count ? (mm.sumTmean / mm.count) : null,
+    RH: mm.count ? (mm.sumRH / mm.count) : null,
+    wind_raw_kmh: windAvg,
+    u2_ms: u2Dbg,
+    sumInso: mm.sumInso,
+    sumGlo: mm.sumGlo,
+    etoDiaria,
+    glo_avg: gloAvg,
+    inso_avg: insoAvg,
+    Ra,
+    N,
+    Rs,
+    Rs_from_glo,
+    Rs_from_inso,
+});
+
 }
 
     const kc = cultivo.kc[mIdx+1] || 0;
