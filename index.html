@@ -207,6 +207,7 @@ let estacionesModelo = {
 
 // Registro: qué estación aportó qué variable por mes
 let usageLogMensual = {}; // se inicializa cuando sepamos los monthKeys
+let radMensualPorEstacion = {}; // { stationId: { "YYYY-MM": {count, sumGlo, sumInso} } }
 
 function initUsageLog(monthKeys) {
     const log = {};
@@ -277,7 +278,33 @@ function normalizarStationDesdeAemet(e) {
         alt
     };
 }
+    
+function indexarRadiacionMensualDesdeAemet(aemetJson) {
+    // Devuelve: { "YYYY-MM": { count, sumGlo, sumInso } }
+    const out = {};
+    for (const d of aemetJson) {
+        if (!d || !d.fecha) continue;
+        const [yyyy, mm] = d.fecha.split("-"); // "YYYY-MM-DD"
+        if (!yyyy || !mm) continue;
+        const monthKey = `${yyyy}-${mm}`;
 
+        if (!out[monthKey]) out[monthKey] = { count: 0, sumGlo: 0, sumInso: 0 };
+
+        // AEMET: glo (radiación global) y inso (horas de sol)
+        // Usamos parseFloat y protegemos NaN
+        const glo = parseFloat(d.glo);
+        const inso = parseFloat(d.inso);
+
+        // Contamos “mes con dato” si hay al menos una de las dos variables
+        if (!Number.isNaN(glo) || !Number.isNaN(inso)) {
+            out[monthKey].count += 1;
+            if (!Number.isNaN(glo)) out[monthKey].sumGlo += glo;
+            if (!Number.isNaN(inso)) out[monthKey].sumInso += inso;
+        }
+    }
+    return out;
+}
+    
 // =======================
 // FAO-56 Penman-Monteith (ETo) usando "día representativo" del mes
 // =======================
