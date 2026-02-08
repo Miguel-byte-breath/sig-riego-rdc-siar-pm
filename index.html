@@ -784,8 +784,9 @@ estacionSeleccionadaVars = null;
 const fIni = new Date(document.getElementById('cicloIni').value);
 const fFin = new Date(document.getElementById('cicloFin').value);
 
-const anioIni = Math.min(fIni.getFullYear(), fFin.getFullYear());
-const anioFin = Math.max(fIni.getFullYear(), fFin.getFullYear());
+// Histórico para previsión estacional (~36 meses = 3 años completos)
+const anioFinDatos = new Date().getFullYear() - 1;
+const anioIniDatos = anioFinDatos - 2;
 console.log("[AEMET rango desde ciclo] cicloIni=", document.getElementById('cicloIni').value,
             "cicloFin=", document.getElementById('cicloFin').value,
             "anioIni=", anioIni, "anioFin=", anioFin);
