@@ -634,12 +634,12 @@ console.log("AEMET ejemplo (primer registro):", aemet && aemet.length ? aemet[0]
 console.log("Campos presentes (primer registro):", aemet && aemet.length ? Object.keys(aemet[0]) : []);
 
         radMensualPorEstacion[estacionSeleccionadaId] = indexarRadiacionMensualDesdeAemet(aemet);
-        // --- Paso 5.3.1: radiación de estaciones de apoyo (máx 5, por distancia) ---
+       // --- Paso 5.3.1: radiación de estaciones de apoyo (máx 5, por distancia) ---
 const supportStations = (estacionesModelo.support || []).slice(0, 5);
 
 for (const st of supportStations) {
     try {
-        const datos = await fetchAemetMensual(est.id, anioIniFetch, anioFinFetch);
+        const aemetSup = await fetchAemetMensual(st.id, anioIni, anioFin);
         radMensualPorEstacion[st.id] = indexarRadiacionMensualDesdeAemet(aemetSup);
     } catch (e) {
         console.warn("Radiación no disponible para estación support", st.id, e);
@@ -678,6 +678,7 @@ const num = (x) => {
     const tmax = num(d.tm_max);
     const tmin = num(d.tm_min);
     const rh = num(d.hr);
+    medias[m].countRH += 1;    
     const wind = num(d.w_med);       // km/h
     const glo = num(d.glo);          // si viene (radiación global)
     const inso = num(d.inso);        // si viene (horas de sol)
@@ -694,6 +695,7 @@ const num = (x) => {
     medias[m].sumTmax += (tmax != null ? tmax : TmeanEff);
     medias[m].sumTmin += (tmin != null ? tmin : TmeanEff);
     medias[m].sumRH += rh;
+    medias[m].countRH += 1;
     medias[m].sumWind += wind;
 
     if (glo != null && glo >= 0) medias[m].sumGlo += glo;
@@ -734,8 +736,8 @@ let monthKeysCiclo = [];
     setUsed(usageLogMensual, monthKey, "tmax", stationIdUsada, "tmax", "principal efectiva");
     const Tmin  = mm.sumTmin / mm.count;
     setUsed(usageLogMensual, monthKey, "tmin", stationIdUsada, "tmin", "principal efectiva");
-    const RHmean = mm.sumRH / mm.count;
-    setUsed(usageLogMensual, monthKey, "rhmean", stationIdUsada, "hr_med", "principal efectiva");
+   const RHmean = (mm.countRH > 0) ? (mm.sumRH / mm.countRH) : null;
+if (RHmean != null) setUsed(usageLogMensual, monthKey, "rhmean", stationIdUsada, "hr_med", "principal efectiva");
 
     // viento medio AEMET (km/h) convertido a u2 (m/s a 2 m, FAO-56)
     const u2 = windToU2(mm.sumWind / mm.count);
