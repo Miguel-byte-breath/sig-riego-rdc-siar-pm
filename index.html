@@ -87,7 +87,7 @@
         </div>
         <div id="resBusqueda" class="result-box" style="display:none"></div>
     </div>
-
+<div id="resTrazabilidad" style="display:none; margin-top:12px;"></div>
     <div class="card">
         <div class="header-step">💧⚖️💧 2. Balance Hídrico Mensual (Agronómico)</div>
         <div class="input-group">
@@ -283,6 +283,52 @@ function initUsageLog(monthKeys) {
 function setUsed(log, monthKey, field, stationId, varName, note) {
     if (!log || !log[monthKey]) return;
     log[monthKey][field] = { stationId, var: varName, note: note || "" };
+}
+function renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual) {
+    const cont = document.getElementById("resTrazabilidad") || document.getElementById("resultados");
+    if (!cont) return;
+
+    const getStationName = (id) => {
+        const s = (estacionesModelo?.ranked || []).find(x => x.id === id);
+        return s?.name || id || "—";
+    };
+
+    const cell = (mk, field) => {
+        const v = usageLogMensual?.[mk]?.[field];
+        if (!v) return "—";
+        const name = getStationName(v.stationId);
+        const note = v.note ? ` · ${v.note}` : "";
+        return `${name} (${v.stationId})${note}`;
+    };
+
+    const rows = (monthKeysCiclo || []).map(mk => `
+        <tr>
+            <td style="white-space:nowrap; font-weight:700;">${mk}</td>
+            <td>${cell(mk, "tmean") || (cell(mk,"tmin") + " / " + cell(mk,"tmax"))}</td>
+            <td>${cell(mk, "rhmean")}</td>
+            <td>${cell(mk, "wind")}</td>
+            <td>${cell(mk, "rad")}</td>
+        </tr>
+    `).join("");
+
+    cont.style.display = "block";
+    cont.innerHTML = `
+        <div style="margin:8px 0 6px; font-weight:800;">🧾 Resumen de estaciones usadas (por mes / variable)</div>
+        <div style="overflow:auto; border:1px solid #e5e7eb; border-radius:10px;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                <thead>
+                    <tr style="background:#f8fafc;">
+                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">Mes</th>
+                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">Temperatura</th>
+                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">HR</th>
+                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">Viento</th>
+                        <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">Radiación</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
 }
 
 // Carga inicial de cultivos
@@ -1066,8 +1112,8 @@ const v = validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual);
 if (!v.ok) {
     mostrarErrorVariablesImprescindibles(v.faltan);
     return;
-    }
-        
+        }
+renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual);
 // Inicializar trazabilidad mensual (no afecta al cálculo todavía)
 // usageLogMensual = initUsageLog(monthKeysCiclo);
 
