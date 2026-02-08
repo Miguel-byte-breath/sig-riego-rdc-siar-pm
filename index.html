@@ -1012,7 +1012,7 @@ if (radSource) {
     // DEBUG (solo JULIO) -> dentro del if para que existan Ra, N, Rs
     if (mIdx === 6) {
         const windAvg = mm.count ? (mm.sumWind / mm.count) : null;
-        const u2Dbg = (windAvg != null) ? windToU2(windAvg) : null;
+        const u2Dbg = u2; // ya resuelto por fallback
         const gloAvg = mm.count ? (mm.sumGlo / mm.count) : null;
         const insoAvg = mm.count ? (mm.sumInso / mm.count) : null;
 
@@ -1022,7 +1022,7 @@ if (radSource) {
         console.log("DEBUG JULIO", {
             estacion: estacionSeleccionadaId,
             count: mm.count,
-            Tmean,
+            Tmean: (temps ? temps.Tmean : null),
             RH: RHmean,
             wind_raw_kmh: windAvg,
             u2_ms: u2Dbg,
