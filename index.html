@@ -175,6 +175,62 @@ async function fetchAemetMensual(stationId, anioIni, anioFin) {
     aemetMensualCache.set(cacheKey, aemet);
     return aemet;
 }
+function validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual) {
+    // Recorre meses del ciclo y verifica disponibilidad mínima para PM (FAO-56)
+    const faltan = [];
+
+    // Normaliza inicio/fin a primer día del mes
+    const ini = new Date(fIni.getFullYear(), fIni.getMonth(), 1);
+    const fin = new Date(fFin.getFullYear(), fFin.getMonth(), 1);
+
+    for (let d = new Date(ini); d <= fin; d.setMonth(d.getMonth() + 1)) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const monthKey = `${y}-${m}`;
+
+        const log = usageLogMensual?.[monthKey] || {};
+
+        // Temperatura: aceptamos tmean o (tmin+tmax)
+        const tempOk = (log.tmean != null && log.tmean !== "") ||
+                       ((log.tmin != null && log.tmin !== "") && (log.tmax != null && log.tmax !== ""));
+
+        const hrOk   = (log.rhmean != null && log.rhmean !== "");
+        const windOk = (log.wind != null && log.wind !== "");
+        const radOk  = (log.rad != null && log.rad !== "");
+
+        const missing = [];
+        if (!tempOk) missing.push("Temperatura (tmean o tmin+tmax)");
+        if (!hrOk)   missing.push("Humedad relativa (HR)");
+        if (!windOk) missing.push("Viento (u2)");
+        if (!radOk)  missing.push("Radiación (Rs)");
+
+        if (missing.length) {
+            faltan.push({ monthKey, missing });
+        }
+    }
+
+    return { ok: faltan.length === 0, faltan };
+}
+
+function mostrarErrorVariablesImprescindibles(faltan) {
+    const msgBase = "No ha sido posible realizar el cálculo de ETo (FAO-56 Penman-Monteith) porque no están disponibles todas las variables necesarias en las estaciones AEMET consultadas (principal y hasta 5 de apoyo por distancia) para el periodo seleccionado.";
+
+    // Mensaje técnico resumido (primeros 3 meses) para depuración sin “ruido”
+    const detalle = faltan.slice(0, 3)
+        .map(x => `${x.monthKey}: ${x.missing.join(", ")}`)
+        .join(" | ");
+
+    const msg = detalle ? `${msgBase}\n\nDetalle (muestra): ${detalle}` : msgBase;
+
+    // 1) Alert (seguro, visible siempre)
+    alert(msg);
+
+    // 2) Si tienes un contenedor de resultados, lo dejamos también por escrito (sin estilos)
+    const out = document.getElementById("resultados") || document.getElementById("salida") || document.getElementById("output");
+    if (out) {
+        out.textContent = msgBase + (detalle ? `\n\nDetalle (muestra): ${detalle}` : "");
+    }
+}
 
 // --- CONFIGURACIÓN GLOBAL CHART.JS ---
 Chart.register(ChartDataLabels);
@@ -477,8 +533,8 @@ console.log("[AEMET rango desde ciclo] cicloIni=", document.getElementById('cicl
             "cicloFin=", document.getElementById('cicloFin').value,
             "anioIni=", anioIni, "anioFin=", anioFin);
         
-const anioFinFetch = Math.min(anioFin, new Date().getFullYear() - 1);
-const anioIniFetch = Math.min(anioIni, anioFinFetch);
+const anioFinFetch = new Date().getFullYear() - 1;
+const anioIniFetch = anioFinFetch - 2;
 
 // Buscamos más allá de 5 si hace falta, hasta encontrar variables suficientes
 const limiteBusqueda = Math.min(25, estacionesCercanas.length);
@@ -789,6 +845,12 @@ if (radSource) {
 }
             iter.setMonth(iter.getMonth() + 1);
         }
+        
+const v = validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual);
+if (!v.ok) {
+    mostrarErrorVariablesImprescindibles(v.faltan);
+    return;
+    }
         
 // Inicializar trazabilidad mensual (no afecta al cálculo todavía)
 // usageLogMensual = initUsageLog(monthKeysCiclo);
