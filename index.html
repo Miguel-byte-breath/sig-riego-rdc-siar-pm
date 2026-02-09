@@ -161,20 +161,47 @@ let estacionSeleccionadaVars = null;
 // =======================
 const aemetMensualCache = new Map();
 
-async function fetchAemetMensual(stationId, anioIni, anioFin) {
-    const cacheKey = `${stationId}|${anioIni}|${anioFin}`;
-    if (aemetMensualCache.has(cacheKey)) return aemetMensualCache.get(cacheKey);
+async function fetchAemetMensual(estacionId, anioIni, anioFin) {
+  const url = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/${anioIni}/aniofin/${anioFin}/estacion/${estacionId}?api_key=${API_KEY}`;
 
-    const urlAemet = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/${anioIni}/aniofin/${anioFin}/estacion/${stationId}?api_key=${API_KEY}`;
+  // 1) Primera llamada (meta)
+  const respMeta = await fetch(url, { cache: "no-store" });
+  const ctMeta = (respMeta.headers.get("content-type") || "").toLowerCase();
+  const txtMeta = await respMeta.text();
 
-    const response = await fetch(urlAemet);
-    const metadata = await response.json();
-    const dataResponse = await fetch(metadata.datos);
-    const aemet = await dataResponse.json();
+  if (!respMeta.ok) {
+    throw new Error(`AEMET meta HTTP ${respMeta.status} (${estacionId}) url=${url} body=${txtMeta.slice(0,80)}`);
+  }
+  if (!ctMeta.includes("application/json")) {
+    throw new Error(`AEMET meta no-JSON (${estacionId}) ct=${ctMeta} url=${url} body=${txtMeta.slice(0,80)}`);
+  }
 
-    aemetMensualCache.set(cacheKey, aemet);
-    return aemet;
+  let meta;
+  try { meta = JSON.parse(txtMeta); }
+  catch (e) {
+    throw new Error(`AEMET meta JSON inválido (${estacionId}) url=${url} body=${txtMeta.slice(0,80)}`);
+  }
+
+  if (!meta || !meta.datos) return null;
+
+  // 2) Segunda llamada (datos reales)
+  const respDatos = await fetch(meta.datos, { cache: "no-store" });
+  const ctDatos = (respDatos.headers.get("content-type") || "").toLowerCase();
+  const txtDatos = await respDatos.text();
+
+  if (!respDatos.ok) {
+    throw new Error(`AEMET datos HTTP ${respDatos.status} (${estacionId}) url=${meta.datos} body=${txtDatos.slice(0,80)}`);
+  }
+  if (!ctDatos.includes("application/json")) {
+    throw new Error(`AEMET datos no-JSON (${estacionId}) ct=${ctDatos} url=${meta.datos} body=${txtDatos.slice(0,80)}`);
+  }
+
+  try { return JSON.parse(txtDatos); }
+  catch (e) {
+    throw new Error(`AEMET datos JSON inválido (${estacionId}) url=${meta.datos} body=${txtDatos.slice(0,80)}`);
+  }
 }
+
 function validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual) {
     // Recorre meses del ciclo y verifica disponibilidad mínima para PM (FAO-56)
     const faltan = [];
