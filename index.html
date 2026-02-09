@@ -1202,7 +1202,7 @@ const anioRef = (typeof anioFinFetch !== "undefined")
       ? anioFinDatos
       : (new Date().getFullYear() - 1));
 
-const monthKeyRad = `${anioRef}-${monthKey.slice(5,7)}`;
+const monthKeyRad = `${anioRef}-${parseInt(monthKey.slice(5,7), 10)}`;
 
 const radMain = getRadMensualDeEstacion(estacionSeleccionadaId, monthKeyRad);
 
