@@ -1,61 +1,242 @@
-# 🌾 S.I.G. Riego Pro v1.0 (API Connect)
 
-**Sistema de Información Geográfica para la Gestión Integral de Recursos Hídricos.** Una herramienta avanzada de ingeniería agronómica que automatiza el balance hídrico mensual y semanal mediante la conexión directa y resiliente con los servicios de **AEMET OpenData**.
+Significa:
+> La estación tiene datos válidos en **todos los meses disponibles** del histórico devuelto por AEMET  
+> (AEMET puede devolver 36, 37, 38 o 39 meses según disponibilidad real).
 
-
-
-## 🚀 Innovación: Automatización y Resiliencia vía API
-
-Esta versión 1.0 elimina la dependencia de archivos externos (JSON manuales), integrando un motor de obtención de datos climáticos en tiempo real. 
-
-### 📡 Validación Automática de Estaciones
-Al introducir las coordenadas (Latitud/Longitud), el sistema inicia un protocolo de verificación técnica:
-1.  **Cercanía Pitagórica:** Identifica la estación más próxima mediante el cálculo de **distancia euclidiana** entre coordenadas decimales, garantizando una respuesta inmediata del motor de búsqueda.
-2.  **Validación Técnica:** Conecta con la infraestructura de AEMET para confirmar la disponibilidad de datos. Si la estación principal carece de registros o está fuera de servicio, el sistema activa un **bucle de resiliencia** que itera automáticamente entre las 5 estaciones más cercanas hasta validar una fuente fiable.
-
-
-
-## 🛰️ Motor de Estabilidad Climática (Media Trienal)
-
-Para garantizar un diseño de riego robusto frente al cambio climático y anomalías meteorológicas puntuales, el software implementa una lógica de **procesamiento histórico profundo**:
-
-### 📅 Período de Análisis: 36 Meses
-El sistema solicita mediante el endpoint de la API los datos de los **últimos 3 años naturales completos**. El software no utiliza un solo año de forma aislada para evitar sesgos por años extremadamente secos o húmedos.
-
-
-
-### 🛠️ Tratamiento de Datos Ausentes (Data Integrity)
-En el sector agrícola, es común que las estaciones sufran fallos técnicos temporales. **Riego Pro v1.0** gestiona estas lagunas de forma inteligente:
-* **Contabilización Dinámica:** Si un mes concreto falta en uno de los tres años, el sistema calcula la media aritmética dividiendo únicamente por los registros válidos encontrados (`medias[m].count++`).
-* **Filtrado de Nulos:** Se descartan automáticamente valores negativos o erróneos, asegurando que el **"Mes Típico Medio"** sea matemáticamente coherente.
-* **Garantía de Cálculo:** El proceso nunca se detiene por falta de un dato mensual; el algoritmo se auto-ajusta para ofrecer la mejor aproximación posible con la serie histórica disponible.
-
-## 🛠️ Funcionalidades Core
-
-### 1. Balance Hídrico Agronómico
-* **Evapotranspiración del Cultivo ($ET_c$):** Determinada por la $ET_o$ local y coeficientes $K_c$ específicos por etapa fenológica.
-* **Precipitación Efectiva ($P_e$):** Cálculo mediante el método de la **USDA** (SCS), optimizando el aprovechamiento real del agua de lluvia.
-* **Necesidades Netas ($NH_n$):** Cálculo preciso del déficit hídrico en $m^3/ha$.
-
-
-
-### 2. Programación Semanal Operativa
-* Desglose operativo del plan mensual en semanas naturales.
-* Gráfico de líneas dinámico para la visualización de la demanda hídrica a lo largo del ciclo.
-
-## 📊 Visualización y Exportación
-* **Reportes Dinámicos:** Gráficos comparativos mediante **Chart.js** (Lluvia vs. Necesidades vs. Asignación).
-* **Exportación Profesional:** Generación de archivos **.xlsx (Excel)** detallados para planes de riego y auditorías de gestión de recursos.
-
-## 💻 Stack Tecnológico
-* **APIs:** AEMET OpenData (REST API).
-* **Frontend:** Vanilla JavaScript (ES6+), CSS3 Premium UI.
-* **Librerías:** Chart.js, SheetJS, Chartjs-plugin-datalabels.
+📌 **No se fuerza nunca a “36 exactos”**: se usa el histórico efectivo real.
 
 ---
 
-## ⚙️ Configuración del Desarrollador
-Para activar el sistema, es necesario integrar una API Key válida en la sección de configuración global del script:
+## 🛰️ Motor climático histórico (Sección 2)
 
-```javascript
+### 📅 Ventana temporal
+El sistema trabaja con los **últimos 3 años naturales completos**, típicamente:
+
+- Año N-2
+- Año N-1
+- Año N (último completo disponible)
+
+Resultado habitual: **36 a 39 meses reales**.
+
+---
+
+### 🧩 Fallback inteligente por variable (no por estación)
+
+Cada variable climática se resuelve **mensualmente** siguiendo esta prioridad:
+
+1. **Estación principal** (más cercana).
+2. Hasta **5 estaciones de apoyo**, por orden de distancia.
+3. Se registra **qué estación aportó cada variable y cada mes** (trazabilidad).
+
+Esto evita descartar meses completos por el fallo de una sola variable.
+
+---
+
+### 📐 Tratamiento de datos ausentes
+- Valores no numéricos o erróneos se descartan.
+- Las medias mensuales se calculan **dividiendo solo por registros válidos**.
+- El sistema **nunca inventa datos** ni detiene el cálculo por huecos parciales.
+
+---
+
+## 🌡️ Evapotranspiración de referencia — FAO-56
+
+La **Evapotranspiración de referencia ($ET_o$)** se calcula mediante el método **FAO-56 Penman–Monteith**, usando un día representativo mensual.
+
+Variables utilizadas:
+- Temperatura media, máxima y mínima
+- Humedad relativa media
+- Viento ajustado a 2 m ($u_2$)
+- Radiación solar ($R_s$)
+- Latitud y altitud de la estación principal
+
+📌 El método **no se modifica** ni se simplifica.
+
+---
+
+## 🌱 Balance hídrico agronómico
+
+### 🔹 Evapotranspiración del cultivo ($ET_c$)
+\[
+ET_c = ET_o \cdot K_c
+\]
+
+Donde $K_c$ depende del cultivo y del mes fenológico.
+
+---
+
+### 🔹 Precipitación mensual ($P$)
+
+- Se obtiene de **AEMET (p_mes)**.
+- Se calcula como **media mensual histórica** por mes natural.
+- Es **independiente** de la disponibilidad de otras variables climáticas.
+
+---
+
+### 🔹 Precipitación Efectiva ($P_e$)
+
+**Precipitación Efectiva ($P_e$):**  
+Se calcula mediante una formulación tipo **USDA / SCS**, aplicada a la precipitación mensual media y posteriormente prorrateada si el mes es parcial.
+
+Ejemplo conceptual:
+- Mes completo → se usa $P_e$ mensual total.
+- Mes parcial → $P_e$ proporcional a los días activos.
+
+---
+
+### 🔹 Necesidades Hídricas Netas ($NH_n$)
+
+\[
+NH_n = (ET_c - P_e) \cdot 10
+\]
+
+Resultado expresado en **$m^3/ha$**.
+
+---
+
+## 📅 Programación semanal (Sección 3)
+
+- Distribución diaria del riego neto.
+- Agregación por **semanas naturales ISO**.
+- Visualización mediante gráfico dinámico.
+- Exportación a Excel para uso operativo.
+
+---
+
+## 📊 Visualización y exportación
+
+- Gráficos comparativos:
+  - Precipitación efectiva
+  - Necesidades netas
+  - Asignación ajustada
+- Exportación profesional a **Excel (.xlsx)**:
+  - Balance mensual
+  - Programación semanal
+
+---
+
+## 🧾 Trazabilidad y transparencia
+
+El sistema mantiene un registro interno que indica:
+- Qué estación aportó cada variable.
+- Para qué mes.
+- Bajo qué condición (principal / apoyo).
+
+Esto permite **auditoría técnica** y validación externa (SIAR, estudios de riego, etc.).
+
+---
+
+## 💻 Stack tecnológico
+
+- **Datos climáticos:** AEMET OpenData (REST)
+- **Frontend:** HTML5 + Vanilla JavaScript (ES6)
+- **Visualización:** Chart.js, chartjs-plugin-datalabels
+- **Exportación:** SheetJS (XLSX)
+
+---
+
+## ⚙️ Configuración
+
+Para ejecutar el sistema es necesaria una **API Key válida de AEMET**:
+
+```js
 const API_KEY = "TU_AEMET_API_KEY";
+
+---
+
+## 🧠 Decisiones de diseño y limitaciones del modelo
+
+Este sistema ha sido diseñado con un enfoque **agrónomo-práctico**, priorizando la **robustez**, la **trazabilidad** y la **interpretabilidad** frente a soluciones “caja negra”. A continuación se explicitan las principales decisiones adoptadas y sus implicaciones.
+
+---
+
+### 🔹 Uso de climatología histórica (no predicción meteorológica)
+
+- El modelo **no realiza predicción meteorológica**.
+- Se basa en la **climatología histórica real** (≈36–39 meses AEMET) para construir un **mes climático típico**.
+- Esta aproximación es adecuada para:
+  - diseño de riego,
+  - planificación de dotaciones,
+  - estudios comparativos,
+  - escenarios de campaña futura.
+
+📌 No pretende sustituir a modelos de predicción diaria a corto plazo.
+
+---
+
+### 🔹 Proyección de ciclos futuros
+
+- El ciclo de cultivo (fechas introducidas por el usuario) puede pertenecer a **años futuros**.
+- La climatología histórica se **proyecta por mes natural** (marzo → marzo, etc.).
+- No se usan datos AEMET “del futuro” ni extrapolaciones temporales.
+
+Esta separación evita inconsistencias temporales y permite reproducibilidad.
+
+---
+
+### 🔹 Priorización por variable, no por estación única
+
+- No se fuerza una estación “perfecta”.
+- Cada variable climática (T, HR, viento, radiación) puede proceder de **estaciones distintas**, priorizando:
+  1. estación más cercana,
+  2. estaciones de apoyo por distancia.
+- Este enfoque reduce pérdidas de información por fallos parciales de estaciones.
+
+📌 La trazabilidad por mes y variable permite auditar esta decisión.
+
+---
+
+### 🔹 Tratamiento de precipitación
+
+- La **precipitación mensual ($P$)** se calcula **independientemente** del resto de variables.
+- No se descarta un mes por ausencia de HR, viento o temperatura.
+- La **Precipitación Efectiva ($P_e$)** se calcula a partir de $P$ mediante una formulación tipo USDA/SCS y se prorratea en meses parciales.
+
+Esto evita infraestimar sistemáticamente la lluvia en estaciones con fallos climáticos parciales.
+
+---
+
+### 🔹 Resolución temporal mensual
+
+- El cálculo se realiza a escala **mensual**, usando un **día representativo** para $ET_o$.
+- No se capturan extremos diarios (olas de calor, tormentas intensas).
+- La programación semanal es una **redistribución operativa**, no un cálculo climático independiente.
+
+📌 Este enfoque es coherente con estudios de riego y planificación de dotaciones.
+
+---
+
+### 🔹 Limitaciones conocidas
+
+- No incorpora:
+  - balance de suelo dinámico,
+  - capacidad de retención hídrica,
+  - estrés hídrico real del cultivo,
+  - coeficientes de eficiencia de aplicación.
+- No sustituye a:
+  - estaciones propias en parcela,
+  - sensores de humedad,
+  - modelos de riego en tiempo real.
+
+El sistema debe entenderse como una **herramienta de apoyo a la decisión**, no como un controlador automático de riego.
+
+---
+
+### 🔹 Validación externa
+
+- El modelo está pensado para ser **contrastado** con:
+  - SIAR,
+  - estudios locales,
+  - series históricas propias del usuario.
+- Las discrepancias deben interpretarse en términos de:
+  - escala temporal,
+  - representatividad espacial,
+  - hipótesis de diseño.
+
+---
+
+📌 **Filosofía general:**  
+> *Mejor un modelo claro, explicable y trazable que uno aparentemente preciso pero opaco.*
+
+---
+
