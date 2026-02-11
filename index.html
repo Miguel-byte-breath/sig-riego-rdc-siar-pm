@@ -1359,7 +1359,9 @@ console.log("DEBUG usageLog init", monthKeysCiclo.length, Object.keys(usageLogMe
         let sumaAsignada = 0, sumaP = 0, sumaPe = 0;
 
         mesesCiclo.forEach(m => {
-            const m3Asignado = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+            const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+            const m3RDC = m.rdc_m3 || 0;
+            const m3Asignado = m3Base + m3RDC;
             sumaAsignada += m3Asignado;
             sumaP += m.pMm; sumaPe += m.peMm;
             m.m3AsignadoFinal = m3Asignado;
