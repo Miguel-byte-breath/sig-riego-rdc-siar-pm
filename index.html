@@ -102,29 +102,7 @@
         <div id="panelResultados" style="display:none">
             <div class="chart-container"><canvas id="graficaDoble"></canvas></div>
             <button class="btn btn-blue" style="width:100%" onclick="descargarExcel()">📥 Exportar Tabla Detallada (.xlsx)</button>
-           <div id="panelRDC" style="display:none; margin: 30px 0 20px 0;">
-  <div style="font-weight:800; color:#0f172a; margin-bottom:10px;">
-    💧 2B. Ajuste RDC por mes
-  </div>
-
-  <div id="rdcContainer"></div>
-
-  <div style="display:flex; align-items:center; gap:10px; margin: 10px 0 12px 0;">
-    <input type="checkbox" id="chkRedistribTermica" />
-    <label for="chkRedistribTermica" style="font-weight:700; color:#334155;">
-      Redistribución térmica diaria (±10%)
-    </label>
-  </div>
-
-  <button class="btn btn-blue" style="width:100%" onclick="aplicarRDCMensual()">
-    Aplicar RDC (solo reasignación)
-  </button>
-
-  <div id="rdcNota" style="color:#64748b; font-size:0.95rem; margin-top:8px;">
-    RDC mensual = ajuste porcentual sobre NHn mensual. No recalcula AEMET/ETo.
-  </div>
-</div>
-            <table>
+             <table>
                 <thead>
                     <tr>
                         <th>Mes</th>
@@ -149,6 +127,28 @@
                     </tr>
                 </tfoot>
             </table>
+            <div id="panelRDC" style="display:none; margin: 30px 0 20px 0;">
+  <div style="font-weight:800; color:#0f172a; margin-bottom:10px;">
+    💧 2B. Ajuste RDC por mes
+  </div>
+
+  <div id="rdcContainer"></div>
+
+  <div style="display:flex; align-items:center; gap:10px; margin: 10px 0 12px 0;">
+    <input type="checkbox" id="chkRedistribTermica" />
+    <label for="chkRedistribTermica" style="font-weight:700; color:#334155;">
+      Redistribución térmica diaria (±10%)
+    </label>
+  </div>
+
+  <button class="btn btn-blue" style="width:100%" onclick="aplicarRDCMensual()">
+    Aplicar RDC (solo reasignación)
+  </button>
+
+  <div id="rdcNota" style="color:#64748b; font-size:0.95rem; margin-top:8px;">
+    RDC mensual = ajuste porcentual sobre NHn mensual. No recalcula AEMET/ETo.
+  </div>
+</div>
         </div>
     </div>
     
