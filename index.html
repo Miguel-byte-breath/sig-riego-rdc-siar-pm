@@ -1581,10 +1581,7 @@ function renderizarControlesRDC(mesesCiclo) {
 function aplicarRDCMensual() {
   generarPlanOro();
 }
-  // re-render del balance usando los rdc_m3 ya almacenados en mesesCiclo
-  generarPlanOro({ skipAemet: true });
-}
-
+  
 function descargarExcel() {
     const ws = XLSX.utils.json_to_sheet(exportDataMensual);
     const wb = XLSX.utils.book_new();
