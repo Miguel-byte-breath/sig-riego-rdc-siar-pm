@@ -1578,7 +1578,8 @@ function renderizarControlesRDC(mesesCiclo) {
 }
 
 function aplicarRDCMensual() {
-  alert("OK: controles RDC listos. Siguiente paso: aplicar RDC a 'Asignado' y totales.");
+  // re-render del balance usando los rdc_m3 ya almacenados en mesesCiclo
+  generarPlanOro({ skipAemet: true });
 }
 
 function descargarExcel() {
