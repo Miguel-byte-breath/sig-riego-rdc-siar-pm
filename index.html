@@ -1395,6 +1395,7 @@ console.log("DEBUG usageLog init", monthKeysCiclo.length, Object.keys(usageLogMe
         document.getElementById('totalAjustado').innerText = fmtNum(sumaAsignada);
         
         document.getElementById('panelResultados').style.display = "block";
+        document.getElementById('panelRDC').style.display = "block";
 
         if(miGrafica) miGrafica.destroy();
         miGrafica = new Chart(document.getElementById('graficaDoble').getContext('2d'), {
