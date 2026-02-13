@@ -125,6 +125,7 @@
                         <td id="totalPe" class="col-rain"></td>
                         <td id="totalIdeal" class="col-ideal"></td>
                         <td id="totalAjustado" class="col-ajustada"></td>
+                        <td class="col-ideal"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -1595,7 +1596,6 @@ function renderizarControlesRDC(mesesCiclo) {
       const i = parseInt(inp.dataset.idx, 10);
       let pct = parseFloat(inp.value);
 if (Number.isFinite(pct)) pct = Math.max(0, Math.min(100, pct));
- = parseFloat(inp.value);
       const base = Number(mesesCiclo[i].nhn_m3 || 0);
 
       mesesCiclo[i].rdc_pct = Number.isFinite(pct) ? pct : null;
