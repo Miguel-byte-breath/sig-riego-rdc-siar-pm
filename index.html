@@ -1650,18 +1650,18 @@ const pesos = dias.map(d => {
         options: {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: { top: 50 } }, // Evita que los números altos se corten
+    layout: { padding: { top: 70 } }, // Evita que los números altos se corten
     plugins: {
         legend: {
-    position: 'bottom'
+    position: 'top'
   },
         datalabels: {
   display: true,
   anchor: 'end',
-  align: 'end',   // 👈 en vez de 'top'
+  align: 'top',   //
   offset: 6,
-  clamp: true,    // 👈 evita que se meta en la leyenda
-  clip: true,     // 👈 recorta si intenta salirse
+  clamp: true,    // 
+  clip: false,     //
   font: { weight: 'bold', size: 10 },
   formatter: (val) => (val > 0 ? fmtNum(val) : '')
 }
