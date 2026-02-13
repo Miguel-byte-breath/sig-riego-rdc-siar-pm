@@ -1353,84 +1353,20 @@ renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual);
 window._monthKeysCiclo = monthKeysCiclo; // DEBUG temporal
 console.log("DEBUG usageLog init", monthKeysCiclo.length, Object.keys(usageLogMensual).length);        
         
-        // --- RENDERIZADO DE TABLA Y GRÁFICO ---
-        const cuerpo = document.getElementById('cuerpoTabla');
-        cuerpo.innerHTML = ""; exportDataMensual = [];
-        let labels = [], dataPe = [], dataIdeal = [], dataAjustada = [];
-        let sumaAsignada = 0, sumaP = 0, sumaPe = 0;
+    // Guardamos caché para poder repintar al aplicar RDC sin recalcular AEMET
+window._mesesCiclo = mesesCiclo;
+window._sumaNHn = sumaNHn;
+window._volV = volV;
+window._fIni = fIni;
+window._fFin = fFin;
 
-        mesesCiclo.forEach(m => {
-            const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
-            const m3RDC = m.rdc_m3 || 0;
-            const m3Asignado = m3Base + m3RDC;
-            sumaAsignada += m3Asignado;
-            sumaP += m.pMm; sumaPe += m.peMm;
-            m.m3AsignadoFinal = m3Asignado;
-            
-            labels.push(m.etiqueta);
-            dataPe.push(Math.round(m.peMm * 10));
-            dataIdeal.push(Math.round(m.nhn_m3));
-            dataAjustada.push(Math.round(m3Asignado));
-            
-            cuerpo.innerHTML += `<tr>
-                <td style="text-transform: capitalize; font-weight:600; color:#1e293b;">${m.etiqueta}</td>
-                <td>${fmtNum(m.diasActivos)}</td>
-                <td class="col-climate">${fmtNum(m.etoDiaria, 2)}</td>
-                <td class="col-climate">${fmtNum(m.kc, 2)}</td>
-                <td>${fmtNum(m.etcMm, 1)}</td>
-                <td class="col-rain">${fmtNum(m.pMm, 1)}</td>
-                <td class="col-rain" style="font-weight:bold">${fmtNum(m.peMm, 1)}</td>
-                <td class="col-ideal">${fmtNum(m.nhn_m3)}</td>
-                <td class="col-ajustada">${fmtNum(m3Asignado)}</td>
-            </tr>`;
-            
-            exportDataMensual.push({ 
-                "Mes": m.etiqueta, "ETc (mm)": fmtNum(m.etcMm, 2), "P. Efectiva (mm)": fmtNum(m.peMm, 2), 
-                "Nec. Neta (m3/ha)": Math.round(m.nhn_m3), "Asignado (m3/ha)": Math.round(m3Asignado) 
-            });
-        });
+// Render (tabla + gráfica + semanal) usando el estado actual
+renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin);
 
-        document.getElementById('totalP').innerText = fmtNum(sumaP, 1);
-        document.getElementById('totalPe').innerText = fmtNum(sumaPe, 1);
-        document.getElementById('totalIdeal').innerText = fmtNum(sumaNHn);
-        document.getElementById('totalAjustado').innerText = fmtNum(sumaAsignada);
-        
-        document.getElementById('panelResultados').style.display = "block";
-        renderizarControlesRDC(mesesCiclo);
-        const elRDC = document.getElementById('panelRDC');
+// Controles RDC: se generan SOLO tras el cálculo completo inicial
+renderizarControlesRDC(mesesCiclo);
+const elRDC = document.getElementById('panelRDC');
 if (elRDC) elRDC.style.display = "block";
-
-        if(miGrafica) miGrafica.destroy();
-        miGrafica = new Chart(document.getElementById('graficaDoble').getContext('2d'), {
-            type: 'bar',
-            data: { 
-                labels: labels, 
-                datasets: [
-                    { label: 'P. Efectiva (m³/ha)', data: dataPe, backgroundColor: '#38bdf8' },
-                    { label: 'Nec. Neta (m³/ha)', data: dataIdeal, backgroundColor: '#2563eb' },
-                    { label: 'Riego Asig. (m³/ha)', data: dataAjustada, backgroundColor: '#d97706' }
-                ] 
-            },
-      options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: { padding: { top: 30 } }, // Para que no se corten los números arriba
-    plugins: {
-        datalabels: {
-            anchor: 'end',
-            align: 'top',
-            font: { weight: 'bold', size: 11 },
-            formatter: (val) => val > 0 ? fmtNum(val) : '' // Usa tu función de formato
-        }
-    },
-    scales: {
-        y: { beginAtZero: true, grid: { display: false } },
-        x: { grid: { display: false } }
-    }
-}
-        });
-
-        calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 
     } catch (err) {
         alert("❌ Error al procesar el balance: " + err.message);
@@ -1438,6 +1374,97 @@ if (elRDC) elRDC.style.display = "block";
         btn.innerText = "✨ Calcular Balance Completo (Vía AEMET)";
         btn.disabled = false;
     }
+}
+function renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin) {
+  // --- RENDERIZADO DE TABLA Y GRÁFICO ---
+  const cuerpo = document.getElementById('cuerpoTabla');
+  cuerpo.innerHTML = "";
+  exportDataMensual = [];
+
+  let labels = [], dataPe = [], dataIdeal = [], dataAjustada = [];
+  let sumaAsignada = 0, sumaP = 0, sumaPe = 0;
+
+  mesesCiclo.forEach(m => {
+    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+    const m3RDC = m.rdc_m3 || 0;
+    const m3Asignado = m3Base + m3RDC;
+
+    sumaAsignada += m3Asignado;
+    sumaP += m.pMm;
+    sumaPe += m.peMm;
+
+    m.m3AsignadoFinal = m3Asignado;
+
+    labels.push(m.etiqueta);
+    dataPe.push(Math.round(m.peMm * 10));
+    dataIdeal.push(Math.round(m.nhn_m3));
+    dataAjustada.push(Math.round(m3Asignado));
+
+    cuerpo.innerHTML += `<tr>
+      <td style="text-transform: capitalize; font-weight:600; color:#1e293b;">${m.etiqueta}</td>
+      <td>${fmtNum(m.diasActivos)}</td>
+      <td class="col-climate">${fmtNum(m.etoDiaria, 2)}</td>
+      <td class="col-climate">${fmtNum(m.kc, 2)}</td>
+      <td>${fmtNum(m.etcMm, 1)}</td>
+      <td class="col-rain">${fmtNum(m.pMm, 1)}</td>
+      <td class="col-rain" style="font-weight:bold">${fmtNum(m.peMm, 1)}</td>
+      <td class="col-ideal">${fmtNum(m.nhn_m3)}</td>
+      <td class="col-ajustada">${fmtNum(m3Asignado)}</td>
+    </tr>`;
+
+    exportDataMensual.push({
+      "Mes": m.etiqueta,
+      "ETc (mm)": fmtNum(m.etcMm, 2),
+      "P. Efectiva (mm)": fmtNum(m.peMm, 2),
+      "Nec. Neta (m3/ha)": Math.round(m.nhn_m3),
+      "Asignado (m3/ha)": Math.round(m3Asignado)
+    });
+  });
+
+  document.getElementById('totalP').innerText = fmtNum(sumaP, 1);
+  document.getElementById('totalPe').innerText = fmtNum(sumaPe, 1);
+  document.getElementById('totalIdeal').innerText = fmtNum(sumaNHn);
+  document.getElementById('totalAjustado').innerText = fmtNum(sumaAsignada);
+
+  document.getElementById('panelResultados').style.display = "block";
+
+  // Mantener visible el panel RDC si existe (sin recrear inputs)
+  const elRDC = document.getElementById('panelRDC');
+  if (elRDC) elRDC.style.display = "block";
+
+  // Gráfica
+  if (miGrafica) miGrafica.destroy();
+  miGrafica = new Chart(document.getElementById('graficaDoble').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'P. Efectiva (m³/ha)', data: dataPe, backgroundColor: '#38bdf8' },
+        { label: 'Nec. Neta (m³/ha)', data: dataIdeal, backgroundColor: '#2563eb' },
+        { label: 'Riego Asig. (m³/ha)', data: dataAjustada, backgroundColor: '#d97706' }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 30 } },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { weight: 'bold', size: 11 },
+          formatter: (val) => val > 0 ? fmtNum(val) : ''
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { display: false } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // Recalcular semanal (depende de m.m3AsignadoFinal)
+  calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 }
 function calcularSemanasCorrelativas(mesesCiclo, fIni, fFin) {
     let mapaDiario = {};
@@ -1579,7 +1606,18 @@ function renderizarControlesRDC(mesesCiclo) {
 }
 
 function aplicarRDCMensual() {
-  generarPlanOro();
+  const mesesCiclo = window._mesesCiclo;
+  const sumaNHn = window._sumaNHn;
+  const volV = window._volV;
+  const fIni = window._fIni;
+  const fFin = window._fFin;
+
+  if (!Array.isArray(mesesCiclo) || sumaNHn == null || volV == null || !fIni || !fFin) {
+    alert("⚠️ No hay balance en memoria. Ejecuta primero 'Calcular Balance Completo'.");
+    return;
+  }
+
+  renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin);
 }
   
 function descargarExcel() {
