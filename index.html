@@ -1388,12 +1388,15 @@ function renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin) {
 
   mesesCiclo.forEach(m => {
     const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
-    const pct = Math.max(0, Math.min(100, Number(m.rdc_pct || 0)));
-    const delta = Number(m.nhn_m3 || 0) * (pct / 100);
-    const m3RdcAgro = (pct > 0) ? delta : Number(m3Asignado || 0);
-m.m3RdcAgro = m3RdcAgro; // guardamos para usarlo luego en la Sección 3
-    const m3RDC = m.rdc_m3 || 0;
-    const m3Asignado = m3Base + m3RDC;
+
+const m3RDC = m.rdc_m3 || 0;
+const m3Asignado = m3Base + m3RDC;
+
+const pct = Math.max(0, Math.min(100, Number(m.rdc_pct || 0)));
+const delta = Number(m.nhn_m3 || 0) * (pct / 100);
+const m3RdcAgro = (pct > 0) ? delta : Number(m3Asignado || 0);
+m.m3RdcAgro = m3RdcAgro; // para Sección 3
+
 
     sumaAsignada += m3Asignado;
     sumaP += m.pMm;
