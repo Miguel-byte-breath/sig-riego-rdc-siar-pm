@@ -11,52 +11,26 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: readme-pdf-main
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - run: mkdir -p docs/generados
+      - name: Instalar pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
 
-      - name: Convertir Markdown a PDF
-        uses: baileyjm02/markdown-to-pdf@v1
-        with:
-          input_path: README.md
-          output_dir: docs/generados
-
-      - name: Debug: listar generados y buscar PDFs
+      - name: Generar PDF
         run: |
-          echo "== docs/generados =="
-          ls -lah docs/generados || true
-          echo "== PDFs en el repo =="
-          find . -maxdepth 6 -type f -name "*.pdf" -print
+          mkdir -p docs/generados
+          pandoc README.md -o docs/generados/README.pdf
 
-      - name: Asegurar docs/generados/README.pdf
+      - name: Commit y push
         run: |
-          if [ ! -f docs/generados/README.pdf ]; then
-            PDF_FOUND="$(find . -maxdepth 6 -type f -name '*.pdf' | head -n 1)"
-            if [ -n "$PDF_FOUND" ]; then
-              echo "Moviendo $PDF_FOUND -> docs/generados/README.pdf"
-              mv "$PDF_FOUND" docs/generados/README.pdf
-            else
-              echo "No se encontró ningún PDF generado."
-              exit 1
-            fi
-          fi
-
-      - run: git config user.name "github-actions[bot]"
-      - run: git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: git add docs/generados/README.pdf
-      - run: git commit -m "docs: actualizar README.pdf" || exit 0
-
-      - name: Pull (rebase) y push
-        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/generados/README.pdf
+          git commit -m "docs: actualizar README.pdf" || exit 0
           git pull --rebase origin main
           git push origin HEAD:main
