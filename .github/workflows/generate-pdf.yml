@@ -2,9 +2,8 @@ name: Generar PDF desde README
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - "README.md"
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -15,34 +14,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del repositorio
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Crear carpeta generados
-        run: mkdir -p docs/generados
+      - run: mkdir -p docs/generados
 
-      - name: Convertir Markdown a PDF
-        uses: baileyjm02/markdown-to-pdf@v1
+      - uses: baileyjm02/markdown-to-pdf@v1
         with:
           input_path: README.md
-          output_dir: docs/generados/
-          build_html: false
-          build_pdf: true
+          output_dir: docs/generados
 
-      - name: Debug: buscar pdfs
-        run: |
-          echo "Contenido de docs/generados:"
-          ls -lah docs/generados || true
-          echo "Buscar PDFs en el workspace:"
-          find . -maxdepth 6 -type f -name "*.pdf" -print
-
-      - name: Commit y push
-        run: |
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-          git add docs/generados || true
-          git diff --cached --quiet && echo "No hay cambios" && exit 0
-          git commit -m "docs: actualizar PDF del README"
-          git push
+      - run: git config user.name "github-actions[bot]"
+      - run: git config user.email "github-actions[bot]@users.noreply.github.com"
+      - run: git add docs/generados
+      - run: git commit -m "Actualizar PDF" || exit 0
+      - run: git push
