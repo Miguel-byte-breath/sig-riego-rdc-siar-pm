@@ -116,7 +116,7 @@ Esto evita perder meses completos por fallo parcial de una variable.
 
 Se aplica la formulación estándar FAO-56:
 
-<img width="355" height="46" alt="image" src="https://github.com/user-attachments/assets/d15b4457-7f4e-45d4-bf91-95d4e128114a" />
+<img width="422" height="56" alt="image" src="https://github.com/user-attachments/assets/a834e7e8-8873-4aa0-8445-b0c17fab1b76" />
 
 
 Donde:
