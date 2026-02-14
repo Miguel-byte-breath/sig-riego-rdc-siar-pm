@@ -119,6 +119,7 @@ Se aplica la formulación estándar FAO-56:
 ## 📐 Ecuación FAO-56 Penman–Monteith
 
 ![Ecuación FAO-56 Penman-Monteith](docs/img/pm_fao56.svg)
+
 Fuente: Allen et al. (1998). FAO Irrigation and Drainage Paper No. 56.
 
 Donde:
