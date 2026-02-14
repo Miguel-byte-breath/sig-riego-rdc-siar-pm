@@ -1,283 +1,357 @@
-# 🌾 S.I.G. Riego Pro v1.0 (API Connect)
+Perfecto.
+A continuación tienes el **README completo reescrito en Markdown 100 % compatible con GitHub**, sin LaTeX, usando solo:
 
-**Sistema de Información Geográfica para la Gestión Integral de Recursos Hídricos**, orientado al diseño y planificación del riego agrícola mediante **climatología histórica real** y **cálculo agronómico riguroso**.
+* Subíndices HTML (`<sub>`)
+* Fórmulas en texto técnico plano
+* Tablas estándar
+* Sin notación que rompa el renderizado
 
-La aplicación automatiza el **balance hídrico mensual y semanal** conectando de forma directa, resiliente y trazable con los servicios de **AEMET OpenData**.
-
----
-
-## 🎯 Objetivo del sistema
-
-Proporcionar una **estimación robusta y reproducible** de las necesidades hídricas de un cultivo, incluso para **ciclos futuros**, combinando:
-
-- Climatología histórica real.
-- Evapotranspiración de referencia **FAO-56 Penman–Monteith**.
-- Reglas agronómicas explícitas y auditables.
-- Priorización inteligente de estaciones meteorológicas.
+Puedes **copiar y pegar directamente** en tu README.md sin problemas.
 
 ---
 
-## 📍 Selección y validación de estaciones (Sección 1)
+# 🌾 S.I.G. Riego Pro v1.1 (API Connect – RDC Edition)
 
-### 📏 Cálculo de distancias
-A partir de la latitud y longitud de la parcela, el sistema calcula la **distancia geográfica real (Haversine)** a todas las estaciones AEMET disponibles.
+**Sistema de Información Geográfica para la Gestión Integral de Recursos Hídricos**, orientado al diseño, planificación y evaluación estacional del riego agrícola mediante:
 
-- Se selecciona una **estación principal** (la más cercana).
-- Se identifican hasta **5 estaciones de apoyo**, ordenadas por distancia.
-- Las distancias se muestran redondeadas con fines informativos.
-
----
-
-### 🧪 Diagnóstico de cobertura de datos
-
-Para cada estación candidata se analiza la **cobertura real de datos mensuales** por variable climática:
-
-- Temperatura
-- Humedad relativa
-- Viento
-- Radiación (global / insolación)
-
-Ejemplo de lectura:
-
-Cobertura 39/39
-Significa:
-> La estación tiene datos válidos en **todos los meses disponibles** del histórico devuelto por AEMET  
-> (AEMET puede devolver 36, 37, 38 o 39 meses según disponibilidad real).
-
-📌 **No se fuerza nunca a “36 exactos”**: se usa el histórico efectivo real.
+* Climatología histórica oficial (AEMET OpenData)
+* Cálculo físico riguroso de ET<sub>o</sub> (FAO-56 Penman–Monteith)
+* Balance hídrico agronómico mensual
+* Redistribución operativa semanal con control hidráulico
+* Sistema resiliente de estaciones con fallback inteligente
 
 ---
 
-## 🛰️ Motor climático histórico (Sección 2)
+# 🎯 Objetivo del sistema
 
-### 📅 Ventana temporal
-El sistema trabaja con los **últimos 3 años naturales completos**, típicamente:
+Proporcionar una **estimación robusta, reproducible y auditable** de las necesidades hídricas de un cultivo para campañas presentes o futuras, basada en:
 
-- Año N-2
-- Año N-1
-- Año N (último completo disponible)
+* Series históricas reales (~36 meses efectivos AEMET)
+* Modelización física estandarizada FAO-56
+* Separación explícita entre:
 
-Resultado habitual: **36 a 39 meses reales**.
+  * Demanda evaporativa (capa física)
+  * Gobernanza hidráulica (capa operativa)
 
----
+El sistema está diseñado para defender técnicamente su uso en:
 
-### 🧩 Fallback inteligente por variable (no por estación)
-
-Cada variable climática se resuelve **mensualmente** siguiendo esta prioridad:
-
-1. **Estación principal** (más cercana).
-2. Hasta **5 estaciones de apoyo**, por orden de distancia.
-3. Se registra **qué estación aportó cada variable y cada mes** (trazabilidad).
-
-Esto evita descartar meses completos por el fallo de una sola variable.
+* Planificación estacional de dotaciones
+* Estudios comparativos
+* Evaluación de escenarios de campaña
+* Diseño de turnos de riego
 
 ---
 
-### 📐 Tratamiento de datos ausentes
-- Valores no numéricos o erróneos se descartan.
-- Las medias mensuales se calculan **dividiendo solo por registros válidos**.
-- El sistema **nunca inventa datos** ni detiene el cálculo por huecos parciales.
+# 📍 1. Selección y validación de estaciones
+
+## 📏 Cálculo de distancia real
+
+Se utiliza la fórmula de Haversine para calcular la distancia geodésica entre:
+
+* Coordenadas de parcela introducidas por el usuario
+* Todas las estaciones AEMET disponibles
+
+Se establece:
+
+* 🔵 Estación principal → la más cercana
+* 🟢 Hasta 5 estaciones de apoyo → ordenadas por distancia
 
 ---
 
-## 🌡️ Evapotranspiración de referencia — FAO-56
+## 🧪 Diagnóstico de cobertura por variable
 
-La **Evapotranspiración de referencia ($ET_o$)** se calcula mediante el método **FAO-56 Penman–Monteith**, usando un día representativo mensual.
+Para cada estación candidata se evalúa la cobertura histórica (~36 meses):
 
-Variables utilizadas:
-- Temperatura media, máxima y mínima
-- Humedad relativa media
-- Viento ajustado a 2 m ($u_2$)
-- Radiación solar ($R_s$)
-- Latitud y altitud de la estación principal
+* Temperatura (tm_mes o tm_max + tm_min)
+* Humedad relativa (hr)
+* Viento (w_med)
+* Radiación (glo / inso)
 
-📌 El método **no se modifica** ni se simplifica.
+La selección para el cálculo no descarta una estación completa, sino que trabaja:
 
----
-
-## 🌱 Balance hídrico agronómico
-
-### 🔹 Evapotranspiración del cultivo ($ET_c$)
-\[
-ET_c = ET_o \cdot K_c
-\]
-
-Donde $K_c$ depende del cultivo y del mes fenológico.
+> 🔎 Por variable y por mes.
 
 ---
 
-### 🔹 Precipitación mensual ($P$)
+# 🛰️ 2. Motor climático histórico (Fallback mensual por variable)
 
-- Se obtiene de **AEMET (p_mes)**.
-- Se calcula como **media mensual histórica** por mes natural.
-- Es **independiente** de la disponibilidad de otras variables climáticas.
+## 📅 Ventana temporal
 
----
+Se utilizan los últimos 3 años completos disponibles en AEMET:
 
-### 🔹 Precipitación Efectiva ($P_e$)
+* Año N-2
+* Año N-1
+* Año N (último completo)
 
-**Precipitación Efectiva ($P_e$):**  
-Se calcula mediante una formulación tipo **USDA / SCS**, aplicada a la precipitación mensual media y posteriormente prorrateada si el mes es parcial.
+Resultado típico: 36–39 meses efectivos.
 
-Ejemplo conceptual:
-- Mes completo → se usa $P_e$ mensual total.
-- Mes parcial → $P_e$ proporcional a los días activos.
+No se fuerzan meses inexistentes.
 
 ---
 
-### 🔹 Necesidades Hídricas Netas ($NH_n$)
+## 🔁 Fallback inteligente por variable (no por estación)
 
-\[
-NH_n = (ET_c - P_e) \cdot 10
-\]
+Para cada mes natural del ciclo:
 
-Resultado expresado en **$m^3/ha$**.
+| Variable    | Prioridad                  |
+| ----------- | -------------------------- |
+| Temperatura | Principal → hasta 5 apoyos |
+| HR          | Principal → hasta 5 apoyos |
+| Viento      | Principal → hasta 5 apoyos |
+| Radiación   | Principal → hasta 5 apoyos |
 
----
+El sistema:
 
-## 📅 Programación semanal (Sección 3)
+* Resuelve mensualmente
+* Registra estación usada
+* Mantiene trazabilidad completa
 
-- Distribución diaria del riego neto.
-- Agregación por **semanas naturales ISO**.
-- Visualización mediante gráfico dinámico.
-- Exportación a Excel para uso operativo.
-
----
-
-## 📊 Visualización y exportación
-
-- Gráficos comparativos:
-  - Precipitación efectiva
-  - Necesidades netas
-  - Asignación ajustada
-- Exportación profesional a **Excel (.xlsx)**:
-  - Balance mensual
-  - Programación semanal
+Esto evita perder meses completos por fallo parcial de una variable.
 
 ---
 
-## 🧾 Trazabilidad y transparencia
+# 🌡️ 3. Cálculo de Evapotranspiración de Referencia (ET<sub>o</sub>)
 
-El sistema mantiene un registro interno que indica:
-- Qué estación aportó cada variable.
-- Para qué mes.
-- Bajo qué condición (principal / apoyo).
+## 📐 Método: FAO-56 Penman–Monteith
 
-Esto permite **auditoría técnica** y validación externa (SIAR, estudios de riego, etc.).
+Se aplica la formulación estándar FAO-56:
+
+ETo =
+[0.408 Δ (Rn − G) + γ (900 / (T + 273)) u2 (es − ea)]
+-----------------------------------------------------
+
+Δ + γ (1 + 0.34 u2)
+
+Donde:
+
+* Δ = pendiente de la curva de presión de vapor
+* Rn = radiación neta
+* G = flujo de calor del suelo (≈ 0 en mensual)
+* γ = constante psicrométrica
+* u2 = velocidad del viento a 2 m
+* es − ea = déficit de presión de vapor
 
 ---
 
-## 💻 Stack tecnológico
+## 🔄 Ajuste del viento
 
-- **Datos climáticos:** AEMET OpenData (REST)
-- **Frontend:** HTML5 + Vanilla JavaScript (ES6)
-- **Visualización:** Chart.js, chartjs-plugin-datalabels
-- **Exportación:** SheetJS (XLSX)
+El viento AEMET (w_med) se convierte a u2 mediante la ecuación FAO-56:
+
+u2 = uz × 4.87 / ln(67.8 z − 5.42)
+
+Asumiendo altura estándar de medición ≈ 10 m.
 
 ---
 
-## ⚙️ Configuración
+## ☀ Radiación
 
-Para ejecutar el sistema es necesaria una **API Key válida de AEMET**:
+Prioridad de cálculo:
 
+1. Radiación global (glo) si está disponible
+2. Insolación (inso) mediante Angström-Prescott
+3. Fallback a estaciones de apoyo
 
+---
+
+## 📅 Día representativo mensual
+
+Se utiliza el día 15 del mes como día juliano representativo.
+
+* En mensual, el flujo de calor del suelo G ≈ 0.
+* Método estándar en estudios de riego estacionales.
+
+---
+
+# 🌱 4. Balance Hídrico Agronómico
+
+## 🔹 Evapotranspiración del cultivo
+
+ET<sub>c</sub> = ET<sub>o</sub> × K<sub>c</sub>
+
+---
+
+## 🔹 Precipitación efectiva (P<sub>e</sub>)
+
+Modelo tipo USDA/SCS:
+
+* Si P < 70 mm → 0.6 P − 10
+* Si P ≥ 70 mm → 0.8 P − 24
+* Nunca negativa
+* Prorrateada en meses parciales
+
+---
+
+## 🔹 Necesidades Hídricas Netas
+
+NH<sub>n</sub> = (ET<sub>c</sub> − P<sub>e</sub>) × 10
+
+Unidad: m³/ha
+
+---
+
+# 💧 5. Sistema RDC (Redistribución de Dotación por Cultivo)
+
+Nueva capa implementada en la versión actual.
+
+## 🎛 Ajuste mensual porcentual
+
+Para cada mes:
+
+* El usuario introduce %RDC (0–100)
+* Se calcula:
+
+RDC (m³/ha) = NH<sub>n</sub> × (RDC% / 100)
+
+El sistema distingue:
+
+* 🔵 Asignado proporcional por recursos disponibles
+* 🟢 Ajuste RDC mensual
+* 🔴 Total mensual resultante
+
+No recalcula AEMET ni ETo.
+
+---
+
+# 📅 6. Programación Semanal
+
+## 🔵 Capa física: ETo-weighted intra-mensual
+
+Dentro de cada mes:
+
+1. Se construye la lista de días activos.
+2. Se interpola ETo entre mes actual y siguiente:
+
+ETo_d = ETo_m + (ETo_m+1 − ETo_m) × t
+
+donde:
+
+t = (día − 1) / (días_mes − 1)
+
+3. Se reparte el volumen mensual proporcional a los pesos diarios.
+
+Resultado:
+
+* Curva suave
+* Continuidad estacional
+* Conservación exacta del total mensual
+
+---
+
+## 🟠 Capa hidráulica: clamp semanal ±10 %
+
+Una vez agregados días por semana natural:
+
+Para cada semana parcial dentro del mes:
+
+Uniforme = Volumen_mensual × (días_semana / días_mes)
+
+Mínimo = 0.9 × Uniforme
+Máximo = 1.1 × Uniforme
+
+Si el valor semanal generado excede esos límites:
+
+* Se ajusta al rango permitido
+* Se redistribuye el residuo
+* Se conserva el total mensual exacto
+
+---
+
+## 🔎 Semanas mixtas (entre dos meses)
+
+Si una semana contiene días de dos meses:
+
+* Cada mes aplica su propio clamp parcial
+* La semana final es suma de ambas partes
+* No se aplica un segundo clamp global
+
+---
+
+# 🧠 Fundamento científico del modelo
+
+El sistema separa explícitamente:
+
+| Capa         | Naturaleza | Justificación            |
+| ------------ | ---------- | ------------------------ |
+| ETo-weighted | Física     | Demanda evaporativa real |
+| Clamp ±10%   | Operativa  | Estabilidad hidráulica   |
+
+El ±10 %:
+
+* No altera ETo
+* No modifica física atmosférica
+* Actúa como amortiguador operativo
+
+---
+
+# 🧾 Trazabilidad completa
+
+El sistema registra por mes:
+
+* Estación usada por variable
+* Si fue principal o apoyo
+* Fuente exacta de radiación
+* Variables imprescindibles validadas
+
+Permite auditoría técnica y validación externa (SIAR u otros).
+
+---
+
+# 💻 Stack Tecnológico
+
+* Datos climáticos: AEMET OpenData (REST)
+* Frontend: HTML5 + ES6 Vanilla JavaScript
+* Visualización: Chart.js
+* Exportación: SheetJS (XLSX)
+* Arquitectura: Cliente puro (sin backend intermedio)
+
+---
+
+# 🔐 Configuración API Key
+
+En el código:
+
+```javascript
 const API_KEY = "TU_AEMET_API_KEY";
+```
+
+Requiere registro previo en AEMET OpenData.
 
 ---
 
-## 🧠 Decisiones de diseño y limitaciones del modelo
+# ⚖ Decisiones de diseño
 
-Este sistema ha sido diseñado con un enfoque **agrónomo-práctico**, priorizando la **robustez**, la **trazabilidad** y la **interpretabilidad** frente a soluciones “caja negra”. A continuación se explicitan las principales decisiones adoptadas y sus implicaciones.
-
----
-
-### 🔹 Uso de climatología histórica (no predicción meteorológica)
-
-- El modelo **no realiza predicción meteorológica**.
-- Se basa en la **climatología histórica real** (≈36–39 meses AEMET) para construir un **mes climático típico**.
-- Esta aproximación es adecuada para:
-  - diseño de riego,
-  - planificación de dotaciones,
-  - estudios comparativos,
-  - escenarios de campaña futura.
-
-📌 No pretende sustituir a modelos de predicción diaria a corto plazo.
+1. Uso de climatología histórica, no predicción meteorológica.
+2. Fallback por variable, no por estación única.
+3. Separación física (demanda) / hidráulica (operatividad).
+4. Resolución mensual coherente con planificación estacional.
+5. Conservación estricta del volumen mensual y total campaña.
 
 ---
 
-### 🔹 Proyección de ciclos futuros
+# 🚫 Limitaciones
 
-- El ciclo de cultivo (fechas introducidas por el usuario) puede pertenecer a **años futuros**.
-- La climatología histórica se **proyecta por mes natural** (marzo → marzo, etc.).
-- No se usan datos AEMET “del futuro” ni extrapolaciones temporales.
-
-Esta separación evita inconsistencias temporales y permite reproducibilidad.
-
----
-
-### 🔹 Priorización por variable, no por estación única
-
-- No se fuerza una estación “perfecta”.
-- Cada variable climática (T, HR, viento, radiación) puede proceder de **estaciones distintas**, priorizando:
-  1. estación más cercana,
-  2. estaciones de apoyo por distancia.
-- Este enfoque reduce pérdidas de información por fallos parciales de estaciones.
-
-📌 La trazabilidad por mes y variable permite auditar esta decisión.
+* No modela balance dinámico de suelo.
+* No incorpora eficiencia de aplicación.
+* No sustituye sensores de humedad.
+* No captura eventos extremos diarios.
+* No es un modelo de predicción meteorológica.
 
 ---
 
-### 🔹 Tratamiento de precipitación
+# 📚 Referencias técnicas
 
-- La **precipitación mensual ($P$)** se calcula **independientemente** del resto de variables.
-- No se descarta un mes por ausencia de HR, viento o temperatura.
-- La **Precipitación Efectiva ($P_e$)** se calcula a partir de $P$ mediante una formulación tipo USDA/SCS y se prorratea en meses parciales.
-
-Esto evita infraestimar sistemáticamente la lluvia en estaciones con fallos climáticos parciales.
+* Allen, R.G. et al. (1998). FAO Irrigation and Drainage Paper 56.
+* USDA Soil Conservation Service – Effective Rainfall.
+* Angström (1924), Prescott (1940).
 
 ---
 
-### 🔹 Resolución temporal mensual
+# 📌 Filosofía del sistema
 
-- El cálculo se realiza a escala **mensual**, usando un **día representativo** para $ET_o$.
-- No se capturan extremos diarios (olas de calor, tormentas intensas).
-- La programación semanal es una **redistribución operativa**, no un cálculo climático independiente.
-
-📌 Este enfoque es coherente con estudios de riego y planificación de dotaciones.
+Modelo físico sólido + capa hidráulica prudente.
+Transparencia y trazabilidad antes que complejidad opaca.
+Robustez agronómica para planificación estacional real.
 
 ---
-
-### 🔹 Limitaciones conocidas
-
-- No incorpora:
-  - balance de suelo dinámico,
-  - capacidad de retención hídrica,
-  - estrés hídrico real del cultivo,
-  - coeficientes de eficiencia de aplicación.
-- No sustituye a:
-  - estaciones propias en parcela,
-  - sensores de humedad,
-  - modelos de riego en tiempo real.
-
-El sistema debe entenderse como una **herramienta de apoyo a la decisión**, no como un controlador automático de riego.
-
----
-
-### 🔹 Validación externa
-
-- El modelo está pensado para ser **contrastado** con:
-  - SIAR,
-  - estudios locales,
-  - series históricas propias del usuario.
-- Las discrepancias deben interpretarse en términos de:
-  - escala temporal,
-  - representatividad espacial,
-  - hipótesis de diseño.
-
----
-
-📌 **Filosofía general:**  
-> *Mejor un modelo claro, explicable y trazable que uno aparentemente preciso pero opaco.*
-
----
-
+* Documento PDF formal para presentación institucional.
+* Anexo matemático detallado del modelo.
