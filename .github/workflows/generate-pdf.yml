@@ -1,10 +1,34 @@
-name: Test Workflow
+name: Generar PDF
 
 on:
+  push:
+    branches: [ main ]
+    paths: [ "README.md" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Funciona"
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Instalar herramientas
+        run: sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base
+
+      - name: Generar PDF en docs/generados
+        run: mkdir -p docs/generados && pandoc README.md -o docs/generados/README.pdf
+
+      - name: Verificar que existe el PDF
+        run: test -f docs/generados/README.pdf
+
+      - name: Commit
+        run: git config user.name "github-actions[bot]" && git config user.email "github-actions[bot]@users.noreply.github.com" && git add docs/generados/README.pdf && git commit -m "docs: actualizar README.pdf" || exit 0
+
+      - name: Push
+        run: git pull --rebase origin main && git push origin HEAD:main
