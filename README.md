@@ -353,5 +353,3 @@ Transparencia y trazabilidad antes que complejidad opaca.
 Robustez agronómica para planificación estacional real.
 
 ---
-* Documento PDF formal para presentación institucional.
-* Anexo matemático detallado del modelo.
