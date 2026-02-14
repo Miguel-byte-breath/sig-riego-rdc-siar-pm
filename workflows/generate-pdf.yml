@@ -2,25 +2,26 @@ name: Generar PDF desde README
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
     paths:
-      - 'README.md'
+      - "README.md"
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Paso 1: Checkout del repositorio
       - name: Checkout del repositorio
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # Paso 2: Crear carpeta de destino (por si no existe)
       - name: Crear carpeta generados
         run: mkdir -p docs/generados
 
-      # Paso 3: Convertir Markdown a PDF
       - name: Convertir Markdown a PDF
         uses: baileyjm02/markdown-to-pdf@v1
         with:
@@ -28,11 +29,16 @@ jobs:
           output_dir: docs/generados
           build_html: false
 
-      # Paso 4: Commit y push del PDF generado
+      - name: Ver qué se generó
+        run: |
+          ls -lah docs/generados
+          git status --porcelain
+
       - name: Commit y push del PDF
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add docs/generados/README.pdf
-          git commit -m "docs: actualizar README.pdf automáticamente" || exit 0
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add docs/generados/*.pdf
+          git diff --cached --quiet && echo "No hay cambios" && exit 0
+          git commit -m "docs: actualizar PDF del README"
           git push
