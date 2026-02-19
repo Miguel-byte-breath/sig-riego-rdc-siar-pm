@@ -150,6 +150,9 @@ fecha_fin = min(fin_teorico, hoy)            # evita pedir futuro a SiAR
 
     r = requests.get(url, params=params, timeout=30)
 
+    if r.status_code >= 400:
+    raise ValueError(f"SIAR {r.status_code}: {r.text}")
+
     if r.status_code in (401, 403):
         _siar_invalidate_token()
         token = _siar_obtener_token()
