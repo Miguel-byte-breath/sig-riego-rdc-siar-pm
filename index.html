@@ -810,9 +810,21 @@ async function encontrarMasCercana() {
     try {
         const responseEsts = await fetch(`${location.origin}/estaciones_siar.json`, { cache: "no-store" });
 if (!responseEsts.ok) throw new Error(`estaciones.json HTTP ${responseEsts.status}`);
-const ests = await responseEsts.json();
+const estsRaw = await responseEsts.json();
 
-        estacionesCercanas = ests.map(e => {
+// Soporta: [ ... ]  o  { estaciones: [ ... ] }  o  { data: [ ... ] }
+const ests = Array.isArray(estsRaw)
+  ? estsRaw
+  : (Array.isArray(estsRaw.estaciones) ? estsRaw.estaciones
+    : (Array.isArray(estsRaw.data) ? estsRaw.data
+      : (Array.isArray(estsRaw.items) ? estsRaw.items : null)));
+
+if (!ests) {
+  console.error("Formato estaciones_siar.json no reconocido:", estsRaw);
+  throw new Error("Formato estaciones_siar.json no reconocido (no es un array).");
+}
+
+estacionesCercanas = ests.map(e => {
     const latE = Number(e.lat);
     const lonE = Number(e.lon);
     const dKm = haversineKm(latU, lonU, latE, lonE);
