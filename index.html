@@ -840,8 +840,12 @@ const estsRaw = await responseEsts.json();
 const ests = Array.isArray(estsRaw)
   ? estsRaw
   : (Array.isArray(estsRaw.estaciones) ? estsRaw.estaciones
-    : (Array.isArray(estsRaw.data) ? estsRaw.data
-      : (Array.isArray(estsRaw.items) ? estsRaw.items : null)));
+    : (Array.isArray(estsRaw.Estaciones) ? estsRaw.Estaciones
+      : (Array.isArray(estsRaw.datos) ? estsRaw.datos
+        : (Array.isArray(estsRaw.Datos) ? estsRaw.Datos
+          : (Array.isArray(estsRaw.data) ? estsRaw.data
+            : (Array.isArray(estsRaw.items) ? estsRaw.items
+              : (estsRaw && typeof estsRaw === "object" ? Object.values(estsRaw).find(v => Array.isArray(v)) : null))))));
 
 if (!ests) {
   console.error("Formato estaciones_siar.json no reconocido:", estsRaw);
