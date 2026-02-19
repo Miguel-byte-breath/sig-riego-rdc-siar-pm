@@ -879,8 +879,10 @@ renderDiagnosticoSeccion1({
 });
         
 return principal;
+} catch (e) {
+    res.innerHTML = `❌ Error al conectar con el servicio de estaciones: ${e.message}`;
 }
-}
+}        
 // SECCIÓN 2: Cálculo con API AEMET (Bucle de Resiliencia)
 async function generarPlanOro(opts = {}) {
   const { skipAemet = false } = opts;
