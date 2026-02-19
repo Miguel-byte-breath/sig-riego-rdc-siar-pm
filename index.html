@@ -523,7 +523,11 @@ function siarToDec(coord) {
   const body = coord.slice(0, -1);
 
   const isLon = (hemi === "E" || hemi === "W");
-  const degLen = isLon ? 3 : 2;
+
+// SiAR usa longitudes tipo "004037000W" (= 00°40'37")
+// Cuando empieza por "00", usamos 2 dígitos de grados.
+  const degLen = (isLon && coord.startsWith("00")) ? 2 : (isLon ? 3 : 2);
+
 
   const deg = parseInt(body.slice(0, degLen), 10);
   const min = parseInt(body.slice(degLen, degLen + 2), 10);
