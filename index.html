@@ -808,20 +808,25 @@ async function encontrarMasCercana() {
     res.innerHTML = "⏳ Localizando y validando estación con datos...";
 
     try {
-        const responseEsts = await fetch(`${location.origin}/estaciones.json`, { cache: "no-store" });
+        const responseEsts = await fetch(`${location.origin}/estaciones_siar.json`, { cache: "no-store" });
 if (!responseEsts.ok) throw new Error(`estaciones.json HTTP ${responseEsts.status}`);
 const ests = await responseEsts.json();
 
         estacionesCercanas = ests.map(e => {
-    const latE = aemetToDec(e.latitud);
-    const lonE = aemetToDec(e.longitud);
+    const latE = Number(e.lat);
+    const lonE = Number(e.lon);
     const dKm = haversineKm(latU, lonU, latE, lonE);
     return { ...e, distanciaRealKm: dKm };
 }).sort((a, b) => a.distanciaRealKm - b.distanciaRealKm);
 // Poblar modelo interno (para siguientes pasos, no cambia la IU ni la estación validada actual)
 estacionesModelo.ranked = estacionesCercanas.map(e => {
-    const s = normalizarStationDesdeAemet(e);
-    return { ...s, dist_km: e.distanciaRealKm };
+    return {
+        id: (e.id ?? e.codigo ?? e.Codigo ?? e.Estacion ?? e.estacion),
+        lat: Number(e.lat),
+        lon: Number(e.lon),
+        meta: e,
+        dist_km: e.distanciaRealKm
+    };
 });
 
 // Candidata por cercanía (aún no sustituye tu estación validada actual)
@@ -863,32 +868,9 @@ estacionSeleccionadaMeta = principal.meta || principal;
 
 // ⬇️ AQUÍ MISMO PEGAS EL PASO 2.2 ⬇️
 
-// 2) Diagnóstico por variable con histórico (~36 meses)
-const anioFinFetch = new Date().getFullYear() - 1;
-const anioIniFetch = anioFinFetch - 2;
-
-const candidates = [principal, ...supports];
-
-const settled = await Promise.allSettled(
-  candidates.map(st =>
-    fetchAemetMensual(stationIdOf(st), anioIniFetch, anioFinFetch)
-  )
-);
-
-const candidatesDiag = candidates.map((st, idx) => {
-  const r = settled[idx];
-  const aemetJson = (r.status === "fulfilled") ? r.value : null;
-  const diag = diagnosticoCobertura36mPorVar(aemetJson);
-  return { st, dist_km: st.dist_km, diag };
-});
-
-const bestByVar = {
-  temp: pickBestStationForVar("temp", candidatesDiag),
-  rh:   pickBestStationForVar("rh", candidatesDiag),
-  wind: pickBestStationForVar("wind", candidatesDiag),
-  rad:  pickBestStationForVar("rad", candidatesDiag)
-};
-
+// 2) Diagnóstico (SiAR): no validamos variables meteo porque ET0 viene dada (EtPMon)
+const candidatesDiag = (supports || []).map(st => ({ st, dist_km: st.dist_km, diag: null }));
+const bestByVar = null; // no aplica en SiAR
 renderDiagnosticoSeccion1({
   principal,
   supports,
@@ -897,77 +879,6 @@ renderDiagnosticoSeccion1({
 });
         
 return principal;
-// Buscamos más allá de 5 si hace falta, hasta encontrar variables suficientes
-const limiteBusqueda = Math.min(25, estacionesCercanas.length);
-
-const cumpleVariablesPM = (datos) => {
-    if (!Array.isArray(datos) || !datos.length) return { ok: false };
-
-    let mesesOK = 0;
-
-    for (const r of datos) {
-        const tieneTemp = (r.tm_mes != null && r.tm_mes !== "") ||
-                          ((r.tm_max != null && r.tm_max !== "") && (r.tm_min != null && r.tm_min !== ""));
-        const tieneHR = (r.hr != null && r.hr !== "");
-        const tieneRad = (r.inso != null && r.inso !== "") || (r.glo != null && r.glo !== "");
-
-        if (tieneTemp && tieneHR && tieneRad) mesesOK++;
-    }
-
-    // Umbral: al menos 18 meses “útiles” dentro de los 36 (puedes subir a 24 si quieres)
-    const ok = mesesOK >= 18;
-
-    // Resumen de variables disponibles (para IU)
-    const tieneInso = datos.some(r => r.inso != null && r.inso !== "");
-    const tieneGlo  = datos.some(r => r.glo  != null && r.glo  !== "");
-    const tieneWmed = datos.some(r => r.w_med != null && r.w_med !== "");
-
-    return { ok, mesesOK, tieneInso, tieneGlo, tieneWmed };
-};
-
-for (let i = 0; i < limiteBusqueda; i++) {
-    const cand = estacionesCercanas[i];
-
-    const urlTest = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/${anioIniFetch}/aniofin/${anioFinFetch}/estacion/${cand.indicativo}?api_key=${API_KEY}`;
-
-    const resp = await fetch(urlTest);
-    const meta = await resp.json();
-
-    if (meta.estado === 200 && meta.datos) {
-        const respDatos = await fetch(meta.datos);
-        const datos = await respDatos.json();
-
-        const chk = cumpleVariablesPM(datos);
-        if (chk.ok) {
-            estacionValida = cand;
-            estacionSeleccionadaId = cand.indicativo;
-            estacionSeleccionadaMeta = cand;
-            estacionSeleccionadaVars = chk;
-            break;
-        }
-    }
-}
-
-        if (estacionValida) {
-            res.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:5px; width:100%;">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:1.4em">✅</span> 
-                        <span><b>Datos Validados:</b> ${estacionValida.nombre}</span>
-                    </div>
-                    <div style="font-size:0.85em; color:#16a34a; padding-left:32px; font-weight:600;">
-    📍 Distancia: ${fmtNum(estacionValida.distanciaRealKm, 1)} km | Estación lista para cálculos.<br>
-    👉 Ya puede proceder a la SECCIÓN 2 y pulsar "Calcular Balance".<br>
-    🧪 ETo FAO-56: Temp ✅ | HR ✅ | Rad ${estacionSeleccionadaVars?.tieneInso ? "inso ✅" : (estacionSeleccionadaVars?.tieneGlo ? "glo ✅" : "❌")} | Viento ${estacionSeleccionadaVars?.tieneWmed ? "w_med ✅" : "≈ fijo ✅"} | Meses válidos: ${estacionSeleccionadaVars?.mesesOK ?? "?"}/36
-</div>
-                </div>`;
-        } else {
-            res.innerHTML = "❌ No se encontraron estaciones con datos en el entorno cercano.";
-        }
-    } catch (e) {
-        res.innerHTML = `❌ Error al conectar con el servicio de estaciones: ${e.message}`;
-
-    }
 }
 
 // SECCIÓN 2: Cálculo con API AEMET (Bucle de Resiliencia)
