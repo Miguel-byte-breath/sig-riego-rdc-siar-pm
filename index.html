@@ -837,15 +837,23 @@ if (!responseEsts.ok) throw new Error(`estaciones.json HTTP ${responseEsts.statu
 const estsRaw = await responseEsts.json();
 
 // Soporta: [ ... ]  o  { estaciones: [ ... ] }  o  { data: [ ... ] }
-const ests = Array.isArray(estsRaw)
-  ? estsRaw
-  : (Array.isArray(estsRaw.estaciones) ? estsRaw.estaciones
-    : (Array.isArray(estsRaw.Estaciones) ? estsRaw.Estaciones
-      : (Array.isArray(estsRaw.datos) ? estsRaw.datos
-        : (Array.isArray(estsRaw.Datos) ? estsRaw.Datos
-          : (Array.isArray(estsRaw.data) ? estsRaw.data
-            : (Array.isArray(estsRaw.items) ? estsRaw.items
-              : (estsRaw && typeof estsRaw === "object" ? Object.values(estsRaw).find(v => Array.isArray(v)) : null))))));
+let ests = null;
+
+if (Array.isArray(estsRaw)) {
+  ests = estsRaw;
+} else if (estsRaw && typeof estsRaw === "object") {
+  for (const k in estsRaw) {
+    if (Array.isArray(estsRaw[k])) {
+      ests = estsRaw[k];
+      break;
+    }
+  }
+}
+
+if (!Array.isArray(ests)) {
+  console.error("Formato estaciones_siar.json no reconocido:", estsRaw);
+  throw new Error("Formato estaciones_siar.json no reconocido (no es un array).");
+}
 
 if (!ests) {
   console.error("Formato estaciones_siar.json no reconocido:", estsRaw);
