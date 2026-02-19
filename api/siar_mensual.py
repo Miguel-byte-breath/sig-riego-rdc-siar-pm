@@ -127,8 +127,14 @@ def nearest_station(lat, lon):
 
 
 def fetch_mensuales(codigo, anio_ref):
-    fecha_ini = f"{anio_ref - 2}-01-01"
-    fecha_fin = f"{anio_ref}-12-31"
+from datetime import date  # arriba en imports (si no lo tienes)
+
+fecha_ini = f"{anio_ref - 2}-01-01"
+
+hoy = date.today().isoformat()               # "YYYY-MM-DD"
+fin_teorico = f"{anio_ref}-12-31"
+fecha_fin = min(fin_teorico, hoy)            # evita pedir futuro a SiAR
+
 
     token = _siar_obtener_token()
 
