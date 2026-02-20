@@ -233,7 +233,7 @@ class handler(BaseHTTPRequestHandler):
             # ==========================================================
             # 2️⃣ Llamar a SIAR Mensual
             # ==========================================================
-                       r = requests.get(
+            r = requests.get(
                 "https://servicio.mapa.gob.es/siarapi/API/V1/Datos/Mensuales/ESTACION",
                 params={
                     "Id": station["Codigo"],
