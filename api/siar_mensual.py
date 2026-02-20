@@ -207,19 +207,88 @@ class handler(BaseHTTPRequestHandler):
             FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
             # --- END: ventana 36 meses ---
 
-            station = nearest_station(lat, lon)
-            token = get_siar_token()
+           station = nearest_station(lat, lon)
+token = get_siar_token()
 
-            _send_json(
-                self,
-                200,
-                {
-                    "ok": True,
-                    "estacion": station,
-                    "token_preview": token[:20] + "...",
-                    "rango": {"FechaInicial": FechaInicial, "FechaFinal": FechaFinal},
-                },
-            )
+# ==========================================================
+# 1️⃣ Calcular rango histórico correcto (3 años anteriores)
+# ==========================================================
+from calendar import monthrange
+
+cicloIni = payload["cicloIni"]
+cicloFin = payload["cicloFin"]
+
+year_base = int(cicloIni[0:4])
+mes_inicio = int(cicloIni[5:7])
+mes_fin = int(cicloFin[5:7])
+
+year_ini = year_base - 3
+year_fin = year_base - 1
+
+FechaInicial = f"{year_ini}-{mes_inicio:02d}-01"
+
+last_day = monthrange(year_fin, mes_fin)[1]
+FechaFinal = f"{year_fin}-{mes_fin:02d}-{last_day:02d}"
+
+# ==========================================================
+# 2️⃣ Llamar a SIAR Mensual (DatosCalculados = true)
+# ==========================================================
+r = requests.get(
+    f"{os.environ.get('SIAR_BASE_URL')}/API/V1/Datos/Mensuales/ESTACION",
+    params={
+        "Estacion": station["Codigo"],
+        "FechaInicial": FechaInicial,
+        "FechaFinal": FechaFinal,
+        "TipoDatos": "Mensuales",
+        "DatosCalculados": "true",
+        "token": token,
+    },
+    timeout=60,
+)
+r.raise_for_status()
+
+data = r.json().get("datos", [])
+
+# ==========================================================
+# 3️⃣ Agrupar y promediar EtPMon y PePMon por mes
+# ==========================================================
+eto_por_mes = {}
+pe_por_mes = {}
+conteo = {}
+
+for row in data:
+    mes = row["Mes"]
+    eto = row.get("EtPMon")
+    pe = row.get("PePMon")
+
+    if mes_inicio <= mes <= mes_fin:
+        eto_por_mes[mes] = eto_por_mes.get(mes, 0) + eto
+        pe_por_mes[mes] = pe_por_mes.get(mes, 0) + pe
+        conteo[mes] = conteo.get(mes, 0) + 1
+
+eto_climatologica = {
+    mes: round(eto_por_mes[mes] / conteo[mes], 3)
+    for mes in eto_por_mes
+}
+
+pe_climatologica = {
+    mes: round(pe_por_mes[mes] / conteo[mes], 3)
+    for mes in pe_por_mes
+}
+
+# ==========================================================
+# 4️⃣ Devolver exactamente lo que necesita el motor actual
+# ==========================================================
+_send_json(
+    self,
+    200,
+    {
+        "ok": True,
+        "estacion": station["Codigo"],
+        "etoMensual": eto_climatologica,
+        "peMensual": pe_climatologica,
+    },
+)
 
         except Exception as e:
             _send_json(self, 400, {"ok": False, "error": str(e)})
