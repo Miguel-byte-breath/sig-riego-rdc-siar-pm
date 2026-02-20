@@ -112,6 +112,8 @@ def nearest_station(lat, lon):
         raise ValueError("No se pudo determinar estación más cercana")
 
     return best
+
+
 # ==========================================================
 # Obtener token SIAR
 # ==========================================================
@@ -124,27 +126,32 @@ def get_siar_token():
         raise ValueError("Faltan variables de entorno SIAR")
 
     # 1️⃣ Cifrar NIF
-    r1 = requests.get(f"{base_url}/API/V1/Autenticacion/CifrarUsuario",
-                      params={"Usuario": nif})
+    r1 = requests.get(
+        f"{base_url}/API/V1/Autenticacion/CifrarUsuario",
+        params={"Usuario": nif},
+        timeout=30,
+    )
     r1.raise_for_status()
-    nif_cifrado = r1.text.strip().replace('"', '')
+    nif_cifrado = r1.text.strip().replace('"', "")
 
     # 2️⃣ Cifrar Password
-    r2 = requests.get(f"{base_url}/API/V1/Autenticacion/CifrarPassword",
-                      params={"Password": password})
+    r2 = requests.get(
+        f"{base_url}/API/V1/Autenticacion/CifrarPassword",
+        params={"Password": password},
+        timeout=30,
+    )
     r2.raise_for_status()
-    password_cifrado = r2.text.strip().replace('"', '')
+    password_cifrado = r2.text.strip().replace('"', "")
 
     # 3️⃣ Obtener token
-    r3 = requests.get(f"{base_url}/API/V1/Autenticacion/ObtenerToken",
-                      params={
-                          "Usuario": nif_cifrado,
-                          "Password": password_cifrado
-                      })
+    r3 = requests.get(
+        f"{base_url}/API/V1/Autenticacion/ObtenerToken",
+        params={"Usuario": nif_cifrado, "Password": password_cifrado},
+        timeout=30,
+    )
     r3.raise_for_status()
 
     token = r3.text.strip()
-
     return token
 
 
@@ -152,27 +159,26 @@ def get_siar_token():
 # Handler Vercel
 # ==========================================================
 class handler(BaseHTTPRequestHandler):
-
     def do_GET(self):
-        _send_json(self, 200, {
-            "ok": True,
-            "route": "GET /api/siar_mensual",
-            "mode": "BASE"
-        })
+        _send_json(
+            self,
+            200,
+            {"ok": True, "route": "GET /api/siar_mensual", "mode": "BASE"},
+        )
 
     def do_POST(self):
-    try:
-        length = int(self.headers.get("Content-Length", "0"))
-        raw = self.rfile.read(length)
-
-        # Normalizar entrada JSON
         try:
-            payload = json.loads(raw.decode("utf-8"))
-        except Exception:
-            payload = json.loads(raw)
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length)
 
-        lat = float(payload["lat"])
-        lon = float(payload["lon"])
+            # Normalizar entrada JSON
+            try:
+                payload = json.loads(raw.decode("utf-8"))
+            except Exception:
+                payload = json.loads(raw)
+
+            lat = float(payload["lat"])
+            lon = float(payload["lon"])
 
             # --- BEGIN: ventana 36 meses (3 años completos cerrados) ---
             def _parse_fini(fini_str):
@@ -181,10 +187,13 @@ class handler(BaseHTTPRequestHandler):
                     return date.today()
                 s = str(fini_str).strip()
                 if len(s) == 7 and s[4] == "-":  # YYYY-MM
-                    y = int(s[0:4]); m = int(s[5:7])
+                    y = int(s[0:4])
+                    m = int(s[5:7])
                     return date(y, m, 1)
                 # YYYY-MM-DD
-                y = int(s[0:4]); m = int(s[5:7]); d = int(s[8:10])
+                y = int(s[0:4])
+                m = int(s[5:7])
+                d = int(s[8:10])
                 return date(y, m, d)
 
             def _add_months(d, months):
@@ -197,8 +206,12 @@ class handler(BaseHTTPRequestHandler):
             ref = _parse_fini(fIni)
 
             first_of_ref_month = date(ref.year, ref.month, 1)
-            fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)  # último día mes anterior
-            fecha_inicial_date = _add_months(first_of_ref_month, -36)  # primer día 36 meses atrás
+            # último día del mes anterior
+            fecha_final_date = first_of_ref_month.fromordinal(
+                first_of_ref_month.toordinal() - 1
+            )
+            # primer día 36 meses atrás
+            fecha_inicial_date = _add_months(first_of_ref_month, -36)
 
             FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
             FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
@@ -207,16 +220,16 @@ class handler(BaseHTTPRequestHandler):
             station = nearest_station(lat, lon)
             token = get_siar_token()
 
-
-            _send_json(self, 200, {
-                "ok": True,
-                "estacion": station,
-                "token_preview": token[:20] + "..."
-            })
-
+            _send_json(
+                self,
+                200,
+                {
+                    "ok": True,
+                    "estacion": station,
+                    "token_preview": token[:20] + "...",
+                    "rango": {"FechaInicial": FechaInicial, "FechaFinal": FechaFinal},
+                },
+            )
 
         except Exception as e:
-            _send_json(self, 400, {
-                "ok": False,
-                "error": str(e)
-            })
+            _send_json(self, 400, {"ok": False, "error": str(e)})
