@@ -91,4 +91,9 @@ class handler(BaseHTTPRequestHandler):
             est = nearest_station(lat, lon)
 
             _send_json(self, 200, {"ok": True, "route": "POST /api/siar_mensual", "estacion": est})
-        except Exception as e:
+            
+           except Exception as e:
+            _send_json(self, 400, {
+                "ok": False,
+                "error": str(e)
+            })
