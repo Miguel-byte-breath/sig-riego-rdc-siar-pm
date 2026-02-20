@@ -79,7 +79,7 @@ class handler(BaseHTTPRequestHandler):
         _send_json(self, 200, {"ok": True, "route": "GET /api/siar_mensual", "mode": "BASE"})
         return
 
-    def do_POST(self):
+      def do_POST(self):
         try:
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length) if length > 0 else b"{}"
@@ -90,10 +90,15 @@ class handler(BaseHTTPRequestHandler):
 
             est = nearest_station(lat, lon)
 
-            _send_json(self, 200, {"ok": True, "route": "POST /api/siar_mensual", "estacion": est})
-            
-           except Exception as e:
+            _send_json(self, 200, {
+                "ok": True,
+                "route": "POST /api/siar_mensual",
+                "estacion": est
+            })
+
+        except Exception as e:
             _send_json(self, 400, {
                 "ok": False,
                 "error": str(e)
             })
+
