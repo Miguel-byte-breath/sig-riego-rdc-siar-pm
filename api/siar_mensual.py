@@ -35,8 +35,8 @@ def siar_to_dec(coord, is_lon):
         deg_len = 2
 
     deg = int(digits[0:deg_len])
-    mins = int(digits[deg_len:deg_len + 2])
-    secs = float(digits[deg_len + 2:]) / 1000.0
+    mins = int(digits[deg_len : deg_len + 2])
+    secs = float(digits[deg_len + 2 :]) / 1000.0
 
     dec = deg + (mins / 60.0) + (secs / 3600.0)
 
@@ -75,7 +75,6 @@ def load_estaciones():
         data = json.load(f)
 
     arr = data.get("datos", data)
-
     if not isinstance(arr, list):
         raise ValueError("Formato estaciones_siar.json inválido")
 
@@ -104,7 +103,6 @@ def nearest_station(lat, lon):
                     "lat": lat_e,
                     "lon": lon_e,
                 }
-
         except Exception:
             continue
 
@@ -125,7 +123,7 @@ def get_siar_token():
     if not base_url or not nif or not password:
         raise ValueError("Faltan variables de entorno SIAR")
 
-    # 1️⃣ Cifrar NIF
+    # NOTA: mantengo tus endpoints actuales. Si luego vemos 401/404, los alineamos con cifrarCadena/obtenerToken.
     r1 = requests.get(
         f"{base_url}/API/V1/Autenticacion/CifrarUsuario",
         params={"Usuario": nif},
@@ -134,7 +132,6 @@ def get_siar_token():
     r1.raise_for_status()
     nif_cifrado = r1.text.strip().replace('"', "")
 
-    # 2️⃣ Cifrar Password
     r2 = requests.get(
         f"{base_url}/API/V1/Autenticacion/CifrarPassword",
         params={"Password": password},
@@ -143,7 +140,6 @@ def get_siar_token():
     r2.raise_for_status()
     password_cifrado = r2.text.strip().replace('"', "")
 
-    # 3️⃣ Obtener token
     r3 = requests.get(
         f"{base_url}/API/V1/Autenticacion/ObtenerToken",
         params={"Usuario": nif_cifrado, "Password": password_cifrado},
@@ -151,8 +147,7 @@ def get_siar_token():
     )
     r3.raise_for_status()
 
-    token = r3.text.strip()
-    return token
+    return r3.text.strip()
 
 
 # ==========================================================
@@ -167,22 +162,20 @@ class handler(BaseHTTPRequestHandler):
         )
 
     def do_POST(self):
-            try:
+        try:
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length)
 
-            # Normalizar entrada JSON (robusto)
+            # Normalizar entrada JSON (robusto: BOM + espacios)
             text = raw.decode("utf-8", "replace")
-            text = text.lstrip("\ufeff").strip()   # quita BOM si viene
+            text = text.lstrip("\ufeff").strip()
             payload = json.loads(text)
 
             lat = float(payload["lat"])
             lon = float(payload["lon"])
 
-
             # --- BEGIN: ventana 36 meses (3 años completos cerrados) ---
             def _parse_fini(fini_str):
-                # Acepta "YYYY-MM-DD" o "YYYY-MM". Si no viene, usa hoy.
                 if not fini_str:
                     return date.today()
                 s = str(fini_str).strip()
@@ -190,27 +183,21 @@ class handler(BaseHTTPRequestHandler):
                     y = int(s[0:4])
                     m = int(s[5:7])
                     return date(y, m, 1)
-                # YYYY-MM-DD
                 y = int(s[0:4])
                 m = int(s[5:7])
                 d = int(s[8:10])
                 return date(y, m, d)
 
             def _add_months(d, months):
-                # suma/resta meses sin dependencias externas
                 y = d.year + (d.month - 1 + months) // 12
                 m = (d.month - 1 + months) % 12 + 1
                 return date(y, m, 1)
 
-            fIni = payload.get("fIni")  # opcional
+            fIni = payload.get("fIni")
             ref = _parse_fini(fIni)
 
             first_of_ref_month = date(ref.year, ref.month, 1)
-            # último día del mes anterior
-            fecha_final_date = first_of_ref_month.fromordinal(
-                first_of_ref_month.toordinal() - 1
-            )
-            # primer día 36 meses atrás
+            fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)
             fecha_inicial_date = _add_months(first_of_ref_month, -36)
 
             FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
