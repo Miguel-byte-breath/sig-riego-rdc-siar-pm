@@ -123,31 +123,34 @@ def get_siar_token():
     if not base_url or not nif or not password:
         raise ValueError("Faltan variables de entorno SIAR")
 
-    # NOTA: mantengo tus endpoints actuales. Si luego vemos 401/404, los alineamos con cifrarCadena/obtenerToken.
+    # 1️⃣ Cifrar NIF
     r1 = requests.get(
-        f"{base_url}/API/V1/Autenticacion/CifrarUsuario",
-        params={"Usuario": nif},
+        f"{base_url}/API/V1/Autenticacion/cifrarCadena",
+        params={"cadena": nif},
         timeout=30,
     )
     r1.raise_for_status()
     nif_cifrado = r1.text.strip().replace('"', "")
 
+    # 2️⃣ Cifrar password
     r2 = requests.get(
-        f"{base_url}/API/V1/Autenticacion/CifrarPassword",
-        params={"Password": password},
+        f"{base_url}/API/V1/Autenticacion/cifrarCadena",
+        params={"cadena": password},
         timeout=30,
     )
     r2.raise_for_status()
     password_cifrado = r2.text.strip().replace('"', "")
 
+    # 3️⃣ Obtener token
     r3 = requests.get(
-        f"{base_url}/API/V1/Autenticacion/ObtenerToken",
+        f"{base_url}/API/V1/Autenticacion/obtenerToken",
         params={"Usuario": nif_cifrado, "Password": password_cifrado},
         timeout=30,
     )
     r3.raise_for_status()
 
-    return r3.text.strip()
+    return r3.text.strip().replace('"', "")
+
 
 
 # ==========================================================
