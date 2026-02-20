@@ -167,18 +167,18 @@ class handler(BaseHTTPRequestHandler):
         )
 
     def do_POST(self):
-        try:
+            try:
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length)
 
-            # Normalizar entrada JSON
-            try:
-                payload = json.loads(raw.decode("utf-8"))
-            except Exception:
-                payload = json.loads(raw)
+            # Normalizar entrada JSON (robusto)
+            text = raw.decode("utf-8", "replace")
+            text = text.lstrip("\ufeff").strip()   # quita BOM si viene
+            payload = json.loads(text)
 
             lat = float(payload["lat"])
             lon = float(payload["lon"])
+
 
             # --- BEGIN: ventana 36 meses (3 años completos cerrados) ---
             def _parse_fini(fini_str):
