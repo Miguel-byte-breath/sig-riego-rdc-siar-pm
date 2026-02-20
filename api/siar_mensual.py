@@ -112,6 +112,40 @@ def nearest_station(lat, lon):
         raise ValueError("No se pudo determinar estación más cercana")
 
     return best
+# ==========================================================
+# Obtener token SIAR
+# ==========================================================
+def get_siar_token():
+    base_url = os.environ.get("SIAR_BASE_URL")
+    nif = os.environ.get("SIAR_NIF")
+    password = os.environ.get("SIAR_PASSWORD")
+
+    if not base_url or not nif or not password:
+        raise ValueError("Faltan variables de entorno SIAR")
+
+    # 1️⃣ Cifrar NIF
+    r1 = requests.get(f"{base_url}/API/V1/Autenticacion/CifrarUsuario",
+                      params={"Usuario": nif})
+    r1.raise_for_status()
+    nif_cifrado = r1.text.strip().replace('"', '')
+
+    # 2️⃣ Cifrar Password
+    r2 = requests.get(f"{base_url}/API/V1/Autenticacion/CifrarPassword",
+                      params={"Password": password})
+    r2.raise_for_status()
+    password_cifrado = r2.text.strip().replace('"', '')
+
+    # 3️⃣ Obtener token
+    r3 = requests.get(f"{base_url}/API/V1/Autenticacion/ObtenerToken",
+                      params={
+                          "Usuario": nif_cifrado,
+                          "Password": password_cifrado
+                      })
+    r3.raise_for_status()
+
+    token = r3.text.strip()
+
+    return token
 
 
 # ==========================================================
@@ -136,12 +170,14 @@ class handler(BaseHTTPRequestHandler):
             lon = float(payload["lon"])
 
             station = nearest_station(lat, lon)
+            token = get_siar_token()
 
-            _send_json(self, 200, {
-                "ok": True,
-                "route": "POST /api/siar_mensual",
-                "estacion": station
-            })
+
+           _send_json(self, 200, {
+           "ok": True,
+           "estacion": station,
+           "token_preview": token[:20] + "..."
+          })
 
         except Exception as e:
             _send_json(self, 400, {
