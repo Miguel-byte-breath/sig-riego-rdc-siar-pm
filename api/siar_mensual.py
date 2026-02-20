@@ -207,7 +207,7 @@ class handler(BaseHTTPRequestHandler):
             FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
             # --- END: ventana 36 meses ---
 
-                       station = nearest_station(lat, lon)
+            station = nearest_station(lat, lon)
             token = get_siar_token()
 
             # ==========================================================
