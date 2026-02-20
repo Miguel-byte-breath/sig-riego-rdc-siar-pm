@@ -233,15 +233,14 @@ class handler(BaseHTTPRequestHandler):
             # ==========================================================
             # 2️⃣ Llamar a SIAR Mensual
             # ==========================================================
-            r = requests.get(
-                f"{os.environ.get('SIAR_BASE_URL')}/API/V1/Datos/Mensuales/ESTACION",
+                       r = requests.get(
+                "https://servicio.mapa.gob.es/siarapi/API/V1/Datos/Mensuales/ESTACION",
                 params={
-                    "Estacion": station["Codigo"],
+                    "Id": station["Codigo"],
+                    "token": token,
                     "FechaInicial": FechaInicial,
                     "FechaFinal": FechaFinal,
-                    "TipoDatos": "Mensuales",
                     "DatosCalculados": "true",
-                    "token": token,
                 },
                 timeout=60,
             )
