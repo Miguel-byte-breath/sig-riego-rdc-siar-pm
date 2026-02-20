@@ -173,11 +173,12 @@ class handler(BaseHTTPRequestHandler):
             token = get_siar_token()
 
 
-           _send_json(self, 200, {
-           "ok": True,
-           "estacion": station,
-           "token_preview": token[:20] + "..."
-          })
+            _send_json(self, 200, {
+                "ok": True,
+                "estacion": station,
+                "token_preview": token[:20] + "..."
+            })
+
 
         except Exception as e:
             _send_json(self, 400, {
