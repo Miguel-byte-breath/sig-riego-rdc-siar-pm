@@ -168,6 +168,35 @@ class handler(BaseHTTPRequestHandler):
 
             lat = float(payload["lat"])
             lon = float(payload["lon"])
+            # --- BEGIN: ventana 36 meses (3 años completos cerrados) ---
+            def _parse_fini(fini_str):
+                # Acepta "YYYY-MM-DD" o "YYYY-MM". Si no viene, usa hoy.
+                if not fini_str:
+                    return date.today()
+                s = str(fini_str).strip()
+                if len(s) == 7 and s[4] == "-":  # YYYY-MM
+                    y = int(s[0:4]); m = int(s[5:7])
+                    return date(y, m, 1)
+                # YYYY-MM-DD
+                y = int(s[0:4]); m = int(s[5:7]); d = int(s[8:10])
+                return date(y, m, d)
+
+            def _add_months(d, months):
+                # suma/resta meses sin dependencias externas
+                y = d.year + (d.month - 1 + months) // 12
+                m = (d.month - 1 + months) % 12 + 1
+                return date(y, m, 1)
+
+            fIni = payload.get("fIni")  # opcional
+            ref = _parse_fini(fIni)
+
+            first_of_ref_month = date(ref.year, ref.month, 1)
+            fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)  # último día mes anterior
+            fecha_inicial_date = _add_months(first_of_ref_month, -36)  # primer día 36 meses atrás
+
+            FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
+            FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
+            # --- END: ventana 36 meses ---
 
             station = nearest_station(lat, lon)
             token = get_siar_token()
