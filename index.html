@@ -936,6 +936,9 @@ async function generarPlanOro(opts = {}) {
         
         const response = await fetch(urlAemet);
         const metadata = await response.json();
+        if (!metadata || !metadata.datos) {
+  throw new Error(`AEMET metadata sin 'datos' (HTTP ${response.status}): ` + JSON.stringify(metadata));
+}
         const dataResponse = await fetch(metadata.datos);
         const aemet = await dataResponse.json(); 
 console.log("ESTACIÓN:", estacionSeleccionadaId, estacionSeleccionadaMeta);
