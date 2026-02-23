@@ -1359,11 +1359,13 @@ if (peMensualSIAR[mesNum]) {
             iter.setMonth(iter.getMonth() + 1);
         }
         
-const v = validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual);
-if (!v.ok) {
-    mostrarErrorVariablesImprescindibles(v.faltan);
-    return;
-        }
+if (!skipAemet) {
+    const v = validarVariablesImprescindiblesPorCiclo(fIni, fFin, usageLogMensual);
+    if (!v.ok) {
+        mostrarErrorVariablesImprescindibles(v.faltan);
+        return;
+    }
+}
 renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual);
 // Inicializar trazabilidad mensual (no afecta al cálculo todavía)
 // usageLogMensual = initUsageLog(monthKeysCiclo);
