@@ -933,7 +933,12 @@ async function generarPlanOro(opts = {}) {
         const anioIni = anioFin - 2;
 
         const urlAemet = `https://opendata.aemet.es/opendata/api/valores/climatologicos/mensualesanuales/datos/anioini/${anioIni}/aniofin/${anioFin}/estacion/${estacionSeleccionadaId}?api_key=${API_KEY}`;
-        
+        let aemet = [];
+        const mediasPorEstacion = {};
+        const supportStations = (estacionesModelo.support || []).slice(0, 5);
+        const supportIds = supportStations.map(s => s.id);
+
+        if (!skipAemet) {        
         const response = await fetch(urlAemet);
         const metadata = await response.json();
         if (!metadata || !metadata.datos) {
@@ -976,7 +981,7 @@ for (const st of supportStations) {
         console.warn("Radiación no disponible para estación support", st.id, e);
     }
 }
-
+    }
         // --- LÓGICA AGRONÓMICA ORIGINAL ---
         const cultivo = cultivosData[document.getElementById('selectCultivo').value];
         const fIni = new Date(document.getElementById('cicloIni').value);
