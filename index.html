@@ -97,7 +97,7 @@
             <div><label class="input-label">Recursos (m³/ha)</label><input type="number" id="volDisponible" value="4000" class="main-input"></div>
         </div>
 
-        <button class="btn btn-gold" onclick="generarPlanOro()">✨ Calcular Balance Completo (Vía SiAR)</button>
+        <button class="btn btn-gold" onclick="generarPlanOro({ skipAemet: true })">✨ Calcular Balance Completo (Vía SiAR)</button>
 
         <div id="panelResultados" style="display:none">
             <div class="chart-container"><canvas id="graficaDoble"></canvas></div>
