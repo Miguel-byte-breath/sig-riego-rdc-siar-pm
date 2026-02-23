@@ -984,21 +984,47 @@ for (const st of supportStations) {
 const lat = parseFloat(document.getElementById("lat").value);
 const lon = parseFloat(document.getElementById("lon").value);
 
-const respSiar = await fetch("/api/siar_mensual.py", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    lat,
-    lon,
-    cicloIni: document.getElementById("cicloIni").value,
-    cicloFin: document.getElementById("cicloFin").value
-  })
-});
+const payload = {
+  lat,
+  lon,
+  cicloIni: document.getElementById("cicloIni").value,
+  cicloFin: document.getElementById("cicloFin").value
+};
 
-const dataSiar = await respSiar.json();
+// Probamos ambas rutas (según cómo Vercel mapee la función)
+const candidates = ["/api/siar_mensual.py", "/api/siar_mensual"];
 
-if (!dataSiar.ok) {
-  throw new Error("SIAR error: " + dataSiar.error);
+let respSiar = null;
+let lastText = "";
+
+for (const url of candidates) {
+  respSiar = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  lastText = await respSiar.text();
+
+  // Si no es 404, ya es “la buena” (aunque sea error 500, queremos verlo)
+  if (respSiar.status !== 404) break;
+}
+
+let dataSiar;
+try {
+  dataSiar = JSON.parse(lastText);
+} catch {
+  throw new Error(
+    `SIAR no devuelve JSON (HTTP ${respSiar?.status}). ` +
+    `Respuesta (inicio): ${String(lastText).slice(0, 120)}`
+  );
+}
+
+if (!respSiar.ok || !dataSiar.ok) {
+  throw new Error(
+    `SIAR error (HTTP ${respSiar.status}): ` +
+    (dataSiar?.error || String(lastText).slice(0, 200))
+  );
 }
 
 const etoMensualSIAR = dataSiar.etoMensual;
