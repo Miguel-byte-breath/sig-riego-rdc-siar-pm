@@ -429,6 +429,8 @@ function renderDiagnosticoSeccion1({ principal, supports, candidatesDiag, bestBy
       </div>
     </div>
   `;
+    const legacy = document.getElementById("diagAemetTabla");
+if (legacy) legacy.style.display = "none";
 }
     
 function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, cicloFin }) {
@@ -530,8 +532,9 @@ function renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual) {
         </tr>
     `).join("");
 
-    cont.style.display = "block";
-    cont.innerHTML = `
+   cont.style.display = "block";
+cont.innerHTML = `
+    <div id="diagAemetTabla">
         <div style="margin:8px 0 6px; font-weight:800;">🧾 Resumen de estaciones usadas (por mes / variable)</div>
         <div style="overflow:auto; border:1px solid #e5e7eb; border-radius:10px;">
             <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
@@ -547,7 +550,8 @@ function renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual) {
                 <tbody>${rows}</tbody>
             </table>
         </div>
-    `;
+    </div>
+`;
 }
 
 // Carga inicial de cultivos
