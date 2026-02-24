@@ -431,6 +431,78 @@ function renderDiagnosticoSeccion1({ principal, supports, candidatesDiag, bestBy
   `;
 }
     
+function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, cicloFin }) {
+  const res = document.getElementById("resBusqueda");
+  if (!res) return;
+
+  const fmt = (x, dec = 1) => (x == null ? "—" : Number(x).toFixed(dec).replace(".", ","));
+  const pid = stationIdOf(principal);
+  const pname = stationNameOf(principal);
+
+  const supportsHtml = (supports || []).map((s, i) => {
+    const id = stationIdOf(s);
+    const name = stationNameOf(s);
+    const dist = fmt(s.dist_km);
+    return `<div>• Apoyo #${i + 1}: <b>${name}</b> (<code>${id}</code>) — ${dist} km</div>`;
+  }).join("");
+
+  const eto = siar?.etoMensual || {};
+  const pe  = siar?.peMensual  || {};
+
+  // Ordenar meses (claves pueden venir como "3" o 3)
+  const meses = Array.from(new Set([
+    ...Object.keys(eto).map(k => parseInt(k, 10)),
+    ...Object.keys(pe).map(k => parseInt(k, 10))
+  ])).filter(m => m >= 1 && m <= 12).sort((a,b) => a-b);
+
+  const filas = meses.map(m => `
+    <tr>
+      <td style="text-transform:capitalize; font-weight:700;">${nombresMesesCortos[m-1]}</td>
+      <td style="text-align:right;">${fmt(eto[m], 3)}</td>
+      <td style="text-align:right;">${fmt(pe[m], 3)}</td>
+    </tr>
+  `).join("");
+
+  res.innerHTML = `
+    <div style="background:#eef7ff;border-radius:14px;padding:16px;border:1px solid #d7ecff">
+      <div style="font-size:1.1rem;">
+        ✅ <b>Principal (más cercana):</b> ${pname} (<code>${pid}</code>) — ${fmt(principal.dist_km)} km
+      </div>
+
+      <div style="margin-top:10px;">
+        <div style="font-weight:700;margin-bottom:6px;">Estaciones de apoyo (por distancia)</div>
+        ${supportsHtml || "<div>—</div>"}
+      </div>
+
+      <div style="margin-top:12px;">
+        <div style="font-weight:700;margin-bottom:6px;">Diagnóstico por variable (SIAR)</div>
+        <div>• ETo: <b>EtPMon</b> (mensual climatológico)</div>
+        <div>• Pe: <b>PePMon</b> (mensual climatológico)</div>
+
+        <div style="margin-top:10px; font-weight:700;">Resumen mensual (mm/mes) — ciclo ${cicloIni} → ${cicloFin}</div>
+        <div style="overflow:auto; border:1px solid #e5e7eb; border-radius:10px; background:#fff; margin-top:6px;">
+          <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
+            <thead>
+              <tr style="background:#f8fafc;">
+                <th style="text-align:left; padding:8px; border-bottom:1px solid #e5e7eb;">Mes</th>
+                <th style="text-align:right; padding:8px; border-bottom:1px solid #e5e7eb;">ETo (EtPMon)</th>
+                <th style="text-align:right; padding:8px; border-bottom:1px solid #e5e7eb;">Pe (PePMon)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filas || `<tr><td colspan="3" style="padding:8px;">—</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:8px; font-size:0.9rem; opacity:0.85;">
+          Nota: el cálculo real (Sección 2) usa directamente EtPMon (ETo) y PePMon (Pe) desde SIAR.
+        </div>
+      </div>
+    </div>
+  `;
+}
+    
 function renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual) {
     const cont = document.getElementById("resTrazabilidad") || document.getElementById("resultados");
     if (!cont) return;
@@ -901,16 +973,41 @@ estacionSeleccionadaMeta = principal.meta || principal;
 
 // ⬇️ AQUÍ MISMO PEGAS EL PASO 2.2 ⬇️
 
-// 2) Diagnóstico (SiAR): no validamos variables meteo porque ET0 viene dada (EtPMon)
-const candidatesDiag = (supports || []).map(st => ({ st, dist_km: st.dist_km, diag: null }));
-const bestByVar = null; // no aplica en SiAR
-renderDiagnosticoSeccion1({
+// 2) Diagnóstico (SiAR): traer climatología mensual (EtPMon / PePMon) y pintarla
+const cicloIni = document.getElementById("cicloIni").value;
+const cicloFin = document.getElementById("cicloFin").value;
+
+const payload = {
+  lat: parseFloat(document.getElementById("lat").value),
+  lon: parseFloat(document.getElementById("lon").value),
+  cicloIni,
+  cicloFin
+};
+
+let resp = await fetch("/api/siar_mensual.py", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+});
+
+const txt = await resp.text();
+let siar;
+try { siar = JSON.parse(txt); }
+catch {
+  throw new Error(`SIAR no devuelve JSON (HTTP ${resp.status}). Resp: ${String(txt).slice(0,120)}`);
+}
+if (!resp.ok || !siar.ok) {
+  throw new Error(`SIAR error (HTTP ${resp.status}): ${siar?.error || String(txt).slice(0,200)}`);
+}
+
+renderDiagnosticoSeccion1_SIAR({
   principal,
   supports,
-  candidatesDiag,
-  bestByVar
+  siar,
+  cicloIni,
+  cicloFin
 });
-        
+
 return principal;
 } catch (e) {
     res.innerHTML = `❌ Error al conectar con el servicio de estaciones: ${e.message}`;
