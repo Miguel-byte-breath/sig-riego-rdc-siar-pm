@@ -177,38 +177,65 @@ class handler(BaseHTTPRequestHandler):
             lat = float(payload["lat"])
             lon = float(payload["lon"])
 
-            # --- BEGIN: ventana 36 meses (3 años completos cerrados) ---
-            def _parse_fini(fini_str):
-                if not fini_str:
-                    return date.today()
-                s = str(fini_str).strip()
-                if len(s) == 7 and s[4] == "-":  # YYYY-MM
-                    y = int(s[0:4])
-                    m = int(s[5:7])
-                    return date(y, m, 1)
-                y = int(s[0:4])
-                m = int(s[5:7])
-                d = int(s[8:10])
-                return date(y, m, d)
+           from datetime import date
+from calendar import monthrange
 
-            def _add_months(d, months):
-                y = d.year + (d.month - 1 + months) // 12
-                m = (d.month - 1 + months) % 12 + 1
-                return date(y, m, 1)
+def build_range_from_fIni(payload):
+    """
+    Ventana 36 meses (3 años completos cerrados) basada en fIni.
+    fIni admite 'YYYY-MM' o 'YYYY-MM-DD'. Si no viene, usa hoy.
+    Devuelve (FechaInicial, FechaFinal) en 'YYYY-MM-DD'.
+    """
+    def _parse_fini(fini_str):
+        if not fini_str:
+            return date.today()
+        s = str(fini_str).strip()
+        if len(s) == 7 and s[4] == "-":  # YYYY-MM
+            y = int(s[0:4])
+            m = int(s[5:7])
+            return date(y, m, 1)
+        y = int(s[0:4])
+        m = int(s[5:7])
+        d = int(s[8:10])
+        return date(y, m, d)
 
-            fIni = payload.get("fIni")
-            ref = _parse_fini(fIni)
+    def _add_months(d, months):
+        y = d.year + (d.month - 1 + months) // 12
+        m = (d.month - 1 + months) % 12 + 1
+        return date(y, m, 1)
 
-            first_of_ref_month = date(ref.year, ref.month, 1)
-            fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)
-            fecha_inicial_date = _add_months(first_of_ref_month, -36)
+    fIni = payload.get("fIni")
+    ref = _parse_fini(fIni)
 
-            FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
-            FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
-            # --- END: ventana 36 meses ---
+    first_of_ref_month = date(ref.year, ref.month, 1)
+    fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)  # último día del mes anterior
+    fecha_inicial_date = _add_months(first_of_ref_month, -36)  # 36 meses antes (primer día de mes)
 
-            station = nearest_station(lat, lon)
-            token = get_siar_token()
+    FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
+    FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
+    return FechaInicial, FechaFinal
+
+
+def build_range_from_ciclo(payload):
+    """
+    Rango histórico: 3 años anteriores (cerrados) en los meses del ciclo.
+    Devuelve (FechaInicial, FechaFinal, mes_inicio, mes_fin).
+    """
+    cicloIni = payload["cicloIni"]
+    cicloFin = payload["cicloFin"]
+
+    year_base = int(cicloIni[0:4])
+    mes_inicio = int(cicloIni[5:7])
+    mes_fin = int(cicloFin[5:7])
+
+    year_ini = year_base - 3
+    year_fin = year_base - 1
+
+    FechaInicial = f"{year_ini}-{mes_inicio:02d}-01"
+    last_day = monthrange(year_fin, mes_fin)[1]
+    FechaFinal = f"{year_fin}-{mes_fin:02d}-{last_day:02d}"
+
+    return FechaInicial, FechaFinal, mes_inicio, mes_fin
 
             # ==========================================================
             # 1️⃣ Calcular rango histórico correcto (3 años anteriores)
