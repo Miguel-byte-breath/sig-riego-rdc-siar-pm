@@ -354,7 +354,7 @@ class handler(BaseHTTPRequestHandler):
             lon = float(payload["lon"])
 
             # Estación más cercana (por ahora: una sola; fallback vendrá después)
-            station = nearest_station(lat, lon)
+            candidatas = nearest_stations(lat, lon, n=6)
 
             # Token SIAR
             token = get_siar_token()
@@ -370,80 +370,75 @@ class handler(BaseHTTPRequestHandler):
                 FechaInicial, FechaFinal = build_range_from_fIni(payload)
                 mes_inicio, mes_fin = 1, 12
 
+             # ==========================================================
+            # Fallback SIAR Mensual (pack completo ETo+Pe)
             # ==========================================================
-            # Llamar a SIAR Mensual
-            # ==========================================================
-            r = requests.get(
-                f"{base_url_data}/API/V1/Datos/Mensuales/ESTACION",
-                params={
-                    "Id": station["Codigo"],
-                    "token": token,
-                    "FechaInicial": FechaInicial,
-                    "FechaFinal": FechaFinal,
-                    "DatosCalculados": "true",
-                },
-                timeout=60,
-            )
-            r.raise_for_status()
+            estaciones_probadas = []
+            pack_ok = False
+            eto_climatologica = {}
+            pe_climatologica = {}
+            estacion_usada = None
+            fallback_index = None
 
-            data = r.json().get("datos", [])
-            if not isinstance(data, list):
-                data = []
+            for idx, st in enumerate(candidatas):
+                code = st["Codigo"]
 
-            # ==========================================================
-            # Agrupar y promediar por mes (climatológica en la ventana)
-            # ==========================================================
-            eto_por_mes = {}
-            pe_por_mes = {}
-            conteo = {}
+                estaciones_probadas.append(
+                    {
+                        "idx": idx,
+                        "Codigo": code,
+                        "Estacion": st.get("Estacion"),
+                        "dist_km": round(st.get("dist_km", 0.0), 3),
+                        "fallbackNote": _fallback_note(idx),
+                    }
+                )
 
-            for row in data:
-                try:
-                    mes = int(row.get("Mes"))
-                except Exception:
-                    continue
+                ok, eto_tmp, pe_tmp, info = fetch_pack_for_station(
+                    base_url_data=base_url_data,
+                    token=token,
+                    station_code=code,
+                    FechaInicial=FechaInicial,
+                    FechaFinal=FechaFinal,
+                    mes_inicio=mes_inicio,
+                    mes_fin=mes_fin,
+                )
 
-                if not (mes_inicio <= mes <= mes_fin):
-                    continue
+                estaciones_probadas[-1]["result"] = "ok" if ok else "fail"
+                estaciones_probadas[-1]["info"] = info
 
-                eto = row.get("EtPMon")
-                pe = row.get("PePMon")
+                if ok:
+                    pack_ok = True
+                    eto_climatologica = eto_tmp
+                    pe_climatologica = pe_tmp
+                    estacion_usada = code
+                    fallback_index = idx
+                    break
 
-                # Convertir de forma robusta (puede venir None / string)
-                try:
-                    eto_v = float(eto) if eto is not None and str(eto).strip() != "" else None
-                except Exception:
-                    eto_v = None
-                try:
-                    pe_v = float(pe) if pe is not None and str(pe).strip() != "" else None
-                except Exception:
-                    pe_v = None
-
-                # si falta alguno, no contamos esa fila
-                if eto_v is None or pe_v is None:
-                    continue
-
-                eto_por_mes[mes] = eto_por_mes.get(mes, 0.0) + eto_v
-                pe_por_mes[mes] = pe_por_mes.get(mes, 0.0) + pe_v
-                conteo[mes] = conteo.get(mes, 0) + 1
-
-            eto_climatologica = {
-                mes: round(eto_por_mes[mes] / conteo[mes], 3)
-                for mes in eto_por_mes
-                if conteo.get(mes, 0) > 0
-            }
-            pe_climatologica = {
-                mes: round(pe_por_mes[mes] / conteo[mes], 3)
-                for mes in pe_por_mes
-                if conteo.get(mes, 0) > 0
-            }
+            if not pack_ok:
+                _send_json(
+                    self,
+                    200,
+                    {
+                        "ok": False,
+                        "error": "No se pudo obtener un pack completo (EtPMon + PePMon) en ninguna estación (principal + 5 apoyos).",
+                        "estacionesProbadas": estaciones_probadas,
+                        "FechaInicial": FechaInicial,
+                        "FechaFinal": FechaFinal,
+                        "mode": "BALANCE" if has_ciclo else "DIAGNOSTICO",
+                    },
+                )
+                return
 
             _send_json(
                 self,
                 200,
                 {
                     "ok": True,
-                    "estacion": station["Codigo"],
+                    "estacion": estacion_usada,          # compat con frontend
+                    "estacionUsada": estacion_usada,
+                    "fallbackIndex": fallback_index,
+                    "fallbackNote": _fallback_note(fallback_index),
+                    "estacionesProbadas": estaciones_probadas,
                     "etoMensual": eto_climatologica,
                     "peMensual": pe_climatologica,
                     "FechaInicial": FechaInicial,
