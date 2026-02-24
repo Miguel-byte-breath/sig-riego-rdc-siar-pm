@@ -1289,14 +1289,18 @@ usageLogMensual[monthKey].rad_value = (Rs != null && !Number.isNaN(Rs)) ? Rs : n
 usageLogMensual[monthKey].rad_station = radSource ? radSource.stationId : null; // opcional, solo debug
 
 
-    if (Rs > 0 && temps && RHmean != null && u2 != null) {
+    if (!skipAemet) {
+  if (Rs > 0 && temps && RHmean != null && u2 != null) {
     const { Tmean, Tmax, Tmin } = temps;
     etoDiaria = etoPM_Fao56_MeanDaily({
-        Tmean, Tmax, Tmin, RHmean, u2, Rs, z, latDeg, J
+      Tmean, Tmax, Tmin, RHmean, u2, Rs, z, latDeg, J
     });
-} else {
-    etoDiaria = 0; // sin variables o sin radiación no calculamos
+  } else {
+    etoDiaria = 0; // en modo AEMET+PM, si faltan variables => 0
+  }
 }
+// en modo SIAR (skipAemet=true) NO tocamos etoDiaria aquí:
+// se queda con la ETo SIAR que ya calculaste arriba.
 
     // DEBUG (solo JULIO) -> dentro del if para que existan Ra, N, Rs
     if (mIdx === 6) {
