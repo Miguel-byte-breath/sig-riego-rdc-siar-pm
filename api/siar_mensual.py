@@ -243,7 +243,20 @@ def build_range_from_ciclo(payload):
 
     return FechaInicial, FechaFinal, mes_inicio, mes_fin
 
+# ==========================================================
+# Fallback helpers
+# ==========================================================
+def _fallback_note(idx: int) -> str:
+    return "principal" if idx == 0 else f"apoyo #{idx}"
 
+
+def _is_valid_pack(eto_mensual: dict, pe_mensual: dict) -> bool:
+    return (
+        isinstance(eto_mensual, dict)
+        and isinstance(pe_mensual, dict)
+        and len(eto_mensual) > 0
+        and len(pe_mensual) > 0
+    )
 # ==========================================================
 # Handler Vercel
 # ==========================================================
