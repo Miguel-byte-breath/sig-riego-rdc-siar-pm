@@ -4,6 +4,7 @@ import math
 import os
 import requests
 from datetime import date
+from calendar import monthrange
 
 
 # ==========================================================
@@ -39,7 +40,6 @@ def siar_to_dec(coord, is_lon):
     secs = float(digits[deg_len + 2 :]) / 1000.0
 
     dec = deg + (mins / 60.0) + (secs / 3600.0)
-
     if hemi in ("W", "S"):
         dec = -dec
 
@@ -60,7 +60,6 @@ def haversine_km(lat1, lon1, lat2, lon2):
         math.sin(dphi / 2) ** 2
         + math.cos(p1) * math.cos(p2) * math.sin(dlambda / 2) ** 2
     )
-
     return 2 * R * math.asin(math.sqrt(a))
 
 
@@ -92,7 +91,6 @@ def nearest_station(lat, lon):
         try:
             lat_e = siar_to_dec(e.get("Latitud"), False)
             lon_e = siar_to_dec(e.get("Longitud"), True)
-
             dist = haversine_km(lat, lon, lat_e, lon_e)
 
             if best is None or dist < best["dist_km"]:
@@ -152,34 +150,9 @@ def get_siar_token():
     return r3.text.strip().replace('"', "")
 
 
-
 # ==========================================================
-# Handler Vercel
+# Rangos temporales
 # ==========================================================
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        _send_json(
-            self,
-            200,
-            {"ok": True, "route": "GET /api/siar_mensual", "mode": "BASE"},
-        )
-
-    def do_POST(self):
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-            raw = self.rfile.read(length)
-
-            # Normalizar entrada JSON (robusto: BOM + espacios)
-            text = raw.decode("utf-8", "replace")
-            text = text.lstrip("\ufeff").strip()
-            payload = json.loads(text)
-
-            lat = float(payload["lat"])
-            lon = float(payload["lon"])
-
-           from datetime import date
-from calendar import monthrange
-
 def build_range_from_fIni(payload):
     """
     Ventana 36 meses (3 años completos cerrados) basada en fIni.
@@ -208,12 +181,15 @@ def build_range_from_fIni(payload):
     ref = _parse_fini(fIni)
 
     first_of_ref_month = date(ref.year, ref.month, 1)
-    fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)  # último día del mes anterior
-    fecha_inicial_date = _add_months(first_of_ref_month, -36)  # 36 meses antes (primer día de mes)
+    # Fin = último día del mes anterior al mes de referencia
+    fecha_final_date = first_of_ref_month.fromordinal(first_of_ref_month.toordinal() - 1)
+    # Inicio = 36 meses antes (primer día de mes)
+    fecha_inicial_date = _add_months(first_of_ref_month, -36)
 
-    FechaInicial = fecha_inicial_date.strftime("%Y-%m-%d")
-    FechaFinal = fecha_final_date.strftime("%Y-%m-%d")
-    return FechaInicial, FechaFinal
+    return (
+        fecha_inicial_date.strftime("%Y-%m-%d"),
+        fecha_final_date.strftime("%Y-%m-%d"),
+    )
 
 
 def build_range_from_ciclo(payload):
@@ -237,31 +213,49 @@ def build_range_from_ciclo(payload):
 
     return FechaInicial, FechaFinal, mes_inicio, mes_fin
 
+
+# ==========================================================
+# Handler Vercel
+# ==========================================================
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        _send_json(self, 200, {"ok": True, "route": "GET /api/siar_mensual.py", "mode": "BASE"})
+
+    def do_POST(self):
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length)
+
+            # Normalizar entrada JSON (robusto: BOM + espacios)
+            text = raw.decode("utf-8", "replace")
+            text = text.lstrip("\ufeff").strip()
+            payload = json.loads(text)
+
+            lat = float(payload["lat"])
+            lon = float(payload["lon"])
+
+            # Estación más cercana (por ahora: una sola; fallback vendrá después)
+            station = nearest_station(lat, lon)
+
+            # Token SIAR
+            token = get_siar_token()
+
+            # Base URL para datos: usa SIAR_BASE_URL si existe, si no el dominio estándar
+            base_url_data = os.environ.get("SIAR_BASE_URL") or "https://servicio.mapa.gob.es/siarapi"
+
+            # Elegir modo: BALANCE (ciclo) o DIAGNÓSTICO (fIni)
+            has_ciclo = ("cicloIni" in payload) and ("cicloFin" in payload)
+            if has_ciclo:
+                FechaInicial, FechaFinal, mes_inicio, mes_fin = build_range_from_ciclo(payload)
+            else:
+                FechaInicial, FechaFinal = build_range_from_fIni(payload)
+                mes_inicio, mes_fin = 1, 12
+
             # ==========================================================
-            # 1️⃣ Calcular rango histórico correcto (3 años anteriores)
-            # ==========================================================
-            from calendar import monthrange
-
-            cicloIni = payload["cicloIni"]
-            cicloFin = payload["cicloFin"]
-
-            year_base = int(cicloIni[0:4])
-            mes_inicio = int(cicloIni[5:7])
-            mes_fin = int(cicloFin[5:7])
-
-            year_ini = year_base - 3
-            year_fin = year_base - 1
-
-            FechaInicial = f"{year_ini}-{mes_inicio:02d}-01"
-
-            last_day = monthrange(year_fin, mes_fin)[1]
-            FechaFinal = f"{year_fin}-{mes_fin:02d}-{last_day:02d}"
-
-            # ==========================================================
-            # 2️⃣ Llamar a SIAR Mensual
+            # Llamar a SIAR Mensual
             # ==========================================================
             r = requests.get(
-                "https://servicio.mapa.gob.es/siarapi/API/V1/Datos/Mensuales/ESTACION",
+                f"{base_url_data}/API/V1/Datos/Mensuales/ESTACION",
                 params={
                     "Id": station["Codigo"],
                     "token": token,
@@ -274,37 +268,57 @@ def build_range_from_ciclo(payload):
             r.raise_for_status()
 
             data = r.json().get("datos", [])
+            if not isinstance(data, list):
+                data = []
 
             # ==========================================================
-            # 3️⃣ Agrupar y promediar
+            # Agrupar y promediar por mes (climatológica en la ventana)
             # ==========================================================
             eto_por_mes = {}
             pe_por_mes = {}
             conteo = {}
 
             for row in data:
-                mes = row["Mes"]
+                try:
+                    mes = int(row.get("Mes"))
+                except Exception:
+                    continue
+
+                if not (mes_inicio <= mes <= mes_fin):
+                    continue
+
                 eto = row.get("EtPMon")
                 pe = row.get("PePMon")
 
-                if mes_inicio <= mes <= mes_fin:
-                    eto_por_mes[mes] = eto_por_mes.get(mes, 0) + eto
-                    pe_por_mes[mes] = pe_por_mes.get(mes, 0) + pe
-                    conteo[mes] = conteo.get(mes, 0) + 1
+                # Convertir de forma robusta (puede venir None / string)
+                try:
+                    eto_v = float(eto) if eto is not None and str(eto).strip() != "" else None
+                except Exception:
+                    eto_v = None
+                try:
+                    pe_v = float(pe) if pe is not None and str(pe).strip() != "" else None
+                except Exception:
+                    pe_v = None
+
+                # si falta alguno, no contamos esa fila
+                if eto_v is None or pe_v is None:
+                    continue
+
+                eto_por_mes[mes] = eto_por_mes.get(mes, 0.0) + eto_v
+                pe_por_mes[mes] = pe_por_mes.get(mes, 0.0) + pe_v
+                conteo[mes] = conteo.get(mes, 0) + 1
 
             eto_climatologica = {
                 mes: round(eto_por_mes[mes] / conteo[mes], 3)
                 for mes in eto_por_mes
+                if conteo.get(mes, 0) > 0
             }
-
             pe_climatologica = {
                 mes: round(pe_por_mes[mes] / conteo[mes], 3)
                 for mes in pe_por_mes
+                if conteo.get(mes, 0) > 0
             }
 
-            # ==========================================================
-            # 4️⃣ Devolver
-            # ==========================================================
             _send_json(
                 self,
                 200,
@@ -313,9 +327,11 @@ def build_range_from_ciclo(payload):
                     "estacion": station["Codigo"],
                     "etoMensual": eto_climatologica,
                     "peMensual": pe_climatologica,
+                    "FechaInicial": FechaInicial,
+                    "FechaFinal": FechaFinal,
+                    "mode": "BALANCE" if has_ciclo else "DIAGNOSTICO",
                 },
             )
-
 
         except Exception as e:
             _send_json(self, 400, {"ok": False, "error": str(e)})
