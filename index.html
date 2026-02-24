@@ -456,14 +456,20 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
     ...Object.keys(eto).map(k => parseInt(k, 10)),
     ...Object.keys(pe).map(k => parseInt(k, 10))
   ])).filter(m => m >= 1 && m <= 12).sort((a,b) => a-b);
-
+  const estacionUsada = siar?.estacionUsada || siar?.estacion || "—";
+  const fallbackIndex = (siar?.fallbackIndex ?? null);
+  const fallbackNote  = siar?.fallbackNote || "";
+  let estacionLabel = estacionUsada;
+  if (fallbackNote) estacionLabel += ` (${fallbackNote})`;
+  if (fallbackIndex !== null && fallbackIndex > 0) estacionLabel += " [fallback]";
   const filas = meses.map(m => `
-    <tr>
-      <td style="text-transform:capitalize; font-weight:700;">${nombresMesesCortos[m-1]}</td>
-      <td style="text-align:right;">${fmt(eto[m], 3)}</td>
-      <td style="text-align:right;">${fmt(pe[m], 3)}</td>
-    </tr>
-  `).join("");
+  <tr>
+    <td style="text-transform:capitalize; font-weight:700;">${nombresMesesCortos[m-1]}</td>
+    <td style="text-align:right;">${fmt(eto[m], 3)}</td>
+    <td style="text-align:right;">${fmt(pe[m], 3)}</td>
+    <td>${estacionLabel}</td>
+  </tr>
+`).join("");
 
   res.innerHTML = `
     <div style="background:#eef7ff;border-radius:14px;padding:16px;border:1px solid #d7ecff">
@@ -493,7 +499,7 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
               </tr>
             </thead>
             <tbody>
-              ${filas || `<tr><td colspan="3" style="padding:8px;">—</td></tr>`}
+              ${filas || `<tr><td colspan="4" style="padding:8px;">—</td></tr>`}
             </tbody>
           </table>
         </div>
