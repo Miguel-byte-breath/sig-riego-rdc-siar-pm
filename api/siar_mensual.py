@@ -258,6 +258,82 @@ def _is_valid_pack(eto_mensual: dict, pe_mensual: dict) -> bool:
         and len(pe_mensual) > 0
     )
 # ==========================================================
+# Intentar obtener pack (ETo+Pe) de una estación concreta
+# ==========================================================
+def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, FechaFinal, mes_inicio, mes_fin):
+    r = requests.get(
+        f"{base_url_data}/API/V1/Datos/Mensuales/ESTACION",
+        params={
+            "Id": station_code,
+            "token": token,
+            "FechaInicial": FechaInicial,
+            "FechaFinal": FechaFinal,
+            "DatosCalculados": "true",
+        },
+        timeout=60,
+    )
+
+    if r.status_code != 200:
+        return False, {}, {}, {"http_status": r.status_code, "text_head": r.text[:180]}
+
+    try:
+        data = r.json().get("datos", [])
+    except Exception:
+        return False, {}, {}, {"error": "json_parse_error", "text_head": r.text[:180]}
+
+    if not isinstance(data, list) or not data:
+        return False, {}, {}, {"error": "no_rows"}
+
+    eto_por_mes = {}
+    pe_por_mes = {}
+    conteo = {}
+
+    for row in data:
+        try:
+            mes = int(row.get("Mes"))
+        except Exception:
+            continue
+
+        if not (mes_inicio <= mes <= mes_fin):
+            continue
+
+        eto = row.get("EtPMon")
+        pe = row.get("PePMon")
+
+        try:
+            eto_v = float(eto) if eto is not None and str(eto).strip() != "" else None
+        except Exception:
+            eto_v = None
+        try:
+            pe_v = float(pe) if pe is not None and str(pe).strip() != "" else None
+        except Exception:
+            pe_v = None
+
+        # Pack completo por fila
+        if eto_v is None or pe_v is None:
+            continue
+
+        eto_por_mes[mes] = eto_por_mes.get(mes, 0.0) + eto_v
+        pe_por_mes[mes] = pe_por_mes.get(mes, 0.0) + pe_v
+        conteo[mes] = conteo.get(mes, 0) + 1
+
+    eto_climatologica = {
+        mes: round(eto_por_mes[mes] / conteo[mes], 3)
+        for mes in eto_por_mes
+        if conteo.get(mes, 0) > 0
+    }
+    pe_climatologica = {
+        mes: round(pe_por_mes[mes] / conteo[mes], 3)
+        for mes in pe_por_mes
+        if conteo.get(mes, 0) > 0
+    }
+
+    ok = _is_valid_pack(eto_climatologica, pe_climatologica)
+    return ok, eto_climatologica, pe_climatologica, {
+        "rows": len(data),
+        "months_ok": sorted(list(eto_climatologica.keys())),
+    }
+# ==========================================================
 # Handler Vercel
 # ==========================================================
 class handler(BaseHTTPRequestHandler):
