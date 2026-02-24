@@ -108,7 +108,37 @@ def nearest_station(lat, lon):
         raise ValueError("No se pudo determinar estación más cercana")
 
     return best
+# ==========================================================
+# Encontrar N estaciones más cercanas (principal + apoyos)
+# ==========================================================
+def nearest_stations(lat, lon, n=6):
+    estaciones = load_estaciones()
+    ranked = []
 
+    for e in estaciones:
+        try:
+            lat_e = siar_to_dec(e.get("Latitud"), False)
+            lon_e = siar_to_dec(e.get("Longitud"), True)
+            dist = haversine_km(lat, lon, lat_e, lon_e)
+
+            ranked.append(
+                {
+                    "Codigo": e.get("Codigo"),
+                    "Estacion": e.get("Estacion"),
+                    "dist_km": dist,
+                    "lat": lat_e,
+                    "lon": lon_e,
+                }
+            )
+        except Exception:
+            continue
+
+    ranked.sort(key=lambda x: x["dist_km"])
+
+    if not ranked:
+        raise ValueError("No se pudieron cargar estaciones SIAR")
+
+    return ranked[: max(1, n)]
 
 # ==========================================================
 # Obtener token SIAR
