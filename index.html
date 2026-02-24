@@ -496,13 +496,15 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
             </tbody>
           </table>
         </div>
-
-        <div style="margin-top:8px; font-size:0.9rem; opacity:0.85;">
+                <div style="margin-top:8px; font-size:0.9rem; opacity:0.85;">
           Nota: el cálculo real (Sección 2) usa directamente EtPMon (ETo) y PePMon (Pe) desde SIAR.
         </div>
       </div>
     </div>
   `;
+  
+  const cont = document.getElementById("resTrazabilidad");
+  if (cont) { cont.style.display = "none"; cont.innerHTML = ""; }
 }
     
 function renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual) {
@@ -1470,8 +1472,16 @@ if (!skipAemet) {
         mostrarErrorVariablesImprescindibles(v.faltan);
         return;
     }
+    // Solo en modo AEMET/PM tiene sentido esta tabla
+    renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual);
+} else {
+    // En modo SIAR, ocultamos cualquier resto heredado
+    const cont = document.getElementById("resTrazabilidad");
+    if (cont) {
+        cont.style.display = "none";
+        cont.innerHTML = "";
+    }
 }
-renderResumenTrazabilidad(monthKeysCiclo, usageLogMensual);
 // Inicializar trazabilidad mensual (no afecta al cálculo todavía)
 // usageLogMensual = initUsageLog(monthKeysCiclo);
 
