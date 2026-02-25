@@ -395,7 +395,7 @@ class handler(BaseHTTPRequestHandler):
             p_climatologica = {}
             estacion_usada = None
             fallback_index = None
-
+            estacion_nombre = None
             for idx, st in enumerate(candidatas):
                 code = st["Codigo"]
 
@@ -428,6 +428,7 @@ class handler(BaseHTTPRequestHandler):
                     pe_climatologica = pe_tmp
                     p_climatologica = p_tmp
                     estacion_usada = code
+                    estacion_nombre = st.get("Estacion")
                     fallback_index = idx
                     break
 
@@ -453,6 +454,7 @@ class handler(BaseHTTPRequestHandler):
                     "ok": True,
                     "estacion": estacion_usada,          # compat con frontend
                     "estacionUsada": estacion_usada,
+                    "estacionNombre": estacion_nombre,
                     "fallbackIndex": fallback_index,
                     "fallbackNote": _fallback_note(fallback_index),
                     "estacionesProbadas": estaciones_probadas,
