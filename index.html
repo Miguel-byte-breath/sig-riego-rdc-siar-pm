@@ -1147,6 +1147,7 @@ if (!respSiar.ok || !dataSiar.ok) {
 
 const etoMensualSIAR = dataSiar.etoMensual;
 const peMensualSIAR = dataSiar.peMensual;
+const pMensualSIAR  = dataSiar.pMensual;        
 
         const medias = Array(13).fill(0).map(() => ({
     sumP: 0,
@@ -1448,13 +1449,25 @@ usageLogMensual[monthKey].rad_station = radSource ? radSource.stationId : null; 
     const etcDiaria = etoDiaria * kc;
     const etcMesTotal = etcDiaria * nDiasActivos;
 
-    let peMensualTotal = 0;
+let peMensualTotal = 0;
 
 if (peMensualSIAR[mesNum]) {
   peMensualTotal = peMensualSIAR[mesNum];
 }
+const peActiva = (peMensualTotal / diasMesTotal) * nDiasActivos;                
+let pMensualTotal = 0;
 
-    const peActiva = (peMensualTotal / diasMesTotal) * nDiasActivos;
+// SIAR (si existe) manda sobre AEMET
+if (pMensualSIAR && (pMensualSIAR[mesNum] != null || pMensualSIAR[String(mesNum)] != null)) {
+  pMensualTotal = Number(pMensualSIAR[mesNum] ?? pMensualSIAR[String(mesNum)] ?? 0);
+} else {
+  // fallback a lo que ya tenías calculado con AEMET (pMensualAvg)
+  pMensualTotal = Number(pMensualAvg || 0);
+}
+
+// P activa proporcional a días del ciclo en ese mes (misma lógica que Pe)
+const pActiva = (pMensualTotal / diasMesTotal) * nDiasActivos;
+                    
     const nhn_m3 = Math.max(0, etcMesTotal - peActiva) * 10;
 
     sumaNHn += nhn_m3;
@@ -1462,7 +1475,7 @@ if (peMensualSIAR[mesNum]) {
 
     mesesCiclo.push({
         etiqueta: etiquetaBonita, mesNum: mIdx+1, anio: anio, diasActivos: nDiasActivos,
-        etoDiaria: etoDiaria, kc: kc, etcMm: etcMesTotal, pMm: pMensualAvg, peMm: peActiva, nhn_m3: nhn_m3,
+        etoDiaria: etoDiaria, kc: kc, etcMm: etcMesTotal, pMm: pActiva, peMm: peActiva, nhn_m3: nhn_m3,
         // NUEVO (FASE 1 - pasivo)
     monthKey: monthKey,                         // "YYYY-MM" del ciclo (campaña)
     tmMensualAvg: (temps ? temps.Tmean : null), // Tmean efectivo usado ese mes (ya resuelto)
