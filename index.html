@@ -447,7 +447,10 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
     const dist = fmt(s.dist_km);
     return `<div>• Apoyo #${i + 1}: <b>${name}</b> (<code>${id}</code>) — ${dist} km</div>`;
   }).join("");
-
+  const nameByCode = new Map([
+  [stationIdOf(principal), stationNameOf(principal)],
+  ...(supports || []).map(s => [stationIdOf(s), stationNameOf(s)])
+  ]);
   const eto = siar?.etoMensual || {};
   const pe  = siar?.peMensual  || {};
 
@@ -456,10 +459,12 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
     ...Object.keys(eto).map(k => parseInt(k, 10)),
     ...Object.keys(pe).map(k => parseInt(k, 10))
   ])).filter(m => m >= 1 && m <= 12).sort((a,b) => a-b);
-  const estacionUsada = siar?.estacionUsada || siar?.estacion || "—";
+  const estacionCode = siar?.estacionUsada || siar?.estacion || "—";
+  const estacionName = nameByCode.get(estacionCode) || "—";
   const fallbackIndex = (siar?.fallbackIndex ?? null);
   const fallbackNote  = siar?.fallbackNote || "";
-  let estacionLabel = estacionUsada;
+
+  let estacionLabel = (estacionCode === "—") ? "—" : `${estacionName} (${estacionCode})`;
   if (fallbackNote) estacionLabel += ` (${fallbackNote})`;
   if (fallbackIndex !== null && fallbackIndex > 0) estacionLabel += " [fallback]";
   const filas = meses.map(m => `
