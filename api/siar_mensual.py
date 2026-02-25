@@ -274,18 +274,19 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
     )
 
     if r.status_code != 200:
-        return False, {}, {}, {"http_status": r.status_code, "text_head": r.text[:180]}
+        return False, {}, {}, {}, {"http_status": r.status_code, "text_head": r.text[:180]}
 
     try:
         data = r.json().get("datos", [])
     except Exception:
-        return False, {}, {}, {"error": "json_parse_error", "text_head": r.text[:180]}
+        return False, {}, {}, {}, {"error": "json_parse_error", "text_head": r.text[:180]}
 
     if not isinstance(data, list) or not data:
-        return False, {}, {}, {"error": "no_rows"}
+        return False, {}, {}, {}, {"error": "no_rows"}
 
     eto_por_mes = {}
     pe_por_mes = {}
+    p_por_mes  = {}
     conteo = {}
 
     for row in data:
@@ -299,6 +300,7 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
 
         eto = row.get("EtPMon")
         pe = row.get("PePMon")
+        p = row.get("Precipitacion")
 
         try:
             eto_v = float(eto) if eto is not None and str(eto).strip() != "" else None
@@ -308,13 +310,18 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
             pe_v = float(pe) if pe is not None and str(pe).strip() != "" else None
         except Exception:
             pe_v = None
+        try:
+            p_v = float(p) if p is not None and str(p).strip() != "" else None
+        except Exception:
+            p_v = None   
 
         # Pack completo por fila
-        if eto_v is None or pe_v is None:
+        if eto_v is None or pe_v is None or p_v is None:
             continue
 
         eto_por_mes[mes] = eto_por_mes.get(mes, 0.0) + eto_v
         pe_por_mes[mes] = pe_por_mes.get(mes, 0.0) + pe_v
+        p_por_mes[mes] = p_por_mes.get(mes, 0.0) + p_v
         conteo[mes] = conteo.get(mes, 0) + 1
 
     eto_climatologica = {
@@ -327,9 +334,17 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
         for mes in pe_por_mes
         if conteo.get(mes, 0) > 0
     }
+    p_climatologica = {
+        mes: round(p_por_mes[mes] / conteo[mes], 3)
+        for mes in p_por_mes
+        if conteo.get(mes, 0) > 0
+    }
 
-    ok = _is_valid_pack(eto_climatologica, pe_climatologica)
-    return ok, eto_climatologica, pe_climatologica, {
+    ok = _is_valid_pack(eto_climatologica, pe_climatologica) \
+        and isinstance(p_climatologica, dict) \
+        and len(p_climatologica) > 0
+
+    return ok, eto_climatologica, pe_climatologica, p_climatologica, {
         "rows": len(data),
         "months_ok": sorted(list(eto_climatologica.keys())),
     }
@@ -377,6 +392,7 @@ class handler(BaseHTTPRequestHandler):
             pack_ok = False
             eto_climatologica = {}
             pe_climatologica = {}
+            p_climatologica = {}
             estacion_usada = None
             fallback_index = None
 
@@ -393,7 +409,7 @@ class handler(BaseHTTPRequestHandler):
                     }
                 )
 
-                ok, eto_tmp, pe_tmp, info = fetch_pack_for_station(
+                ok, eto_tmp, pe_tmp, p_tmp, info = fetch_pack_for_station(
                     base_url_data=base_url_data,
                     token=token,
                     station_code=code,
@@ -410,6 +426,7 @@ class handler(BaseHTTPRequestHandler):
                     pack_ok = True
                     eto_climatologica = eto_tmp
                     pe_climatologica = pe_tmp
+                    p_climatologica = p_tmp
                     estacion_usada = code
                     fallback_index = idx
                     break
@@ -441,6 +458,7 @@ class handler(BaseHTTPRequestHandler):
                     "estacionesProbadas": estaciones_probadas,
                     "etoMensual": eto_climatologica,
                     "peMensual": pe_climatologica,
+                    "pMensual": p_climatologica,
                     "FechaInicial": FechaInicial,
                     "FechaFinal": FechaFinal,
                     "mode": "BALANCE" if has_ciclo else "DIAGNOSTICO",
