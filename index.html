@@ -460,7 +460,7 @@ function renderDiagnosticoSeccion1_SIAR({ principal, supports, siar, cicloIni, c
     ...Object.keys(pe).map(k => parseInt(k, 10))
   ])).filter(m => m >= 1 && m <= 12).sort((a,b) => a-b);
   const estacionCode = siar?.estacionUsada || siar?.estacion || "—";
-  const estacionName = nameByCode.get(estacionCode) || "—";
+  const estacionName = siar?.estacionNombre || nameByCode.get(estacionCode) || "—";
   const fallbackIndex = (siar?.fallbackIndex ?? null);
   const fallbackNote  = siar?.fallbackNote || "";
 
