@@ -3,6 +3,7 @@ import json
 import math
 import os
 import requests
+import time
 from datetime import date
 from calendar import monthrange
 
@@ -143,6 +144,22 @@ def nearest_stations(lat, lon, n=6):
 # ==========================================================
 # Obtener token SIAR
 # ==========================================================
+def _get_with_retry(url, params, timeout=(5, 60), attempts=3, backoff=(0.6, 1.2, 2.0)):
+    last_exc = None
+    for i in range(attempts):
+        try:
+            r = requests.get(url, params=params, timeout=timeout)
+            if r.status_code in (429, 500, 502, 503, 504):
+                raise requests.HTTPError(f"HTTP {r.status_code}", response=r)
+            r.raise_for_status()
+            return r
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, requests.HTTPError) as e:
+            last_exc = e
+            if i < attempts - 1:
+                time.sleep(backoff[min(i, len(backoff) - 1)])
+            continue
+    raise last_exc
+    
 def get_siar_token():
     base_url = os.environ.get("SIAR_BASE_URL")
     nif = os.environ.get("SIAR_NIF")
@@ -151,31 +168,28 @@ def get_siar_token():
     if not base_url or not nif or not password:
         raise ValueError("Faltan variables de entorno SIAR")
 
-    # 1️⃣ Cifrar NIF
-    r1 = requests.get(
+    r1 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/cifrarCadena",
         params={"cadena": nif},
-        timeout=30,
+        timeout=(5, 60),
+        attempts=3,
     )
-    r1.raise_for_status()
     nif_cifrado = r1.text.strip().replace('"', "")
 
-    # 2️⃣ Cifrar password
-    r2 = requests.get(
+    r2 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/cifrarCadena",
         params={"cadena": password},
-        timeout=30,
+        timeout=(5, 60),
+        attempts=3,
     )
-    r2.raise_for_status()
     password_cifrado = r2.text.strip().replace('"', "")
 
-    # 3️⃣ Obtener token
-    r3 = requests.get(
+    r3 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/obtenerToken",
         params={"Usuario": nif_cifrado, "Password": password_cifrado},
-        timeout=30,
+        timeout=(5, 60),
+        attempts=3,
     )
-    r3.raise_for_status()
 
     return r3.text.strip().replace('"', "")
 
@@ -467,5 +481,7 @@ class handler(BaseHTTPRequestHandler):
                 },
             )
 
+        except requests.exceptions.Timeout as e:
+            _send_json(self, 503, {"ok": False, "error": f"SIAR timeout: {str(e)}"})
         except Exception as e:
             _send_json(self, 400, {"ok": False, "error": str(e)})
