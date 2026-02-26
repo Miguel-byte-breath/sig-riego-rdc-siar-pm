@@ -1,4 +1,4 @@
-# 🌾 S.I.G. Riego Pro v2.0 (SIAR Edition – RDC Integrated)
+# 🌾 S.I.G. Riego Pro v1.0 (SIAR Edition – RDC Integrated)
 
 > Planificación estacional del riego basada en climatología oficial SIAR y redistribución hidráulica controlada.
 
