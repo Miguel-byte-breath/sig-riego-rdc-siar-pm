@@ -1,4 +1,4 @@
-`🌾 S.I.G. Riego Pro v2.0 (SIAR Edition – RDC Integrated)
+🌾 S.I.G. Riego Pro v2.0 (SIAR Edition – RDC Integrated)
 
 Sistema de Información Geográfica para la Gestión Integral de Recursos Hídricos, orientado al diseño, planificación y evaluación estacional del riego agrícola mediante:
 
@@ -254,9 +254,3 @@ No sustituye sensores de humedad.
 No captura eventos extremos diarios.
 
 No es modelo de predicción meteorológica.
-
-📌 Filosofía del sistema
-
-Referencia institucional + modelo agronómico coherente.
-Transparencia, trazabilidad y alineación normativa.
-Herramienta técnica para planificación estacional real.
