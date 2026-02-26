@@ -144,7 +144,7 @@ def nearest_stations(lat, lon, n=6):
 # ==========================================================
 # Obtener token SIAR
 # ==========================================================
-def _get_with_retry(url, params, timeout=(5, 60), attempts=3, backoff=(0.6, 1.2, 2.0)):
+def _get_with_retry(url, params, timeout=(5, 25), attempts=2,backoff=(0.4, 0.8)):
     last_exc = None
     for i in range(attempts):
         try:
@@ -171,24 +171,18 @@ def get_siar_token():
     r1 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/cifrarCadena",
         params={"cadena": nif},
-        timeout=(5, 60),
-        attempts=3,
     )
     nif_cifrado = r1.text.strip().replace('"', "")
 
     r2 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/cifrarCadena",
         params={"cadena": password},
-        timeout=(5, 60),
-        attempts=3,
     )
     password_cifrado = r2.text.strip().replace('"', "")
 
     r3 = _get_with_retry(
         f"{base_url}/API/V1/Autenticacion/obtenerToken",
         params={"Usuario": nif_cifrado, "Password": password_cifrado},
-        timeout=(5, 60),
-        attempts=3,
     )
 
     return r3.text.strip().replace('"', "")
