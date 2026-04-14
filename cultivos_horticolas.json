@@ -1,104 +1,41 @@
 [
-  {
-    "nombre": "Alcachofa",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2, "dev": 0.2, "mid": 0.4, "fin": 0.2 },
-    "kc": { "ini": 0.7, "mid": 1.05, "fin": 0.85 }
-  },
-  {
-    "nombre": "Espárrago (verde)",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2083, "dev": 0.25, "mid": 0.3333, "fin": 0.2083 },
-    "kc": { "ini": 0.7, "mid": 1.10, "fin": 0.70 }
-  },
-  {
-    "nombre": "Judía (verde)",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2222, "dev": 0.2778, "mid": 0.3333, "fin": 0.1667 },
-    "kc": { "ini": 0.45, "mid": 1.00, "fin": 0.80 }
-  },
-  {
-    "nombre": "Remolacha",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1667, "dev": 0.2778, "mid": 0.3889, "fin": 0.1667 },
-    "kc": { "ini": 0.4, "mid": 1.20, "fin": 1.00 }
-  },
-  {
-    "nombre": "Brócoli",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2105, "dev": 0.2632, "mid": 0.3684, "fin": 0.1579 },
-    "kc": { "ini": 0.7, "mid": 1.00, "fin": 0.80 }
-  },
-  {
-    "nombre": "Zanahoria",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.3636, "fin": 0.1818 },
-    "kc": { "ini": 0.7, "mid": 1.05, "fin": 0.80 }
-  },
-  {
-    "nombre": "Pepino",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2105, "dev": 0.2632, "mid": 0.3684, "fin": 0.1579 },
-    "kc": { "ini": 0.6, "mid": 1.05, "fin": 0.75 }
-  },
-  {
-    "nombre": "Berenjena",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2273, "dev": 0.2727, "mid": 0.3636, "fin": 0.1364 },
-    "kc": { "ini": 0.6, "mid": 1.05, "fin": 0.80 }
-  },
-  {
-    "nombre": "Lechuga iceberg",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.3636, "fin": 0.1818 },
-    "kc": { "ini": 0.7, "mid": 1.05, "fin": 0.80 }
-  },
-  {
-    "nombre": "Melón",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2083, "dev": 0.2917, "mid": 0.3333, "fin": 0.1667 },
-    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.65 }
-  },
-  {
-    "nombre": "Cebolla",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1923, "dev": 0.2692, "mid": 0.3846, "fin": 0.1538 },
-    "kc": { "ini": 0.7, "mid": 1.05, "fin": 0.75 }
-  },
-  {
-    "nombre": "Pimiento rojo",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2273, "dev": 0.2727, "mid": 0.3636, "fin": 0.1364 },
-    "kc": { "ini": 0.6, "mid": 1.05, "fin": 0.80 }
-  },
-  {
-    "nombre": "Calabacín (inmaduro)",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2222, "dev": 0.2778, "mid": 0.3333, "fin": 0.1667 },
-    "kc": { "ini": 0.6, "mid": 1.05, "fin": 0.75 }
-  },
-  {
-    "nombre": "Fresa",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.3636, "fin": 0.1818 },
-    "kc": { "ini": 0.7, "mid": 1.05, "fin": 0.80 }
-  },
-  {
-    "nombre": "Maíz dulce (fresco)",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.3636, "fin": 0.1818 },
-    "kc": { "ini": 0.3, "mid": 1.15, "fin": 0.50 }
-  },
-  {
-    "nombre": "Tomate",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.25, "dev": 0.25, "mid": 0.3333, "fin": 0.1667 },
-    "kc": { "ini": 0.6, "mid": 1.15, "fin": 0.80 }
-  },
-  {
-    "nombre": "Sandía",
-    "tipo": "fenologico",
-    "fases_pct": { "ini": 0.2273, "dev": 0.2727, "mid": 0.3636, "fin": 0.1364 },
-    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.65 }
-  }
+  {"nombre":"Alcachofa","tipo":"fenologico","fases_pct":{"ini":0.2,"dev":0.2,"mid":0.4,"fin":0.2},"kc":{"ini":0.7,"mid":1.05,"fin":0.85}},
+  {"nombre":"Espárrago (verde)","tipo":"fenologico","fases_pct":{"ini":0.2083,"dev":0.25,"mid":0.3333,"fin":0.2083},"kc":{"ini":0.7,"mid":1.1,"fin":0.7}},
+  {"nombre":"Espárrago (blanco)","tipo":"fenologico","fases_pct":{"ini":0.2083,"dev":0.25,"mid":0.3333,"fin":0.2083},"kc":{"ini":0.7,"mid":1.1,"fin":0.7}},
+  {"nombre":"Judía (verde)","tipo":"fenologico","fases_pct":{"ini":0.2222,"dev":0.2778,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.45,"mid":1.0,"fin":0.8}},
+  {"nombre":"Remolacha","tipo":"fenologico","fases_pct":{"ini":0.1667,"dev":0.2778,"mid":0.3889,"fin":0.1667},"kc":{"ini":0.4,"mid":1.2,"fin":1.0}},
+  {"nombre":"Brócoli","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Col de Bruselas","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Col","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Zanahoria","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Coliflor","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Apio","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Achicoria","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Pepino","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.6,"mid":1.05,"fin":0.75}},
+  {"nombre":"Berenjena","tipo":"fenologico","fases_pct":{"ini":0.2273,"dev":0.2727,"mid":0.3636,"fin":0.1364},"kc":{"ini":0.6,"mid":1.05,"fin":0.8}},
+  {"nombre":"Endivia","tipo":"fenologico","fases_pct":{"ini":0.2105,"dev":0.2632,"mid":0.3684,"fin":0.1579},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Haba (verde)","tipo":"fenologico","fases_pct":{"ini":0.25,"dev":0.3,"mid":0.35,"fin":0.1},"kc":{"ini":0.45,"mid":1.0,"fin":0.8}},
+  {"nombre":"Ajo","tipo":"fenologico","fases_pct":{"ini":0.1923,"dev":0.2692,"mid":0.3846,"fin":0.1538},"kc":{"ini":0.7,"mid":1.05,"fin":0.75}},
+  {"nombre":"Puerro","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Lechuga iceberg","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Lechuga romana","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Melón","tipo":"fenologico","fases_pct":{"ini":0.2083,"dev":0.2917,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.4,"mid":1.05,"fin":0.65}},
+  {"nombre":"Melón cantaloupe","tipo":"fenologico","fases_pct":{"ini":0.2083,"dev":0.2917,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.4,"mid":1.05,"fin":0.65}},
+  {"nombre":"Cebolla","tipo":"fenologico","fases_pct":{"ini":0.1923,"dev":0.2692,"mid":0.3846,"fin":0.1538},"kc":{"ini":0.7,"mid":1.05,"fin":0.75}},
+  {"nombre":"Perejil","tipo":"fenologico","fases_pct":{"ini":0.2,"dev":0.2667,"mid":0.4,"fin":0.1333},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Guisante (verde, vainas)","tipo":"fenologico","fases_pct":{"ini":0.2222,"dev":0.2778,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.45,"mid":1.0,"fin":0.8}},
+  {"nombre":"Guisante (verde, semillas)","tipo":"fenologico","fases_pct":{"ini":0.2222,"dev":0.2778,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.45,"mid":1.0,"fin":0.8}},
+  {"nombre":"Pimiento verde","tipo":"fenologico","fases_pct":{"ini":0.2273,"dev":0.2727,"mid":0.3636,"fin":0.1364},"kc":{"ini":0.6,"mid":1.05,"fin":0.8}},
+  {"nombre":"Pimiento rojo","tipo":"fenologico","fases_pct":{"ini":0.2273,"dev":0.2727,"mid":0.3636,"fin":0.1364},"kc":{"ini":0.6,"mid":1.05,"fin":0.8}},
+  {"nombre":"Calabaza","tipo":"fenologico","fases_pct":{"ini":0.2273,"dev":0.2727,"mid":0.3636,"fin":0.1364},"kc":{"ini":0.5,"mid":1.05,"fin":0.75}},
+  {"nombre":"Rábano","tipo":"fenologico","fases_pct":{"ini":0.2143,"dev":0.2857,"mid":0.3571,"fin":0.1429},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Espinaca","tipo":"fenologico","fases_pct":{"ini":0.2143,"dev":0.2857,"mid":0.3571,"fin":0.1429},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Acelga","tipo":"fenologico","fases_pct":{"ini":0.2143,"dev":0.2857,"mid":0.3571,"fin":0.1429},"kc":{"ini":0.7,"mid":1.0,"fin":0.8}},
+  {"nombre":"Calabacín (inmaduro)","tipo":"fenologico","fases_pct":{"ini":0.2222,"dev":0.2778,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.6,"mid":1.05,"fin":0.75}},
+  {"nombre":"Calabacín (maduro)","tipo":"fenologico","fases_pct":{"ini":0.2222,"dev":0.2778,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.6,"mid":1.05,"fin":0.75}},
+  {"nombre":"Fresa","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.7,"mid":1.05,"fin":0.8}},
+  {"nombre":"Maíz dulce (seco)","tipo":"fenologico","fases_pct":{"ini":0.1538,"dev":0.2308,"mid":0.3846,"fin":0.2308},"kc":{"ini":0.3,"mid":1.15,"fin":0.5}},
+  {"nombre":"Maíz dulce (fresco)","tipo":"fenologico","fases_pct":{"ini":0.1818,"dev":0.2727,"mid":0.3636,"fin":0.1818},"kc":{"ini":0.3,"mid":1.15,"fin":0.5}},
+  {"nombre":"Tomate","tipo":"fenologico","fases_pct":{"ini":0.25,"dev":0.25,"mid":0.3333,"fin":0.1667},"kc":{"ini":0.6,"mid":1.15,"fin":0.8}},
+  {"nombre":"Sandía","tipo":"fenologico","fases_pct":{"ini":0.2273,"dev":0.2727,"mid":0.3636,"fin":0.1364},"kc":{"ini":0.4,"mid":1.05,"fin":0.65}}
 ]

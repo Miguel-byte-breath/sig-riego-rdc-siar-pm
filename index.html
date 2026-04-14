@@ -569,12 +569,166 @@ cont.innerHTML = `
 }
 
 // Carga inicial de cultivos
-fetch('cultivos.json').then(r => r.json()).then(data => {
-    cultivosData = data;
-    document.getElementById('selectCultivo').innerHTML = data.map((c, i) => `<option value="${i}">${c.nombre}</option>`).join('');
+Promise.all([
+    fetch('cultivos.json').then(r => r.json()),
+    fetch('cultivos_horticolas.json').then(r => r.json())
+]).then(([leñosos, horticolas]) => {
+
+    // Normalizar leñosos
+    const cultivosLeñosos = leñosos.map(c => ({
+        ...c,
+        tipo: "mensual_fijo"
+    }));
+
+    // Hortícolas ya vienen con tipo correcto
+    const cultivosHorticolas = horticolas;
+
+    // Unificar
+    cultivosData = [...cultivosLeñosos, ...cultivosHorticolas];
+
+    // Poblar selector
+    document.getElementById('selectCultivo').innerHTML =
+        cultivosData.map((c, i) =>
+            `<option value="${i}">${c.nombre}</option>`
+        ).join('');
 });
 
 // Funciones Auxiliares
+function daysBetweenInclusive(dateA, dateB) {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const a = new Date(dateA);
+    const b = new Date(dateB);
+    a.setHours(0, 0, 0, 0);
+    b.setHours(0, 0, 0, 0);
+    return Math.round((b - a) / msPerDay) + 1;
+}
+
+function addDays(dateStr, days) {
+    const d = new Date(dateStr);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + days);
+    return d;
+}
+
+function toISODate(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+}
+
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+function buildKcCurveForCycle(cultivo, fechaInicio, fechaFin) {
+    if (!cultivo || cultivo.tipo !== "fenologico") return [];
+
+    const totalDias = daysBetweenInclusive(fechaInicio, fechaFin);
+    if (!Number.isFinite(totalDias) || totalDias <= 0) return [];
+
+    const pct = cultivo.fases_pct || {};
+    let diasIni = Math.round(totalDias * (pct.ini || 0));
+    let diasDev = Math.round(totalDias * (pct.dev || 0));
+    let diasMid = Math.round(totalDias * (pct.mid || 0));
+    let diasFin = Math.round(totalDias * (pct.fin || 0));
+
+    let suma = diasIni + diasDev + diasMid + diasFin;
+    let diff = totalDias - suma;
+
+    diasMid += diff;
+
+    diasIni = Math.max(0, diasIni);
+    diasDev = Math.max(0, diasDev);
+    diasMid = Math.max(0, diasMid);
+    diasFin = Math.max(0, diasFin);
+
+    const kcIni = Number(cultivo.kc?.ini || 0);
+    const kcMid = Number(cultivo.kc?.mid || 0);
+    const kcFin = Number(cultivo.kc?.fin || 0);
+
+    const curva = [];
+    let idx = 0;
+
+    for (let i = 0; i < diasIni; i++, idx++) {
+        const fecha = addDays(fechaInicio, idx);
+        curva.push({
+            fecha: toISODate(fecha),
+            kc: kcIni,
+            fase: "ini"
+        });
+    }
+
+    for (let i = 0; i < diasDev; i++, idx++) {
+        const fecha = addDays(fechaInicio, idx);
+        const t = diasDev <= 1 ? 1 : i / (diasDev - 1);
+        curva.push({
+            fecha: toISODate(fecha),
+            kc: lerp(kcIni, kcMid, t),
+            fase: "dev"
+        });
+    }
+
+    for (let i = 0; i < diasMid; i++, idx++) {
+        const fecha = addDays(fechaInicio, idx);
+        curva.push({
+            fecha: toISODate(fecha),
+            kc: kcMid,
+            fase: "mid"
+        });
+    }
+
+    for (let i = 0; i < diasFin; i++, idx++) {
+        const fecha = addDays(fechaInicio, idx);
+        const t = diasFin <= 1 ? 1 : i / (diasFin - 1);
+        curva.push({
+            fecha: toISODate(fecha),
+            kc: lerp(kcMid, kcFin, t),
+            fase: "fin"
+        });
+    }
+
+    if (curva.length > totalDias) {
+        curva.length = totalDias;
+    }
+
+    while (curva.length < totalDias) {
+        const fecha = addDays(fechaInicio, curva.length);
+        curva.push({
+            fecha: toISODate(fecha),
+            kc: kcFin,
+            fase: "fin"
+        });
+    }
+
+    return curva;
+}
+
+function getKcMensualParaMes(cultivo, year, month, fechaInicio, fechaFin) {
+    if (!cultivo) return 0;
+
+    if (cultivo.tipo === "mensual_fijo") {
+        return Number(cultivo.kc?.[month] || 0);
+    }
+
+    if (cultivo.tipo !== "fenologico") {
+        return 0;
+    }
+
+    const curva = buildKcCurveForCycle(cultivo, fechaInicio, fechaFin);
+
+    const vals = curva
+        .filter(d => {
+            const dt = new Date(d.fecha);
+            return dt.getFullYear() === year && (dt.getMonth() + 1) === month;
+        })
+        .map(d => d.kc);
+
+    if (!vals.length) return 0;
+
+    const suma = vals.reduce((a, b) => a + b, 0);
+    return suma / vals.length;
+}
 function getWeekNumber(d) {
     d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -1450,7 +1604,7 @@ usageLogMensual[monthKey].rad_station = radSource ? radSource.stationId : null; 
 }
 
 
-    const kc = cultivo.kc[mIdx+1] || 0;
+    const kc = getKcMensualParaMes(cultivo, anio, mIdx + 1, fIni, fFin);
     const etcDiaria = etoDiaria * kc;
     const etcMesTotal = etcDiaria * nDiasActivos;
 
