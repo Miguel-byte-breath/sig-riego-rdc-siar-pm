@@ -1866,8 +1866,8 @@ const pesos = dias.map(d => {
   keys.forEach(key => {
     const diasSem = semanasMes[key].dias;
     const uniforme = m3MesBase * (diasSem / totalDias);
-    const minV = 0.9 * uniforme;
-    const maxV = 1.1 * uniforme;
+    const minV = 0.8 * uniforme;
+    const maxV = 1.2 * uniforme;
     let val = semanasMes[key].val;
     val = Math.max(minV, Math.min(maxV, val));
     semanasMes[key].val = val;
