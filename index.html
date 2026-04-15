@@ -579,17 +579,20 @@ Promise.all([
         tipo: "mensual_fijo"
     }));
 
-    // Hortícolas ya vienen con tipo correcto
-    const cultivosHorticolas = horticolas;
+   // Hortícolas ya vienen con tipo correcto
+const cultivosHorticolas = horticolas;
 
-    // Unificar
-    cultivosData = [...cultivosLeñosos, ...cultivosHorticolas];
+// Unificar
+cultivosData = [...cultivosLeñosos, ...cultivosHorticolas];
 
-    // Poblar selector
-    document.getElementById('selectCultivo').innerHTML =
-        cultivosData.map((c, i) =>
-            `<option value="${i}">${c.nombre}</option>`
-        ).join('');
+// Ordenar alfabéticamente
+cultivosData.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+
+// Poblar selector
+document.getElementById('selectCultivo').innerHTML =
+    cultivosData.map((c, i) =>
+        `<option value="${i}">${c.nombre}</option>`
+    ).join('');
 });
 
 // Funciones Auxiliares
