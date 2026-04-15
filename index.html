@@ -137,13 +137,6 @@
 
   <div id="rdcContainer"></div>
 
-  <div style="display:flex; align-items:center; gap:10px; margin: 10px 0 12px 0;">
-    <input type="checkbox" id="chkRedistribTermica" />
-    <label for="chkRedistribTermica" style="font-weight:700; color:#334155;">
-      Redistribución térmica (±20% semanal)
-    </label>
-  </div>
-
   <button class="btn btn-blue" style="width:100%" onclick="aplicarRDCMensual()">
     Aplicar RDC (solo reasignación)
   </button>
@@ -160,7 +153,12 @@
         <p style="color:#64748b; font-size:1rem; margin-bottom: 25px; line-height: 1.5;">
             Distribución operativa del riego neto por semanas naturales.
         </p>
-        
+        <div style="display:flex; align-items:center; gap:10px; margin: 10px 0 20px 0;">
+           <input type="checkbox" id="chkRedistribTermica" />
+           <label for="chkRedistribTermica" style="font-weight:700; color:#334155;">
+               Activar redistribución térmica semanal (±20%)
+           </label>
+    </div>
         <div class="chart-container"><canvas id="graficaSemanal"></canvas></div>
         <button class="btn btn-blue" style="width:100%" onclick="descargarExcelSemanal()">📥 Exportar Plan Semanal (.xlsx)</button>
 
