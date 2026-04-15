@@ -2085,6 +2085,15 @@ function descargarExcelSemanal() {
     XLSX.utils.book_append_sheet(wb, ws, "Plan_Semanal");
     XLSX.writeFile(wb, "Riego_Semanal_Neto.xlsx");
 }
+document.getElementById("chkRedistribTermica")?.addEventListener("change", () => {
+    const mesesCiclo = window._mesesCiclo;
+    const fIni = window._fIni;
+    const fFin = window._fFin;
+
+    if (!mesesCiclo || !fIni || !fFin) return;
+
+    calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
+});
 </script>
 </body>
 </html>
