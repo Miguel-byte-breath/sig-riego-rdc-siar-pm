@@ -83,7 +83,6 @@
         <div class="search-bar">
             <div class="search-item"><label>Lat:</label><input type="number" id="lat" value="39.443557" step="0.000001"></div>
             <div class="search-item"><label>Lon:</label><input type="number" id="lon" value="-0.740434" step="0.000001"></div>
-            <button class="btn btn-blue" onclick="encontrarMasCercana()">Buscar Estación</button>
         </div>
         <div id="resBusqueda" class="result-box" style="display:none"></div>
     </div>
@@ -96,7 +95,9 @@
             <div><label class="input-label">Fin Ciclo</label><input type="date" id="cicloFin" value="2026-10-31" class="main-input"></div>
             <div><label class="input-label">Recursos (m³/ha)</label><input type="number" id="volDisponible" value="4000" class="main-input"></div>
         </div>
-
+        <button class="btn btn-blue" onclick="encontrarMasCercana()" style="width:100%; margin-bottom:10px;">
+    🔍 Buscar Estación
+</button>
         <button class="btn btn-gold" onclick="generarPlanOro({ skipAemet: true })">✨ Calcular Balance Completo (Vía SiAR)</button>
 
         <div id="panelResultados" style="display:none">
