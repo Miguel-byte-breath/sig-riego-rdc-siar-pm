@@ -184,15 +184,27 @@ Dentro de cada mes:
 - Se distribuye el volumen mensual según pesos diarios
 - Se conserva exactamente el total mensual
 
-### 🟠 Capa hidráulica (clamp ±10 %)
+### 🟠 Redistribución térmica semanal (opcional)
+
+El sistema permite activar una redistribución térmica intra-mensual mediante control en interfaz (checkbox).
+
+Cuando está activada:
+
+- Se modula el reparto semanal en función de la tendencia térmica (derivada de ET₀ mensual)
+- Se mantiene estrictamente el volumen mensual total
+
+### 🔧 Control hidráulico (clamp ±20 %)
 
 Para cada semana:
 
-- Mínimo = 0.9 × uniforme
-- Máximo = 1.1 × uniforme
+- Mínimo = 0.8 × uniforme
+- Máximo = 1.2 × uniforme
 
-Se aplica corrección manteniendo el total mensual exacto.
+Este límite evita distorsiones excesivas y garantiza estabilidad operativa.
 
+Cuando la redistribución no está activada:
+
+- El reparto semanal es uniforme dentro de cada mes
 ---
 
 ## 🧾 Trazabilidad
