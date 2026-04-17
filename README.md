@@ -156,8 +156,52 @@ NH<sub>n</sub> = (ET<sub>c</sub> − Pe) × 10
 Unidad: m³/ha
 
 ---
+## 🌿 6. Coeficiente de cultivo (Kc) y adaptación fenológica
 
-## 💧 6. Sistema RDC (Redistribución de Dotación por Cultivo)
+### Enfoque general
+
+La evapotranspiración del cultivo se estima mediante la relación:
+
+**ETc = ETo × Kc**
+
+donde:
+
+- **ETo** es la evapotranspiración de referencia oficial integrada desde SIAR (`EtPMon`)
+- **Kc** es el coeficiente de cultivo, que representa la evolución de la demanda hídrica del cultivo a lo largo de su ciclo
+
+---
+
+### Cálculo del Kc a partir del ciclo real del cultivo
+
+Para cultivos con comportamiento fenológico variable, el sistema no utiliza un Kc mensual fijo, sino que construye dinámicamente la evolución del coeficiente de cultivo a lo largo del ciclo.
+
+#### 1. Definición del ciclo
+
+El usuario introduce:
+
+- fecha de inicio del cultivo
+- fecha de fin del cultivo
+
+A partir de estas fechas se obtiene:
+
+- duración total del ciclo (en días)
+
+---
+
+#### 2. Distribución de las etapas fenológicas
+
+El ciclo se divide en cuatro fases siguiendo el enfoque FAO:
+
+- inicio
+- desarrollo
+- media estación
+- final
+
+La duración de cada fase se calcula como un porcentaje del ciclo total:
+
+```text
+días_fase = duración_total × porcentaje_fase
+## 💧 7. Sistema RDC (Redistribución de Dotación por Cultivo)
 
 Ajuste mensual porcentual:
 
@@ -173,7 +217,7 @@ No recalcula SIAR ni ET<sub>o</sub>.
 
 ---
 
-## 📅 7. Programación Semanal
+## 📅 8. Programación Semanal
 
 ### 🔵 Capa física intra-mensual
 
