@@ -199,7 +199,6 @@ El ciclo se divide en cuatro fases siguiendo el enfoque FAO:
 
 La duración de cada fase se calcula como un porcentaje del ciclo total:
 
-```text
 días_fase = duración_total × porcentaje_fase
 ---
 
