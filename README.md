@@ -201,6 +201,8 @@ La duración de cada fase se calcula como un porcentaje del ciclo total:
 
 ```text
 días_fase = duración_total × porcentaje_fase
+---
+
 ## 💧 7. Sistema RDC (Redistribución de Dotación por Cultivo)
 
 Ajuste mensual porcentual:
