@@ -76,9 +76,34 @@
             </span>
         </div>
 
-        <div style="color: #64748b; font-size: 0.9rem; font-weight: 500;">
-            Gestión Integral de Recursos Hídricos
-        </div>
+        <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.9rem; font-weight: 500;">
+    <span>Gestión Integral de Recursos Hídricos</span>
+
+    <button
+        type="button"
+        onclick="openInfoModal()"
+        title="Apoyo al plan de abonado: integra clima (histórico reciente), precipitaciones y recursos hídricos disponibles para orientar la fertirrigación, conforme al art. 6.3 del RD 1051/2022."
+        aria-label="Información sobre el objetivo normativo de la aplicación"
+        style="
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #4a6fa5;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+        "
+    >
+        i
+    </button>
+</div>
 
     </div>
 
@@ -2101,6 +2126,77 @@ document.getElementById("chkRedistribTermica")?.addEventListener("change", () =>
 
     calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 });
+function openInfoModal() {
+    document.getElementById("infoModal").style.display = "block";
+}
+
+function closeInfoModal() {
+    document.getElementById("infoModal").style.display = "none";
+}
+
+window.addEventListener("click", function(event) {
+    const modal = document.getElementById("infoModal");
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+});    
 </script>
+<div id="infoModal" style="
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+">
+    <div style="
+        position: relative;
+        width: min(640px, calc(100% - 32px));
+        margin: 8vh auto;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 24px 24px 20px;
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+    ">
+        <button
+            type="button"
+            onclick="closeInfoModal()"
+            aria-label="Cerrar"
+            style="
+                position: absolute;
+                top: 10px;
+                right: 12px;
+                border: 0;
+                background: transparent;
+                font-size: 26px;
+                cursor: pointer;
+                color: #64748b;
+            "
+        >
+            &times;
+        </button>
+
+        <h3 style="margin-top: 0; margin-bottom: 14px; color: #1e3a8a;">
+            Referencia normativa y alcance
+        </h3>
+
+        <p style="color: #334155; line-height: 1.55;">
+            Esta herramienta proporciona una base técnica para la planificación del riego y la programación orientativa de la fertirrigación, integrando:
+        </p>
+
+        <ul style="color: #334155; line-height: 1.6; padding-left: 20px;">
+            <li>climatología de referencia SIAR basada en medias históricas recientes,</li>
+            <li>precipitaciones y su distribución anual,</li>
+            <li>y recursos hídricos disponibles.</li>
+        </ul>
+
+        <p style="color: #334155; line-height: 1.55;">
+            En este sentido, se alinea con el <strong>art. 6.3 del RD 1051/2022</strong>, que establece que el plan de abonado debe considerar estos factores para programar los momentos de fertilización.
+        </p>
+
+        <p style="color: #334155; line-height: 1.55; margin-bottom: 0;">
+            La herramienta no sustituye el plan de abonado ni el asesoramiento técnico, sino que actúa como soporte técnico para su elaboración y justificación.
+        </p>
+    </div>
+</div>
 </body>
 </html>
