@@ -127,7 +127,7 @@
         <button class="btn btn-blue" onclick="encontrarMasCercana()" style="width:100%; margin-bottom:10px;">
     🔍 Buscar Estación
 </button>
-        <button class="btn btn-gold" onclick="generarPlanOro({ skipAemet: true })">✨ Calcular Balance Completo (Vía SiAR)</button>
+        <button class="btn btn-gold" onclick="calcularPlanRiego({ skipAemet: true })">✨ Calcular Balance Completo (Vía SiAR)</button>
 
         <div id="panelResultados" style="display:none">
             <div class="chart-container"><canvas id="graficaDoble"></canvas></div>
@@ -312,6 +312,13 @@ Chart.defaults.font.size = 12;
 Chart.defaults.color = '#64748b';
 
 let cultivosData = [], exportDataMensual = [], exportDataSemanal = [], miGrafica = null, miGraficaSemana = null;
+
+// ─── Helper: normaliza strings para comparación de nombres de cultivo ───────
+function normalizar(str) {
+  return (str || "").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
 
 const fmtNum = (n, dec=0) => n.toLocaleString('es-ES', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 const nombresMesesCortos = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -1217,14 +1224,22 @@ return principal;
 }
 }        
 // SECCIÓN 2: Cálculo con API AEMET (Bucle de Resiliencia)
-async function generarPlanOro(opts = {}) {
-  const { skipAemet = false } = opts;
-    if(!estacionSeleccionadaId) return alert("⚠️ La estación aún no ha sido validada en el Paso 1.");
-    
-    const volV = parseFloat(document.getElementById('volDisponible').value) || 0;
-    const btn = document.querySelector(".btn-gold");
-    btn.disabled = true;
-    btn.innerText = "⏳ Procesando datos agronómicos...";
+async function calcularPlanRiego(opts = {}) {
+  const { skipAemet = false, apiParams = null } = opts;
+
+  // ── Modo API: los parámetros llegan directamente, sin formulario ──────────
+  const isApiMode = apiParams != null;
+
+  if (!isApiMode && !estacionSeleccionadaId) {
+    return alert("⚠️ La estación aún no ha sido validada en el Paso 1.");
+  }
+
+  const volV = isApiMode
+    ? (apiParams.vol_disponible ?? 4000)
+    : (parseFloat(document.getElementById('volDisponible').value) || 0);
+
+  const btn = isApiMode ? null : document.querySelector(".btn-gold");
+  if (btn) { btn.disabled = true; btn.innerText = "⏳ Procesando datos agronómicos..."; }
 
     try {
         radMensualPorEstacion = {}; // Paso 5.2.3: reset radiación por estación
@@ -1283,20 +1298,26 @@ for (const st of supportStations) {
 }
     }
         // --- LÓGICA AGRONÓMICA ORIGINAL ---
-        const cultivo = cultivosData[document.getElementById('selectCultivo').value];
-        const fIni = new Date(document.getElementById('cicloIni').value);
-        const fFin = new Date(document.getElementById('cicloFin').value);
+        const cultivo = isApiMode
+          ? cultivosData.find(c => normalizar(c.nombre) === normalizar(apiParams.cultivo))
+          : cultivosData[document.getElementById('selectCultivo').value];
+        const fIni = isApiMode
+          ? new Date(apiParams.fecha_ini)
+          : new Date(document.getElementById('cicloIni').value);
+        const fFin = isApiMode
+          ? new Date(apiParams.fecha_fin)
+          : new Date(document.getElementById('cicloFin').value);
 // ===============================
 // NUEVO: Obtener climatología SIAR
 // ===============================
-const lat = parseFloat(document.getElementById("lat").value);
-const lon = parseFloat(document.getElementById("lon").value);
+const lat = isApiMode ? apiParams.lat : parseFloat(document.getElementById("lat").value);
+const lon = isApiMode ? apiParams.lon : parseFloat(document.getElementById("lon").value);
 
 const payload = {
   lat,
   lon,
-  cicloIni: document.getElementById("cicloIni").value,
-  cicloFin: document.getElementById("cicloFin").value
+  cicloIni: isApiMode ? apiParams.fecha_ini : document.getElementById("cicloIni").value,
+  cicloFin: isApiMode ? apiParams.fecha_fin : document.getElementById("cicloFin").value
 };
 
 // Probamos ambas rutas (según cómo Vercel mapee la función)
@@ -1705,6 +1726,51 @@ window._volV = volV;
 window._fIni = fIni;
 window._fFin = fFin;
 
+// ── Modo API: redistribución térmica siempre activa, devolver datos ───────
+if (isApiMode) {
+  // Calcular m3AsignadoFinal y m3RdcAgro (normalmente los asigna renderBalanceMensual)
+  exportDataMensual = [];
+  mesesCiclo.forEach(m => {
+    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+    const m3RDC = m.rdc_m3 || 0;
+    const m3Asignado = m3Base + m3RDC;
+    const pct = Math.max(0, Math.min(100, Number(m.rdc_pct || 0)));
+    const delta = Number(m.nhn_m3 || 0) * (pct / 100);
+    const m3RdcAgro = (pct > 0) ? delta : Number(m3Asignado || 0);
+    m.m3RdcAgro = m3RdcAgro;
+    m.m3AsignadoFinal = m3Asignado;
+    exportDataMensual.push({
+      mes: m.etiqueta,
+      dias: m.diasActivos,
+      eto_mm_dia: Math.round(m.etoDiaria * 100) / 100,
+      kc: Math.round(m.kc * 100) / 100,
+      etc_mm: Math.round(m.etcMm * 10) / 10,
+      p_mm: Math.round(m.pMm * 10) / 10,
+      pe_mm: Math.round(m.peMm * 10) / 10,
+      nhn_m3ha: Math.round(m.nhn_m3),
+      asignado_m3ha: Math.round(m3Asignado)
+    });
+  });
+
+  // Calcular semanas (redistribucion termica forzada a true)
+  calcularSemanasCorrelativas(mesesCiclo, fIni, fFin, true);
+
+  return {
+    ok: true,
+    redistribucion_termica: true,
+    programacion_semanal: exportDataSemanal.map(s => {
+      const partes = s["Fechas"].split(" - ");
+      return {
+        semana: s["Semana"],
+        fecha_ini: partes[0]?.trim() ?? "",
+        fecha_fin: partes[1]?.trim() ?? "",
+        riego_neto_m3ha: s["Riego Neto (m3/ha)"]
+      };
+    }),
+    balance_mensual: exportDataMensual
+  };
+}
+
 // Render (tabla + gráfica + semanal) usando el estado actual
 renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin);
 
@@ -1714,10 +1780,10 @@ const elRDC = document.getElementById('panelRDC');
 if (elRDC) elRDC.style.display = "block";
 
     } catch (err) {
+        if (isApiMode) throw err;
         alert("❌ Error al procesar el balance: " + err.message);
     } finally {
-        btn.innerText = "✨ Calcular Balance Completo (Vía SIAR)";
-        btn.disabled = false;
+        if (btn) { btn.innerText = "✨ Calcular Balance Completo (Vía SIAR)"; btn.disabled = false; }
     }
 }
 function renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin) {
@@ -1827,9 +1893,11 @@ m.m3RdcAgro = m3RdcAgro; // para Sección 3
   // Recalcular semanal (depende de m.m3AsignadoFinal)
   calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 }
-function calcularSemanasCorrelativas(mesesCiclo, fIni, fFin) {
+function calcularSemanasCorrelativas(mesesCiclo, fIni, fFin, redistribucionTermicaParam) {
     let mapaDiario = {};
-    const usarRedistribTermica = !!document.getElementById("chkRedistribTermica")?.checked;
+    const usarRedistribTermica = (redistribucionTermicaParam !== undefined)
+      ? !!redistribucionTermicaParam
+      : !!document.getElementById("chkRedistribTermica")?.checked;
     mesesCiclo.forEach(m => {
         const m3MesBase = Number((m.m3RdcAgro != null ? m.m3RdcAgro : m.m3AsignadoFinal) || 0);
         const m3Diario = (m.diasActivos > 0) ? (m3MesBase / m.diasActivos) : 0;
@@ -2126,6 +2194,57 @@ document.getElementById("chkRedistribTermica")?.addEventListener("change", () =>
 
     calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 });
+
+// =============================================================================
+// API PÚBLICA — Integración FertiPRO ↔ SIG Riego Pro
+// =============================================================================
+// Uso desde FertiPRO (o cualquier app externa):
+//
+//   const resultado = await window.calcularBalanceAPI({
+//     lat: 39.443557,
+//     lon: -0.740434,
+//     cultivo: "Naranjo",
+//     fecha_ini: "2026-03-01",
+//     fecha_fin: "2026-10-31",
+//     vol_disponible: 4000        // opcional, default 4000 m³/ha
+//   });
+//
+// Response:
+//   {
+//     ok: true,
+//     redistribucion_termica: true,
+//     programacion_semanal: [
+//       { semana: 1, fecha_ini: "01/03", fecha_fin: "07/03", riego_neto_m3ha: 42 },
+//       ...
+//     ],
+//     balance_mensual: [ ... ]
+//   }
+// =============================================================================
+window.calcularBalanceAPI = async function(params) {
+  const { lat, lon, cultivo, fecha_ini, fecha_fin, vol_disponible = 4000 } = params || {};
+
+  // Validación de entrada
+  if (lat == null || lon == null || !cultivo || !fecha_ini || !fecha_fin) {
+    return { ok: false, error: "Parámetros requeridos: lat, lon, cultivo, fecha_ini, fecha_fin" };
+  }
+
+  // Verificar que el cultivo existe en el catálogo
+  const cultivoEncontrado = cultivosData.find(c => normalizar(c.nombre) === normalizar(cultivo));
+  if (!cultivoEncontrado) {
+    const disponibles = cultivosData.map(c => c.nombre).slice(0, 10).join(", ");
+    return { ok: false, error: `Cultivo "${cultivo}" no encontrado en catálogo. Ejemplos: ${disponibles}` };
+  }
+
+  try {
+    const resultado = await calcularPlanRiego({
+      skipAemet: true,
+      apiParams: { lat, lon, cultivo, fecha_ini, fecha_fin, vol_disponible }
+    });
+    return resultado;
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+};
 function openInfoModal() {
     document.getElementById("infoModal").style.display = "block";
 }
