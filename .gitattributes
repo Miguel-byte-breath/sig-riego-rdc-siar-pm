@@ -1,0 +1,14 @@
+# Normaliza saltos de línea a LF para todos los archivos de texto.
+# Cada usuario (Windows / Mac / Linux) ve los archivos como prefiera,
+# pero en el repositorio se guardan siempre con LF.
+* text=auto eol=lf
+
+# Marca explícita de tipos binarios para que git no intente convertirlos.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.xlsx  binary
