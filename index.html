@@ -312,7 +312,7 @@ Chart.defaults.font.family = "'Segoe UI', 'Helvetica', 'Arial', sans-serif";
 Chart.defaults.font.size = 12;
 Chart.defaults.color = '#64748b';
 
-let cultivosData = [], exportDataMensual = [], exportDataSemanal = [], miGrafica = null, miGraficaSemana = null;
+let cultivosData = [], cultivosSativumData = [], exportDataMensual = [], exportDataSemanal = [], miGrafica = null, miGraficaSemana = null;
 
 // ─── Helper: normaliza strings para comparación de nombres de cultivo ───────
 function normalizar(str) {
@@ -607,8 +607,9 @@ cont.innerHTML = `
 // Carga inicial de cultivos
 Promise.all([
     fetch('cultivos.json').then(r => r.json()),
-    fetch('cultivos_horticolas.json').then(r => r.json())
-]).then(([leñosos, horticolas]) => {
+    fetch('cultivos_horticolas.json').then(r => r.json()),
+    fetch('cultivos_sativum.json').then(r => r.json())
+]).then(([leñosos, horticolas, sativum]) => {
 
     // Normalizar leñosos
     const cultivosLeñosos = leñosos.map(c => ({
@@ -619,7 +620,10 @@ Promise.all([
    // Hortícolas ya vienen con tipo correcto
 const cultivosHorticolas = horticolas;
 
-// Unificar
+// Cultivos Sativum (207 cultivos, formato fenologico, nombres exactos API)
+cultivosSativumData = sativum;
+
+// Unificar leñosos + hortícolas para la UI (el dropdown no cambia)
 cultivosData = [...cultivosLeñosos, ...cultivosHorticolas];
 
 // Ordenar alfabéticamente
@@ -2229,11 +2233,12 @@ window.calcularBalanceAPI = async function(params) {
     return { ok: false, error: "Parámetros requeridos: lat, lon, cultivo, fecha_ini, fecha_fin" };
   }
 
-  // Verificar que el cultivo existe en el catálogo
-  const cultivoEncontrado = cultivosData.find(c => normalizar(c.nombre) === normalizar(cultivo));
+  // Verificar que el cultivo existe en el catálogo (leñosos+hortícolas o Sativum)
+  const cultivoEncontrado = cultivosData.find(c => normalizar(c.nombre) === normalizar(cultivo))
+    || cultivosSativumData.find(c => normalizar(c.nombre) === normalizar(cultivo));
   if (!cultivoEncontrado) {
-    const disponibles = cultivosData.map(c => c.nombre).slice(0, 10).join(", ");
-    return { ok: false, error: `Cultivo "${cultivo}" no encontrado en catálogo. Ejemplos: ${disponibles}` };
+    const ejemplos = [...cultivosData, ...cultivosSativumData].map(c => c.nombre).slice(0, 10).join(", ");
+    return { ok: false, error: `Cultivo "${cultivo}" no encontrado en catálogo. Ejemplos: ${ejemplos}` };
   }
 
   try {
