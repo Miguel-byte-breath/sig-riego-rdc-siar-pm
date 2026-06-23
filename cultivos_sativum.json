@@ -1,0 +1,3107 @@
+[
+  {
+    "nombre": "Arroz sin descascarillar",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.1667,
+      "mid": 0.4444,
+      "fin": 0.2222
+    },
+    "kc": {
+      "ini": 1.05,
+      "mid": 1.2,
+      "fin": 0.7
+    }
+  },
+  {
+    "nombre": "Trigo blando panificable - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo blando panificable - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo blando pienso - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo blando pienso - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Espelta - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Espelta - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo duro - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1389,
+      "dev": 0.3056,
+      "mid": 0.3611,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo duro - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1389,
+      "dev": 0.3056,
+      "mid": 0.3611,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Trigo (Khorasan)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Triticale - Rto. igual o superior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Triticale - Rto. inferior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Cebada 2c - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Cebada 2c - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Cebada 6c - Rto. inferior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Cebada 6c - Rto. igual o superior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Avena (grano) - Rto. inferior a 3.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Avena (grano) - Rto. igual o superior a 3.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Centeno (grano) - Rto. igual o superior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Centeno (grano) - Rto. inferior a 4.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2273,
+      "mid": 0.4091,
+      "fin": 0.2272
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Maíz (grano) - Rto. igual o superior a 12.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2,
+      "dev": 0.2667,
+      "mid": 0.3333,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.2,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Maíz (grano) - Rto. inferior a 12.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2,
+      "dev": 0.2667,
+      "mid": 0.3333,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.2,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Mijo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1429,
+      "dev": 0.2381,
+      "mid": 0.381,
+      "fin": 0.238
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.0,
+      "fin": 0.3
+    }
+  },
+  {
+    "nombre": "Alforfón",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1429,
+      "dev": 0.2381,
+      "mid": 0.381,
+      "fin": 0.238
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.0,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Alfalfa (heno/ floración) - Rto. inferior a 10.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0952,
+      "dev": 0.1429,
+      "mid": 0.5238,
+      "fin": 0.2381
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.95,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Alfalfa (heno/ floración) - Rto. igual o superior a 10.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0952,
+      "dev": 0.1429,
+      "mid": 0.5238,
+      "fin": 0.2381
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.95,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Alfalfa (verde/ floración) - Rto. igual o superior a 34.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0952,
+      "dev": 0.1429,
+      "mid": 0.5238,
+      "fin": 0.2381
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.2,
+      "fin": 1.05
+    }
+  },
+  {
+    "nombre": "Alfalfa (verde/ floración) - Rto. inferior 34.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0952,
+      "dev": 0.1429,
+      "mid": 0.5238,
+      "fin": 0.2381
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.2,
+      "fin": 1.05
+    }
+  },
+  {
+    "nombre": "Esparceta (verde)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.175,
+      "mid": 0.525,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 1.0
+    }
+  },
+  {
+    "nombre": "Esparceta (heno)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.175,
+      "mid": 0.525,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 1.0
+    }
+  },
+  {
+    "nombre": "Esparceta (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.175,
+      "mid": 0.525,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 1.0
+    }
+  },
+  {
+    "nombre": "Veza panónica (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.175,
+      "mid": 0.525,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Veza panónica (heno)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.175,
+      "mid": 0.525,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Veza (verde/ floración)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1081,
+      "dev": 0.1892,
+      "mid": 0.4865,
+      "fin": 0.2162
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Veza vellosa (verde/ floración)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1081,
+      "dev": 0.1892,
+      "mid": 0.4865,
+      "fin": 0.2162
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de veza y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y cebada 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y cebada 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y cebada 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y trigo 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y trigo 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y trigo 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y raigrás 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y raigrás 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y raigrás 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y triticale 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y triticale 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza y triticale 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza 75% y cebada-avena 25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza 50% y cebada-avena 50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de veza 25% y cebada-avena 75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y cebada 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y cebada 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de guisante y cebada 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de trébol y raigrás 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de trébol y raigrás 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Heno de trébol y raigrás 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.1,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Centeno (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Triticale (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Trigo blando (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Avena (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Cebada (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.1,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Sorgo (siega en verde/forraje)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.15,
+      "dev": 0.25,
+      "mid": 0.45,
+      "fin": 0.15
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Maíz (verde/ ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2308,
+      "dev": 0.3077,
+      "mid": 0.3846,
+      "fin": 0.0769
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.2,
+      "fin": 1.05
+    }
+  },
+  {
+    "nombre": "Nabo (fresco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Remolacha forrajera",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1613,
+      "dev": 0.1935,
+      "mid": 0.5806,
+      "fin": 0.0646
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Raigrás perenne",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0417,
+      "dev": 0.125,
+      "mid": 0.5833,
+      "fin": 0.25
+    },
+    "kc": {
+      "ini": 0.85,
+      "mid": 1.0,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Festuca",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0417,
+      "dev": 0.125,
+      "mid": 0.5833,
+      "fin": 0.25
+    },
+    "kc": {
+      "ini": 0.85,
+      "mid": 1.0,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de triticale y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de triticale y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de triticale y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de centeno y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de centeno y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de centeno y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cebada y avena 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cebada y avena 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cebada y avena 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cereales y raigrás 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cereales y raigrás 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de cereales y raigrás 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y cebada 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y cebada 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Heno de trigo y cebada 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.1667,
+      "mid": 0.5556,
+      "fin": 0.1944
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Fresón",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Perejil",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2,
+      "dev": 0.2667,
+      "mid": 0.4,
+      "fin": 0.1333
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Acelga",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2143,
+      "dev": 0.2857,
+      "mid": 0.3571,
+      "fin": 0.1429
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Grelos",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Cardo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2,
+      "dev": 0.2,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Hinojo (semillas)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Guindilla",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Guisante (verde/ semillas)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2778,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Ajo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2692,
+      "mid": 0.3846,
+      "fin": 0.1538
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Pimiento rojo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Melón",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2083,
+      "dev": 0.2917,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.05,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Brócoli",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Lechuga Romana",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Lechuga Iceberg",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Sandía",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.05,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Cebolla",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2692,
+      "mid": 0.3846,
+      "fin": 0.1538
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Apio",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Coliflor",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Berenjena",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Calabacín (maduro)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2778,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Calabacín (inmaduro)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2778,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Alcachofa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2,
+      "dev": 0.2,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Pepino",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Puerro",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col de Bruselas",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Endivia",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Zanahoria",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Judía / Alubia (verde)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2778,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Espinaca",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2143,
+      "dev": 0.2857,
+      "mid": 0.3571,
+      "fin": 0.1429
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Calabaza",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.05,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Rábano",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2143,
+      "dev": 0.2857,
+      "mid": 0.3571,
+      "fin": 0.1429
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Tomate",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.25,
+      "dev": 0.25,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.15,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Fresa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Espárrago (blanco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2083,
+      "dev": 0.25,
+      "mid": 0.3333,
+      "fin": 0.2083
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.1,
+      "fin": 0.7
+    }
+  },
+  {
+    "nombre": "Maíz dulce (fresco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.15,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Escarola",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Guisante (verde/ vainas)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2778,
+      "mid": 0.3333,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Rúcula",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2143,
+      "dev": 0.2857,
+      "mid": 0.3571,
+      "fin": 0.1429
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Canónigos",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Repollo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col roja o lombarda",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col Milán",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Berza",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col china",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col crespa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Col picuda",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2105,
+      "dev": 0.2632,
+      "mid": 0.3684,
+      "fin": 0.1579
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.0,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Pimiento verde",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2273,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1364
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  },
+  {
+    "nombre": "Remolacha de mesa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.2778,
+      "mid": 0.3889,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.2,
+      "fin": 1.0
+    }
+  },
+  {
+    "nombre": "Algodón",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1538,
+      "dev": 0.2564,
+      "mid": 0.3077,
+      "fin": 0.2821
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.7
+    }
+  },
+  {
+    "nombre": "Girasol (aceite) - Rto. inferior a 3.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2692,
+      "mid": 0.3462,
+      "fin": 0.1923
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Girasol (aceite) - Rto. igual o superior a 3.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2692,
+      "mid": 0.3462,
+      "fin": 0.1923
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Colza - Rto. igual o superior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Colza - Rto. inferior a 4.500 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1053,
+      "dev": 0.3158,
+      "mid": 0.3684,
+      "fin": 0.2105
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Remolacha - Rto. igual o superior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1613,
+      "dev": 0.1935,
+      "mid": 0.5806,
+      "fin": 0.0646
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Remolacha - Rto. inferior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1613,
+      "dev": 0.1935,
+      "mid": 0.5806,
+      "fin": 0.0646
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Remolacha azucarera - Rto. igual o superior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1613,
+      "dev": 0.1935,
+      "mid": 0.5806,
+      "fin": 0.0646
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Remolacha azucarera - Rto. inferior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1613,
+      "dev": 0.1935,
+      "mid": 0.5806,
+      "fin": 0.0646
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Azafrán",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.2222,
+      "dev": 0.2222,
+      "mid": 0.3889,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.7,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Lavandin",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1111,
+      "dev": 0.2222,
+      "mid": 0.5,
+      "fin": 0.1667
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.65,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Lino",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.2333,
+      "mid": 0.3333,
+      "fin": 0.2667
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.1,
+      "fin": 0.25
+    }
+  },
+  {
+    "nombre": "Menta",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.075,
+      "dev": 0.125,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.15,
+      "fin": 1.1
+    }
+  },
+  {
+    "nombre": "Tabaco Virginia",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1765,
+      "dev": 0.2647,
+      "mid": 0.3235,
+      "fin": 0.2353
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.2,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Tabaco Burley",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1765,
+      "dev": 0.2647,
+      "mid": 0.3235,
+      "fin": 0.2353
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.2,
+      "fin": 0.9
+    }
+  },
+  {
+    "nombre": "Lúpulo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1087,
+      "dev": 0.2174,
+      "mid": 0.5217,
+      "fin": 0.1522
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 1.05,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Judía escarlata",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Fenogreco",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.28,
+      "mid": 0.36,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.0,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Judía/maíz 75-25%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.2667,
+      "mid": 0.3667,
+      "fin": 0.1999
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Judía/maíz 50-50%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.2667,
+      "mid": 0.3667,
+      "fin": 0.1999
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Judía/maíz 25-75%",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.2667,
+      "mid": 0.3667,
+      "fin": 0.1999
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 1.15,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Guisante (grano)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.25,
+      "mid": 0.4167,
+      "fin": 0.1666
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.3
+    }
+  },
+  {
+    "nombre": "Haba (grano seco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.129,
+      "dev": 0.2258,
+      "mid": 0.4516,
+      "fin": 0.1936
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 1.15,
+      "fin": 0.3
+    }
+  },
+  {
+    "nombre": "Garbanzo (Kabuli)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.28,
+      "mid": 0.36,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.0,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Garbanzo (Desi)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.28,
+      "mid": 0.36,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.0,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Lenteja",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1818,
+      "dev": 0.2727,
+      "mid": 0.3636,
+      "fin": 0.1819
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.05,
+      "fin": 0.3
+    }
+  },
+  {
+    "nombre": "Judía / Alubia (grano seco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Judía escarlata (grano seco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Judía de lima (grano seco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Judía de Egipto (grano seco)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.16,
+      "dev": 0.24,
+      "mid": 0.4,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Veza (grano)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1667,
+      "dev": 0.25,
+      "mid": 0.4167,
+      "fin": 0.1666
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.3
+    }
+  },
+  {
+    "nombre": "Soja",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1154,
+      "dev": 0.2308,
+      "mid": 0.4231,
+      "fin": 0.2307
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.15,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Almendro",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.9,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Manzano",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.95,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Pera",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.95,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Cerezo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 0.85,
+      "fin": 0.7
+    }
+  },
+  {
+    "nombre": "Ciruelo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.0,
+      "fin": 0.55
+    }
+  },
+  {
+    "nombre": "Albaricoquero",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.0,
+      "fin": 0.55
+    }
+  },
+  {
+    "nombre": "Melocotón",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.95,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Caqui",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.35,
+      "mid": 0.9,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Membrillo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.9,
+      "fin": 0.55
+    }
+  },
+  {
+    "nombre": "Avellano",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.75,
+      "fin": 0.35
+    }
+  },
+  {
+    "nombre": "Castaño",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.95,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Nogal",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.1,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Pistacho",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.0,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Endrino",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.8,
+      "fin": 0.5
+    }
+  },
+  {
+    "nombre": "Higuera",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.8,
+      "fin": 0.4
+    }
+  },
+  {
+    "nombre": "Granado",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.45,
+      "mid": 0.7,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Papaya",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1304,
+      "dev": 0.2174,
+      "mid": 0.4348,
+      "fin": 0.2174
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.85,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Viñedo (vino) - Rto. inferior a 8.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2727,
+      "mid": 0.4091,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 0.85,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Viñedo (vino) - Rto. igual o superior a 8.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1364,
+      "dev": 0.2727,
+      "mid": 0.4091,
+      "fin": 0.1818
+    },
+    "kc": {
+      "ini": 0.3,
+      "mid": 0.85,
+      "fin": 0.45
+    }
+  },
+  {
+    "nombre": "Kiwi",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.0833,
+      "dev": 0.2292,
+      "mid": 0.5,
+      "fin": 0.1875
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 1.05,
+      "fin": 1.05
+    }
+  },
+  {
+    "nombre": "Naranjo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 0.75,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Limonero",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 0.75,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Clementina",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 0.75,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Olivo",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 0.6,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Olivar de mesa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 0.6,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Aguacate",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.8,
+      "mid": 0.85,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Mango",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.8,
+      "mid": 0.85,
+      "fin": 0.85
+    }
+  },
+  {
+    "nombre": "Algarroba",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.4,
+      "mid": 0.8,
+      "fin": 0.4
+    }
+  },
+  {
+    "nombre": "Níspero",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1,
+      "dev": 0.1,
+      "mid": 0.6,
+      "fin": 0.2
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 0.75,
+      "fin": 0.6
+    }
+  },
+  {
+    "nombre": "Patata - Rto. igual o superior a 45.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2308,
+      "mid": 0.3462,
+      "fin": 0.2307
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.15,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Patata - Rto. inferior a 45.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1923,
+      "dev": 0.2308,
+      "mid": 0.3462,
+      "fin": 0.2307
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.15,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Batata",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1333,
+      "dev": 0.2,
+      "mid": 0.4,
+      "fin": 0.2667
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.1,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Boniato",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1333,
+      "dev": 0.2,
+      "mid": 0.4,
+      "fin": 0.2667
+    },
+    "kc": {
+      "ini": 0.5,
+      "mid": 1.1,
+      "fin": 0.65
+    }
+  },
+  {
+    "nombre": "Chufa",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1429,
+      "dev": 0.2143,
+      "mid": 0.4286,
+      "fin": 0.2142
+    },
+    "kc": {
+      "ini": 0.6,
+      "mid": 1.0,
+      "fin": 0.75
+    }
+  },
+  {
+    "nombre": "Hinojo (bulbos)",
+    "tipo": "fenologico",
+    "fases_pct": {
+      "ini": 0.1429,
+      "dev": 0.25,
+      "mid": 0.3929,
+      "fin": 0.2142
+    },
+    "kc": {
+      "ini": 0.7,
+      "mid": 1.05,
+      "fin": 0.8
+    }
+  }
+]
