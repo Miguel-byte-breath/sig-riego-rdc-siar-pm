@@ -4,5 +4,9 @@
     { "src": "api/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.json", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/api/calcular-riego", "dest": "/api/calcular-riego.js" },
+    { "src": "/api/(.*)",            "dest": "/api/$1" }
   ]
 }
