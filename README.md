@@ -323,3 +323,48 @@ Garantiza reproducibilidad determinista del cálculo y permite auditoría técni
 La lógica agronómica de balance y programación semanal se mantiene intacta en ambas versiones.
 
 ---
+
+## Integración con FertiPRO Add-on Sativum
+
+[FertiPRO Add-on Sativum](https://fertipro.vercel.app) es un módulo web de planificación de abonado NPK para agricultores españoles (Sativum/ITACyL). Integra SIG Riego Pro como motor de planificación hídrica: el asesor obtiene el plan de riego semanal directamente desde la sesión de FertiPRO Add-on Sativum, sin navegar a esta aplicación.
+
+La comunicación se realiza mediante el endpoint público `/api/calcular-riego`, que acepta los parámetros de la parcela y el cultivo y devuelve el balance mensual y la programación semanal en JSON.
+
+### Endpoint: `POST /api/calcular-riego`
+
+**Request:**
+
+```json
+{
+  "lat":            40.123,
+  "lon":            -4.567,
+  "cultivo":        "Patata",
+  "fecha_ini":      "2026-04-01",
+  "fecha_fin":      "2026-09-30",
+  "vol_disponible": 2500
+}
+```
+
+- `cultivo` — nombre exacto del catálogo (207 cultivos Sativum + 40 hortícolas + 25 leñosos)
+- `vol_disponible` — m³/ha disponibles; opcional, default 4 000
+- `lat` / `lon` — coordenadas WGS84 de la parcela
+
+**Response:**
+
+```json
+{
+  "ok": true,
+  "redistribucion_termica": true,
+  "programacion_semanal": [
+    { "semana": 14, "fecha_ini": "01/04", "fecha_fin": "07/04", "riego_neto_m3ha": 28 }
+  ],
+  "balance_mensual": [
+    { "mes": "abr-26", "dias": 30, "eto_mm_dia": 3.20, "kc": 0.55,
+      "etc_mm": 52.8, "p_mm": 42.1, "pe_mm": 28.7, "nhn_m3ha": 241, "asignado_m3ha": 215 }
+  ]
+}
+```
+
+CORS habilitado para `fertipro.vercel.app` y `localhost:*` (desarrollo). Timeout interno: 20 s.
+
+---
