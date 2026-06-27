@@ -282,15 +282,15 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
     )
 
     if r.status_code != 200:
-        return False, {}, {}, {}, {"http_status": r.status_code, "text_head": r.text[:180]}
+        return False, {}, {}, {}, {}, {"http_status": r.status_code, "text_head": r.text[:180]}
 
     try:
         data = r.json().get("datos", [])
     except Exception:
-        return False, {}, {}, {}, {"error": "json_parse_error", "text_head": r.text[:180]}
+        return False, {}, {}, {}, {}, {"error": "json_parse_error", "text_head": r.text[:180]}
 
     if not isinstance(data, list) or not data:
-        return False, {}, {}, {}, {"error": "no_rows"}
+        return False, {}, {}, {}, {}, {"error": "no_rows"}
 
     eto_por_mes = {}
     pe_por_mes = {}
@@ -352,7 +352,7 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
         and isinstance(p_climatologica, dict) \
         and len(p_climatologica) > 0
 
-    return ok, eto_climatologica, pe_climatologica, p_climatologica, {
+    return ok, eto_climatologica, pe_climatologica, p_climatologica, conteo, {
         "rows": len(data),
         "months_ok": sorted(list(eto_climatologica.keys())),
     }
@@ -394,19 +394,27 @@ class handler(BaseHTTPRequestHandler):
                 mes_inicio, mes_fin = 1, 12
 
              # ==========================================================
-            # Fallback SIAR Mensual (pack completo ETo+Pe)
+            # Fallback SIAR Mensual — mosaico por mes
+            # Para cada mes del ciclo: estación más cercana con dato.
+            # Criterio: proximidad primero, profundidad histórica secundaria.
+            # Nota: asume mes_fin >= mes_inicio (ciclos sin cruce de año).
             # ==========================================================
+            meses_ciclo = set(range(mes_inicio, mes_fin + 1))
+            meses_cubiertos = set()
+            estacion_por_mes = {}   # {mes: {code, nombre, dist_km, anios}}
             estaciones_probadas = []
-            pack_ok = False
             eto_climatologica = {}
             pe_climatologica = {}
             p_climatologica = {}
             estacion_usada = None
-            fallback_index = None
             estacion_nombre = None
-            for idx, st in enumerate(candidatas):
-                code = st["Codigo"]
+            fallback_index = None
 
+            for idx, st in enumerate(candidatas):
+                if meses_cubiertos >= meses_ciclo:
+                    break
+
+                code = st["Codigo"]
                 estaciones_probadas.append(
                     {
                         "idx": idx,
@@ -417,7 +425,7 @@ class handler(BaseHTTPRequestHandler):
                     }
                 )
 
-                ok, eto_tmp, pe_tmp, p_tmp, info = fetch_pack_for_station(
+                ok_any, eto_tmp, pe_tmp, p_tmp, conteo_tmp, info = fetch_pack_for_station(
                     base_url_data=base_url_data,
                     token=token,
                     station_code=code,
@@ -427,18 +435,32 @@ class handler(BaseHTTPRequestHandler):
                     mes_fin=mes_fin,
                 )
 
-                estaciones_probadas[-1]["result"] = "ok" if ok else "fail"
+                nuevos = []
+                for mes in sorted(meses_ciclo - meses_cubiertos):
+                    if mes in eto_tmp and mes in pe_tmp and mes in p_tmp:
+                        eto_climatologica[mes] = eto_tmp[mes]
+                        pe_climatologica[mes] = pe_tmp[mes]
+                        p_climatologica[mes] = p_tmp[mes]
+                        estacion_por_mes[mes] = {
+                            "code": code,
+                            "nombre": st.get("Estacion"),
+                            "dist_km": round(st.get("dist_km", 0.0), 3),
+                            "anios": conteo_tmp.get(mes, 0),
+                        }
+                        nuevos.append(mes)
+
+                meses_cubiertos.update(nuevos)
+                estaciones_probadas[-1]["meses_aportados"] = nuevos
+                estaciones_probadas[-1]["result"] = "ok" if nuevos else "fail"
                 estaciones_probadas[-1]["info"] = info
 
-                if ok:
-                    pack_ok = True
-                    eto_climatologica = eto_tmp
-                    pe_climatologica = pe_tmp
-                    p_climatologica = p_tmp
+                if nuevos and estacion_usada is None:
                     estacion_usada = code
                     estacion_nombre = st.get("Estacion")
                     fallback_index = idx
-                    break
+
+            pack_ok = len(meses_cubiertos) > 0
+            meses_sin_datos = sorted(list(meses_ciclo - meses_cubiertos))
 
             if not pack_ok:
                 _send_json(
@@ -460,12 +482,14 @@ class handler(BaseHTTPRequestHandler):
                 200,
                 {
                     "ok": True,
-                    "estacion": estacion_usada,          # compat con frontend
+                    "estacion": estacion_usada,
                     "estacionUsada": estacion_usada,
                     "estacionNombre": estacion_nombre,
                     "fallbackIndex": fallback_index,
-                    "fallbackNote": _fallback_note(fallback_index),
+                    "fallbackNote": _fallback_note(fallback_index) if fallback_index is not None else "sin_datos",
                     "estacionesProbadas": estaciones_probadas,
+                    "estacionPorMes": estacion_por_mes,
+                    "mesesSinDatos": meses_sin_datos,
                     "etoMensual": eto_climatologica,
                     "peMensual": pe_climatologica,
                     "pMensual": p_climatologica,

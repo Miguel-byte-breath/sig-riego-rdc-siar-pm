@@ -313,7 +313,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const { etoMensual, peMensual, pMensual } = dataSiar;
+    const { etoMensual, peMensual, pMensual, estacionPorMes = {} } = dataSiar;
     const volV = Number(vol_disponible) || 4000;
 
     // ── 4. Bucle mensual ───────────────────────────────────────────────────
@@ -373,6 +373,8 @@ module.exports = async function handler(req, res) {
       const m3Asig = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
       m.m3AsignadoFinal = m3Asig;
       m.m3RdcAgro       = m3Asig;   // sin ajuste RDC en esta integración
+      // estacionPorMes tiene claves integer en Python → strings en JSON; ambos funcionan en JS
+      const stInfo = estacionPorMes[m.mesNum] || estacionPorMes[String(m.mesNum)] || null;
       return {
         mes:          m.etiqueta,
         dias:         m.diasActivos,
@@ -383,18 +385,26 @@ module.exports = async function handler(req, res) {
         pe_mm:        Math.round(m.peMm * 10) / 10,
         nhn_m3ha:     Math.round(m.nhn_m3),
         asignado_m3ha: Math.round(m3Asig),
+        estacion:     stInfo?.nombre || null,
+        anios_datos:  stInfo?.anios ?? null,
       };
     });
 
     // ── 6. Programación semanal (redistribución térmica) ──────────────────
     const programacionSemanal = calcularSemanasCorrelativas(mesesCiclo, fIni, fFin);
 
+    // Estación de display: nombre único si todas las filas usan la misma; null si mosaico
+    const stationNames = [...new Set(Object.values(estacionPorMes).map(s => s.nombre).filter(Boolean))];
+    const estacionDisplay = stationNames.length === 1 ? stationNames[0] : null;
+
     return res.status(200).json({
       ok:                    true,
       cultivo:               cultivoObj.nombre,
+      estacion:              estacionDisplay,
       redistribucion_termica: true,
       programacion_semanal:  programacionSemanal,
       balance_mensual:       balanceMensual,
+      meses_sin_datos:       dataSiar.mesesSinDatos || [],
     });
 
   } catch (err) {
