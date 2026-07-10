@@ -606,25 +606,27 @@ cont.innerHTML = `
 
 // Carga inicial de cultivos
 Promise.all([
-    fetch('cultivos.json').then(r => r.json()),
+    fetch('cultivos_frutales.json').then(r => r.json()),
     fetch('cultivos_horticolas.json').then(r => r.json()),
+    fetch('cultivos_leguminosas.json').then(r => r.json()).catch(() => []),
+    fetch('cultivos_extensivos.json').then(r => r.json()).catch(() => []),
     fetch('cultivos_sativum.json').then(r => r.json())
-]).then(([leñosos, horticolas, sativum]) => {
+]).then(([frutales, horticolas, leguminosas, extensivos, sativum]) => {
 
-    // Normalizar leñosos
-    const cultivosLeñosos = leñosos.map(c => ({
-        ...c,
-        tipo: "mensual_fijo"
-    }));
+    // Frutales (leñosos): mensual_fijo por defecto, sin pisar el tipo de
+    // entradas que ya lo traen propio (ej. Viña vinificación, fenológico)
+    const cultivosFrutales = frutales.map(c => ({ tipo: "mensual_fijo", ...c }));
 
-   // Hortícolas ya vienen con tipo correcto
+   // Hortícolas/leguminosas/extensivos ya vienen con tipo correcto
 const cultivosHorticolas = horticolas;
+const cultivosLeguminosas = leguminosas;
+const cultivosExtensivos = extensivos;
 
 // Cultivos Sativum (207 cultivos, formato fenologico, nombres exactos API)
 cultivosSativumData = sativum;
 
-// Unificar leñosos + hortícolas para la UI (el dropdown no cambia)
-cultivosData = [...cultivosLeñosos, ...cultivosHorticolas];
+// Unificar catálogo propio de FertiPRO para la UI (el dropdown no cambia)
+cultivosData = [...cultivosFrutales, ...cultivosHorticolas, ...cultivosLeguminosas, ...cultivosExtensivos];
 
 // Ordenar alfabéticamente
 cultivosData.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));

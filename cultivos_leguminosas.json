@@ -1,0 +1,44 @@
+[
+  {
+    "nombre": "Garbanzo (desi)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.16, "dev": 0.28, "mid": 0.36, "fin": 0.2 },
+    "kc": { "ini": 0.4, "mid": 1.0, "fin": 0.35 },
+    "_nota": "Copiado de cultivos_sativum.json ('Garbanzo (Desi)') — mismo cultivo, solo difiere mayúscula/minúscula del nombre."
+  },
+  {
+    "nombre": "Guisante (grano)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1667, "dev": 0.25, "mid": 0.4167, "fin": 0.1666 },
+    "kc": { "ini": 0.4, "mid": 1.15, "fin": 0.3 },
+    "_nota": "Copiado de cultivos_sativum.json ('Guisante (grano)') — nombre ya coincide exacto (esto ya funcionaba antes por 'spillover' hacia cultivos_sativum.json)."
+  },
+  {
+    "nombre": "Lenteja",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.3636, "fin": 0.1819 },
+    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.3 },
+    "_nota": "Copiado de cultivos_sativum.json ('Lenteja') — nombre ya coincide exacto."
+  },
+  {
+    "nombre": "Soja",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1154, "dev": 0.2308, "mid": 0.4231, "fin": 0.2307 },
+    "kc": { "ini": 0.4, "mid": 1.15, "fin": 0.5 },
+    "_nota": "Copiado de cultivos_sativum.json ('Soja') — nombre ya coincide exacto."
+  },
+  {
+    "nombre": "Haba (seca)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.129, "dev": 0.2258, "mid": 0.4516, "fin": 0.1936 },
+    "kc": { "ini": 0.45, "mid": 1.15, "fin": 0.3 },
+    "_nota": "Adaptado de cultivos_sativum.json ('Haba (grano seco)') — mismo cultivo (haba/fava bean seca), nombre ajustado al canónico de FertiPRO."
+  },
+  {
+    "nombre": "Judía (seca)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.16, "dev": 0.24, "mid": 0.4, "fin": 0.2 },
+    "kc": { "ini": 0.4, "mid": 1.15, "fin": 0.35 },
+    "_nota": "Adaptado de cultivos_sativum.json ('Judía / Alubia (grano seco)'), la variedad más genérica de judía seca de ese catálogo (también tiene Judía de Egipto, de lima, escarlata — se eligió la genérica 'Judía/Alubia' por ser la más representativa de 'Judía (seca)' sin más especificación)."
+  }
+]

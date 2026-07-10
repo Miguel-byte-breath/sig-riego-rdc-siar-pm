@@ -251,7 +251,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST')
     return res.status(405).json({ ok: false, error: 'Método no permitido. Usa POST.' });
 
-  const { lat, lon, cultivo, fecha_ini, fecha_fin, vol_disponible = 4000 } = req.body || {};
+  const { lat, lon, cultivo, fecha_ini, fecha_fin, vol_disponible = 4000, origen } = req.body || {};
 
   if (lat == null || lon == null || !cultivo || !fecha_ini || !fecha_fin) {
     return res.status(400).json({
@@ -262,27 +262,55 @@ module.exports = async function handler(req, res) {
 
   try {
     // ── 1. Cargar catálogos ────────────────────────────────────────────────
+    // Dos "gemelos digitales" comparten este endpoint: FertiPRO (motor propio,
+    // catálogo canónico VisualNacert) y fertipro-api-sativum (catálogo Sativum
+    // ITACyL). `origen` ('fertipro'|'sativum') indica cuál llama, para no
+    // buscar en el catálogo del otro — evita que un cambio en un catálogo
+    // rompa silenciosamente al otro gemelo. Si `origen` no viene (llamadas
+    // antiguas), se mantiene el comportamiento combinado de siempre.
     const root = join(__dirname, '..');
-    const [rawLenosos, rawHorticolas, rawSativum] = await Promise.all([
-      readFile(join(root, 'cultivos.json'),           'utf8'),
-      readFile(join(root, 'cultivos_horticolas.json'), 'utf8'),
-      readFile(join(root, 'cultivos_sativum.json'),    'utf8'),
+
+    async function loadJsonSafe(filename) {
+      try {
+        return JSON.parse(await readFile(join(root, filename), 'utf8'));
+      } catch (err) {
+        if (err.code === 'ENOENT') return []; // fichero todavía no creado (categoría pendiente)
+        throw err;
+      }
+    }
+
+    const [rawFrutales, rawHorticolas, rawLeguminosas, rawExtensivos, rawSativum] = await Promise.all([
+      loadJsonSafe('cultivos_frutales.json'),
+      loadJsonSafe('cultivos_horticolas.json'),
+      loadJsonSafe('cultivos_leguminosas.json'),
+      loadJsonSafe('cultivos_extensivos.json'),
+      loadJsonSafe('cultivos_sativum.json'),
     ]);
 
-    // Leñosos: añadir tipo:'mensual_fijo' igual que en index.html
-    const lenosos   = JSON.parse(rawLenosos).map(c => ({ ...c, tipo: 'mensual_fijo' }));
-    const horticolas = JSON.parse(rawHorticolas);   // ya tienen tipo:'fenologico'
-    const sativum    = JSON.parse(rawSativum);       // ya tienen tipo:'fenologico'
+    // Frutales (leñosos): igual que antes, mensual_fijo por defecto — pero
+    // sin pisar el `tipo` de entradas que ya lo traen propio (ej. las
+    // variantes fenológicas copiadas de Sativum, como Viña vinificación).
+    const frutales    = rawFrutales.map(c => ({ tipo: 'mensual_fijo', ...c }));
+    const horticolas  = rawHorticolas;   // ya tienen tipo:'fenologico'
+    const leguminosas = rawLeguminosas;  // ya tienen tipo:'fenologico'
+    const extensivos  = rawExtensivos;   // formato por definir según categoría
+    const sativum     = rawSativum;      // ya tienen tipo:'fenologico'
 
-    const todosCultivos = [...lenosos, ...horticolas, ...sativum];
+    const catalogoFertipro = [...frutales, ...horticolas, ...leguminosas, ...extensivos];
+    const catalogoSativum  = sativum;
+
+    let todosCultivos;
+    if (origen === 'sativum')       todosCultivos = catalogoSativum;
+    else if (origen === 'fertipro') todosCultivos = catalogoFertipro;
+    else                             todosCultivos = [...catalogoFertipro, ...catalogoSativum]; // compatibilidad hacia atrás
 
     // ── 2. Buscar cultivo (normalizado) ────────────────────────────────────
     const cultivoObj = todosCultivos.find(c => normalizar(c.nombre) === normalizar(cultivo));
     if (!cultivoObj) {
-      const ejemplos = sativum.map(c => c.nombre).slice(0, 8).join(', ');
+      const ejemplos = todosCultivos.map(c => c.nombre).slice(0, 8).join(', ');
       return res.status(404).json({
         ok: false,
-        error: `Cultivo "${cultivo}" no encontrado. Ejemplos del catálogo Sativum: ${ejemplos}`,
+        error: `Cultivo "${cultivo}" no encontrado${origen ? ` en el catálogo ${origen}` : ''}. Ejemplos: ${ejemplos}`,
       });
     }
 
