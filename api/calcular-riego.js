@@ -293,7 +293,12 @@ module.exports = async function handler(req, res) {
     const frutales    = rawFrutales.map(c => ({ tipo: 'mensual_fijo', ...c }));
     const horticolas  = rawHorticolas;   // ya tienen tipo:'fenologico'
     const leguminosas = rawLeguminosas;  // ya tienen tipo:'fenologico'
-    const extensivos  = rawExtensivos;   // formato por definir según categoría
+    const extensivos  = rawExtensivos;   // ya tienen tipo:'fenologico' — incluidas las forrajeras
+                                          // plurianuales de heno (Alfalfa, Dactilo, Trifolium, etc.),
+                                          // que reutilizan este mismo formato con una única "mid" larga
+                                          // que absorbe internamente los cortes/rebrotes del ciclo,
+                                          // en vez de un motor de corte dedicado (decisión 2026-07-11,
+                                          // ver CLAUDE.md)
     const sativum     = rawSativum;      // ya tienen tipo:'fenologico'
 
     const catalogoFertipro = [...frutales, ...horticolas, ...leguminosas, ...extensivos];

@@ -40,5 +40,26 @@
     "fases_pct": { "ini": 0.16, "dev": 0.24, "mid": 0.4, "fin": 0.2 },
     "kc": { "ini": 0.4, "mid": 1.15, "fin": 0.35 },
     "_nota": "Adaptado de cultivos_sativum.json ('Judía / Alubia (grano seco)'), la variedad más genérica de judía seca de ese catálogo (también tiene Judía de Egipto, de lima, escarlata — se eligió la genérica 'Judía/Alubia' por ser la más representativa de 'Judía (seca)' sin más especificación)."
+  },
+  {
+    "nombre": "Caupí",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.186, "dev": 0.2807, "mid": 0.3474, "fin": 0.1859 },
+    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.35 },
+    "_nota": "Extraído del PDF original FAO-56 rev. 2025 (Pereira/Allen/Paredes/López-Urrea et al.), no del markdown ya aplanado (bloqueo documentado en CLAUDE.md). Kc: Tabla 6.2, 'Cowpea (Vigna unguiculata)', fila 'Dry' = 0.40/1.05/0.35 (altura máx. 0.60–0.80 m, raíz 0.60–1.30 m) — se eligió la fila 'Dry' porque en el catálogo canónico FertiPRO 'Caupí' tiene parte_comercial='semilla' y parte_no_comercial='paja', propio de grano seco, no de vaina verde. fases_pct: esta revisión del FAO-56 ya NO publica la tabla clásica de duración de fases en días calendario (antigua Tabla 11 de 1998) para este cultivo, solo grados-día acumulados (GDD) en la Tabla 6.12 ('Cowpea', rango de cultivar corto/largo: GDDini/dev/mid/late 220/350/440/230=1240 y 310/450/550/300=1610). fases_pct = fracción de cada fase sobre el promedio min/max del GDD total (ini=265, dev=400, mid=495, fin=265 sobre total 1425). Aproximación razonable (fracción de GDD como proxy de fracción de días), no un dato de días real — sin tabla de días calendario disponible en esta revisión para contrastar."
+  },
+  {
+    "nombre": "Cacahuete (semillas)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1646, "dev": 0.312, "mid": 0.3342, "fin": 0.1892 },
+    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.6 },
+    "_nota": "Extraído del PDF original FAO-56 rev. 2025, no del markdown aplanado. Kc: Tabla 6.2, 'Groundnut (peanut) (Arachis hypogaea)' = 0.40/1.05/0.60 (altura máx. 0.50 m, raíz 0.50–1.00 m) — fila única, la tabla no distingue semilla/vaina, por lo que aplica igual a 'Cacahuete (vainas)'. fases_pct: FAO-56 rev. 2025 no publica días calendario por fase para este cultivo (solo GDD, Tabla 6.12: cultivar corto 240/470/760/460=1930, cultivar largo 430/800/600/310=2140). fases_pct = fracción de cada fase sobre el promedio min/max del GDD total (ini=335, dev=635, mid=680, fin=385 sobre total 2035). Aproximación (fracción de GDD como proxy de fracción de días), pendiente de contrastar contra observación de campo si aparece."
+  },
+  {
+    "nombre": "Cacahuete (vainas)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1646, "dev": 0.312, "mid": 0.3342, "fin": 0.1892 },
+    "kc": { "ini": 0.4, "mid": 1.05, "fin": 0.6 },
+    "_nota": "Mismo Kc y fases_pct que 'Cacahuete (semillas)' — Tabla 6.2 del FAO-56 no distingue semilla pelada vs vaina entera, es el mismo cultivo físico (Groundnut/peanut), solo cambia la parte comercializada a efectos de composición nutricional, no de evapotranspiración. Ver nota de 'Cacahuete (semillas)' para el detalle completo de la extracción."
   }
 ]

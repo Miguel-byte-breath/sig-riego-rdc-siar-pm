@@ -1,0 +1,149 @@
+[
+  {
+    "nombre": "Alfalfa (heno, floración)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.4, "mid": 0.95, "fin": 0.9 },
+    "_nota": "Copiado de cultivos_sativum.json ('Alfalfa (heno/ floración) - Rto. inferior/igual o superior a 10.000 kg/ha' — mismo Kc en ambas variantes de rendimiento, el Rto. no afecta el Kc). fases_pct: mismo patrón que el resto de esta partida — una única 'mid' larga (52.4% del ciclo) que absorbe internamente los cortes/rebrotes sucesivos de la alfalfa, en vez de modelar cada corte por separado (así lo hace también el propio catálogo Sativum, que tampoco tiene un mecanismo de corte explícito)."
+  },
+  {
+    "nombre": "Alfalfa (heno, vegetativo)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.4, "mid": 0.95, "fin": 0.9 },
+    "_nota": "Mismo Kc que 'Alfalfa (heno, floración)' — cultivos_sativum.json no distingue estado vegetativo/floración para alfalfa (solo tiene variantes 'floración'). Aproximación: el Kc representa el comportamiento de evapotranspiración del cultivo (cobertura, altura), que no cambia sustancialmente entre cortar en vegetativo o en floración — la diferencia entre ambos estados es de calidad/rendimiento nutricional del forraje, no de dinámica de ET. Pendiente de un valor propio si aparece dato específico."
+  },
+  {
+    "nombre": "Alfalfa (verde, floración)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.4, "mid": 1.2, "fin": 1.05 },
+    "_nota": "Copiado de cultivos_sativum.json ('Alfalfa (verde/ floración) - Rto. igual o superior/inferior a 34.000 kg/ha' — mismo Kc en ambas variantes de rendimiento). Kc mid/fin más altos que la variante heno (1.2/1.05 vs 0.95/0.9) porque en Sativum 'verde' representa forraje verde de alta producción, con mayor cobertura/altura media entre cortes."
+  },
+  {
+    "nombre": "Alfalfa (verde, vegetativo)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.4, "mid": 1.2, "fin": 1.05 },
+    "_nota": "Mismo Kc que 'Alfalfa (verde, floración)' — mismo criterio de aproximación que 'Alfalfa (heno, vegetativo)' (ver esa nota): cultivos_sativum.json no distingue vegetativo/floración, y la diferencia entre ambos estados es de calidad/rendimiento, no de dinámica de ET."
+  },
+  {
+    "nombre": "Poa pratensis (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Gramínea perenne de pradera de siega, sin entrada propia en FAO-56 (ni Tabla 6.2 ni 6.3, que no cubren pastos/praderas por especie). Kc de la Tabla 6.4 del PDF original FAO-56 rev. 2025, fila 'Irrigated, for hay (typical cut cycles)' = 0.55/1.05/1.00 — la propia tabla ya promedia el efecto de los cortes sucesivos sin distinguir especie de gramínea/leguminosa de pradera. Se usa la variante de regadío porque esta herramienta (sig-riego) calcula necesidades de riego — el escenario de secano no aplica aquí. fases_pct: mismo patrón que Alfalfa (única fuente disponible con ese reparto, FAO-56 no da duración de fases para pastizales). Decisión de Miguel (2026-07-11): reutilizar fenologico + Kc genérico de Tabla 6.4 para todas las forrajeras plurianuales sin entrada propia en FAO-56, en vez de construir un motor de cortes dedicado."
+  },
+  {
+    "nombre": "Bromus spp. (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Phalaris arundinacea (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Trifolium hybridum (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay'). La Tabla 6.4 no distingue leguminosas (Trifolium/Lotus/Melilotus) de gramíneas de pradera para el Kc de heno — una sola fila genérica cubre ambos grupos."
+  },
+  {
+    "nombre": "Trifolium pratense (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Trifolium hybridum (heno)'."
+  },
+  {
+    "nombre": "Trifolium repens (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Trifolium hybridum (heno)'."
+  },
+  {
+    "nombre": "Trifolium repens (ladino) (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Trifolium hybridum (heno)' — mismo Kc que 'Trifolium repens (heno)', la variante ladino (de mayor porte) no tiene entrada diferenciada en FAO-56."
+  },
+  {
+    "nombre": "Lolium sp. (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay'). Tratado como raigrás perenne genérico de siega (no como variante anual tipo raigrás italiano); si el uso real fuera de un solo corte anual, mejor tratarlo como cultivo anual en lugar de esta partida."
+  },
+  {
+    "nombre": "Lolium pratense (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Lolium arundinaceum (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay'). Festuca alta (a veces clasificada como Festuca arundinacea), gramínea perenne de siega de porte alto — sin entrada diferenciada en FAO-56."
+  },
+  {
+    "nombre": "Dactilo (siega verde)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay'). Mismo Kc que 'Dactilo (heno)' — la Tabla 6.4 no distingue forraje verde/henificado, solo el ciclo de corte."
+  },
+  {
+    "nombre": "Dactilo (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Raigrás perenne (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Phleum pratense (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay')."
+  },
+  {
+    "nombre": "Lotus (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Trifolium hybridum (heno)' — leguminosa de pradera (Lotus corniculatus), misma fila genérica de Tabla 6.4."
+  },
+  {
+    "nombre": "El pasto de trigo (heno) Poaceae",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Poa pratensis (heno)' — mismo criterio y misma fuente (Tabla 6.4 FAO-56, 'Irrigated, for hay'). Wheatgrass (Agropyron/Elymus/Thinopyrum spp.), gramínea perenne de pradera/pastizal — sin entrada diferenciada en FAO-56."
+  },
+  {
+    "nombre": "Poaceae (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Entrada genérica del catálogo canónico FertiPRO para mezcla de gramíneas de pradera sin especie determinada. Mismo criterio y fuente que el resto de esta partida (Tabla 6.4 FAO-56, 'Irrigated, for hay') — es, de hecho, la entrada para la que esta tabla genérica encaja mejor por definición. No confundir con 'Poaceae (ensilado)', que queda fuera de esta partida (uso típico de un solo corte, se tratará como cultivo anual en el resto del backlog de cultivos_extensivos.json)."
+  }
+]

@@ -124,5 +124,10 @@
     "fases_pct": { "ini": 0.1304, "dev": 0.2174, "mid": 0.4348, "fin": 0.2174 },
     "kc": { "ini": 0.4, "mid": 1.0, "fin": 0.45 },
     "_nota": "Copiado de cultivos_sativum.json ('Pistacho')."
+  },
+  {
+    "nombre": "Arándano",
+    "kc": { "1": 0.0, "2": 0.0, "3": 0.55, "4": 0.75, "5": 0.9, "6": 0.9, "7": 0.85, "8": 0.75, "9": 0.6, "10": 0.0, "11": 0.0, "12": 0.0 },
+    "_nota": "Kc ini/mid/end confirmados EXACTOS contra el PDF original FAO-56 rev. 2025 (Pereira/Allen/Paredes/López-Urrea et al.), Tabla 6.3, b.4.3 'Highbush blueberries (Vaccinium corymbosum)', fila 'Common density, 2 500–5 000 pl/ha' (fc 0.50–0.80, h 1.50–2.00 m) = Kc ini 0.55 / Kc mid 0.90 / Kc end 0.75. Coincide EXACTO con el valor que ya se había estimado leyendo el markdown antiguo (0.55/0.90/0.75) — confirmado contra el PDF real, no había error de conversión en este caso concreto. Curva mensual: FAO-56 no publica un reparto mes a mes, solo Kc ini/mid/end puntuales — se construyó por analogía con el patrón ya usado en este mismo fichero para otros arbustos/frutales deciduos de ventana activa marzo-octubre (mismo patrón que Kiwi: dormancia nov-feb, rampa mar-abr, meseta de pico may-jun, declive jul-sep hasta 0 en oct), ajustando los valores de pico/cola a los Kc ini/mid/end reales de esta tabla. Aproximación razonable para clima templado español (Huelva/Asturias, principales zonas de cultivo de arándano en España), no un dato FAO-56 literal mes a mes."
   }
 ]
