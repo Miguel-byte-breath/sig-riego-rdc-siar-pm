@@ -145,5 +145,376 @@
     "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
     "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
     "_nota": "Entrada genérica del catálogo canónico FertiPRO para mezcla de gramíneas de pradera sin especie determinada. Mismo criterio y fuente que el resto de esta partida (Tabla 6.4 FAO-56, 'Irrigated, for hay') — es, de hecho, la entrada para la que esta tabla genérica encaja mejor por definición. No confundir con 'Poaceae (ensilado)', que queda fuera de esta partida (uso típico de un solo corte, se tratará como cultivo anual en el resto del backlog de cultivos_extensivos.json)."
+  },
+  {
+    "nombre": "Melilotus sp. (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0952, "dev": 0.1429, "mid": 0.5238, "fin": 0.2381 },
+    "kc": { "ini": 0.55, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Trifolium hybridum (heno)' — leguminosa perenne de pradera (meliloto, Melilotus spp.), misma fila genérica de Tabla 6.4 FAO-56 'Irrigated, for hay'. Añadida a posteriori tras detectar que se había quedado fuera de las '17 más' de la sesión 2026-07-11 por omisión — es forrajera perenne, no anual/bienal, y encaja en el mismo grupo que Trifolium/Lotus."
+  },
+  {
+    "nombre": "Cebada 2 carreras",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1645, "dev": 0.3021, "mid": 0.2674, "fin": 0.266 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'f. Cereals and pseudocereals', fila 'Barley (Hordeum vulgare)' — 0.30/1.10/0.25 (verificado contra imagen de la página 169/PDF p.201, no solo texto extraído). No distingue 2/6 carreras. fases_pct: media de fracciones GDD ciclo corto (290/455/345/360=1450) y largo (300/675/690/660=2325), Tabla 6.11."
+  },
+  {
+    "nombre": "Cebada 6 carreras",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1645, "dev": 0.3021, "mid": 0.2674, "fin": 0.266 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.25 },
+    "_nota": "Ver nota de 'Cebada 2 carreras' — FAO-56 no distingue variedad, mismo Kc/fases_pct."
+  },
+  {
+    "nombre": "Alforfón",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1645, "dev": 0.3021, "mid": 0.2674, "fin": 0.266 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, fila 'Buckwheat (Fagopyrum esculentum)' — 0.30/1.05/0.25. Sin entrada en Tabla 6.11/6.12 (sin dato GDD propio) — fases_pct aproximado reutilizando el reparto de Cebada (cereal de grano pequeño, ciclo de siembra similar)."
+  },
+  {
+    "nombre": "Maíz (grano)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1459, "dev": 0.2412, "mid": 0.3743, "fin": 0.2386 },
+    "kc": { "ini": 0.3, "mid": 1.2, "fin": 0.3 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Maize (Zea mays)', fila 'Grain, low grain moisture at harvest' — 0.30/1.20/0.30 (cosecha en seco, práctica habitual en España; existe variante 'high grain moisture' con Kc end 0.65). fases_pct: media GDD corto (200/380/500/340=1420) y largo (295/420/775/465=1955), Tabla 6.11."
+  },
+  {
+    "nombre": "Maíz (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1691, "dev": 0.3294, "mid": 0.3838, "fin": 0.1177 },
+    "kc": { "ini": 0.3, "mid": 1.15, "fin": 0.95 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Maize (Zea mays)', fila 'Silage' — 0.30/1.15/0.95. fases_pct: media GDD corto (200/380/430/120=1130) y largo (250/500/600/200=1550), Tabla 6.11."
+  },
+  {
+    "nombre": "Mijo africano",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.35 },
+    "_nota": "El FAO-56 rev.2025 (Tabla 6.2) solo lista 'Pearl Millet (Pennisetum glaucum)' — 0.30/1.10/0.35 — sin entrada específica para mijo africano ni mijo común. Por decisión de Miguel (2026-07-11: 'usamos el mismo Kc... es una web para estimaciones estacionales, seguro que nadie nos reclama'), se reutiliza el Kc de Pearl Millet para las 3 variedades de mijo del catálogo canónico. fases_pct: sin dato GDD propio en Tabla 6.11/6.12 — aproximado reutilizando el reparto de Sorgo (gramínea C4 de verano de dinámica similar)."
+  },
+  {
+    "nombre": "Mijo perla",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.35 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, fila 'Pearl Millet (Pennisetum glaucum)' — 0.30/1.10/0.35 (match directo de especie). fases_pct: sin dato GDD propio en Tabla 6.11/6.12 — aproximado reutilizando el reparto de Sorgo (gramínea C4 de verano de dinámica similar). Ver también 'Mijo perla (ensilado)' en la partida de forrajeras (entrada distinta, uso ensilado)."
+  },
+  {
+    "nombre": "Mijo común",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.35 },
+    "_nota": "Ver nota de 'Mijo africano' — mismo criterio, Kc de Pearl Millet reutilizado por decisión de Miguel al no existir entrada propia en el FAO-56."
+  },
+  {
+    "nombre": "Avena",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2432, "dev": 0.3216, "mid": 0.2973, "fin": 0.1379 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, fila 'Oats (Avena sativa)' — 0.30/1.05/0.25. fases_pct: Tabla 6.11 solo da un valor 'Common' (450/595/550/255=1850), sin split corto/largo. Ver también 'Avena (heno)' en forrajeras (mismo Kc, uso de forraje segado en vez de grano)."
+  },
+  {
+    "nombre": "Quinoa",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1645, "dev": 0.3021, "mid": 0.2674, "fin": 0.266 },
+    "kc": { "ini": 0.4, "mid": 1.1, "fin": 0.5 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, fila 'Quinoa (Chenopodium quinoa)' — 0.40/1.10/0.50. Sin entrada en Tabla 6.11/6.12 (sin dato GDD) — fases_pct aproximado reutilizando el reparto de Cebada (pseudocereal/cereal de ciclo corto similar)."
+  },
+  {
+    "nombre": "Arroz cáscara",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1414, "dev": 0.2758, "mid": 0.4053, "fin": 0.1775 },
+    "kc": { "ini": 1.05, "mid": 1.2, "fin": 1.05 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'g. Rice (Oryza sativa)', fila 'Flooded' — 1.05/1.20/1.05 (manejo tradicional inundado, el más habitual en el arrozal español). Existen variantes con Kc distinto (siembra en seco, corte anticipado, riego intermitente, aeróbico) no aplicadas aquí por defecto. fases_pct: media GDD corto (235/465/665/295=1660) y largo (255/490/740/320=1805), Tabla 6.11."
+  },
+  {
+    "nombre": "Arroz descascarillado",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1414, "dev": 0.2758, "mid": 0.4053, "fin": 0.1775 },
+    "kc": { "ini": 1.05, "mid": 1.2, "fin": 1.05 },
+    "_nota": "Mismo cultivo en campo que 'Arroz cáscara' — cáscara/descascarillado es procesado post-cosecha, no afecta al Kc de campo."
+  },
+  {
+    "nombre": "Centeno",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.3, "mid": 1.0, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, fila 'Rye (Secale cereale)' — 0.30/1.00/0.25. Sin entrada en Tabla 6.11/6.12 (sin dato GDD) — fases_pct aproximado reutilizando el reparto de Trigo de invierno (cereal de siembra otoñal similar). Ver también 'Centeno (heno)' en forrajeras (mismo Kc)."
+  },
+  {
+    "nombre": "Sorgo (grano)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.45 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Sorghum (Sorghum bicolor)', fila 'Grain' — 0.30/1.05/0.45. fases_pct: media GDD corto (280/300/570/230=1380) y largo (280/310/650/280=1520), Tabla 6.11 (dato único de Sorgo, reutilizado también para ensilaje/verde ya que la tabla no distingue subtipo en la duración de fases)."
+  },
+  {
+    "nombre": "Sorgo (ensilaje)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.9 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Sorghum (Sorghum bicolor)', fila 'Silage' — 0.30/1.05/0.90. fases_pct: mismo reparto GDD que 'Sorgo (grano)' — Tabla 6.11 no distingue subtipo."
+  },
+  {
+    "nombre": "Sorgo (verde)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.1, "fin": 0.95 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Sorghum (Sorghum bicolor)', fila 'Sweet' — 0.30/1.10/0.95 (sorgo dulce/forrajero verde). fases_pct: mismo reparto GDD que 'Sorgo (grano)'."
+  },
+  {
+    "nombre": "Triticale",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.7, "mid": 1.15, "fin": 0.25 },
+    "_nota": "Sin entrada propia en FAO-56 (híbrido trigo×centeno). Aproximado con 'Wheat, common, Winter, low grain moisture at harvest' (0.70/1.15/0.25, Tabla 6.2) por ser el cereal de invierno más próximo en porte y ciclo. fases_pct: reparto GDD de Trigo de invierno, media corto (395/445/440/365=1645) y largo (560/405/730/410=2105), Tabla 6.11."
+  },
+  {
+    "nombre": "Trigo espelta",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.7, "mid": 1.15, "fin": 0.25 },
+    "_nota": "Sin entrada propia — la espelta (Triticum spelta) es subespecie de trigo común; se usa 'Wheat, common, Winter, low grain moisture at harvest' (0.70/1.15/0.25, Tabla 6.2). fases_pct: reparto GDD de Trigo de invierno (Tabla 6.11)."
+  },
+  {
+    "nombre": "Trigo blando",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.7, "mid": 1.15, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Wheat, common (Triticum aestivum)', fila 'Winter, low grain moisture at harvest' — 0.70/1.15/0.25 (cosecha en seco, práctica habitual en España; existen variantes Spring/high moisture con otros valores — ver imagen de tabla verificada, página 169). fases_pct: media GDD corto (395/445/440/365=1645) y largo (560/405/730/410=2105), Tabla 6.11."
+  },
+  {
+    "nombre": "Trigo (duro)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.5, "mid": 1.05, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2, 'Wheat, durum (Triticum durum)', fila 'Winter, low grain moisture at harvest' — 0.50/1.05/0.25. Tabla 6.11 no da GDD específico de durum — fases_pct aproximado reutilizando el reparto de Trigo de invierno común (mismo género, ciclo de invierno equivalente)."
+  },
+  {
+    "nombre": "Ricino",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1237, "dev": 0.265, "mid": 0.3883, "fin": 0.223 },
+    "kc": { "ini": 0.35, "mid": 1.05, "fin": 0.4 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'c. Oil Crops', fila 'Castorbean (Ricinus communis)' — 0.35/1.05/0.40. fases_pct: media GDD longitud mínima (280/530/640/330=1780) y máxima (190/490/880/550=2110), Tabla 6.12."
+  },
+  {
+    "nombre": "Algodón",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.152, "dev": 0.3438, "mid": 0.3482, "fin": 0.156 },
+    "kc": { "ini": 0.4, "mid": 1.1, "fin": 0.5 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'b. Fiber Crops', fila 'Cotton (Gossypium hirsutum)' — 0.40/1.10/0.50. fases_pct: media GDD corto (280/520/800/350=1950) y largo (345/905/615/285=2150), Tabla 6.11."
+  },
+  {
+    "nombre": "Lino",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1387, "dev": 0.1864, "mid": 0.3727, "fin": 0.3022 },
+    "kc": { "ini": 0.45, "mid": 1.05, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'b. Fiber Crops', fila 'Flax (Linseed) (Linum usitatissimum)' — 0.45/1.05/0.25 (variante fibra; existe también 'Linseed' en Oil Crops con 0.35/0.95/0.25 para variedad aceite — se usa la de fibra por corresponder al nombre canónico 'Lino'). fases_pct: media GDD longitud mínima (210/450/840/730=2230) y máxima (760/710/1530/1150=4150), Tabla 6.12."
+  },
+  {
+    "nombre": "Colza",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1894, "dev": 0.2023, "mid": 0.3135, "fin": 0.2948 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.35 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'c. Oil Crops', fila 'Canola (Brassica napus)' — 0.50/1.10/0.35. fases_pct: media GDD corto (330/310/450/595=1685) y largo (460/555/905/595=2515), Tabla 6.11."
+  },
+  {
+    "nombre": "Cártamo",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0801, "dev": 0.2311, "mid": 0.4275, "fin": 0.2613 },
+    "kc": { "ini": 0.35, "mid": 1.05, "fin": 0.25 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'c. Oil Crops', fila 'Safflower (Carthamus tinctorius)' — 0.35/1.05/0.25. fases_pct: media GDD longitud mínima (110/410/800/470=1790) y máxima (220/520/910/580=2230), Tabla 6.12."
+  },
+  {
+    "nombre": "Remolacha azucarera",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1588, "dev": 0.1887, "mid": 0.4962, "fin": 0.1563 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.75 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'd. Sugar crops', fila 'Sugar beet (Beta vulgaris)' — 0.35/1.10/0.75. fases_pct: media GDD longitud mínima (300/290/790/520=1900) y máxima (490/690/1770/120=3070), Tabla 6.12. Mismo Kc/fases aplicado a las 2 variantes 'Rto. ≥/< 90.000 kg/ha' del catálogo — el Rto. objetivo no afecta al Kc de evapotranspiración, igual que ya se hace con Sorgo/Viña."
+  },
+  {
+    "nombre": "Remolacha azucarera - Rto. igual o superior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1588, "dev": 0.1887, "mid": 0.4962, "fin": 0.1563 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.75 },
+    "_nota": "Ver nota de 'Remolacha azucarera' — mismo Kc/fases_pct, el Rto. objetivo no afecta al Kc."
+  },
+  {
+    "nombre": "Remolacha azucarera - Rto. inferior a 90.000 kg/ha",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1588, "dev": 0.1887, "mid": 0.4962, "fin": 0.1563 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.75 },
+    "_nota": "Ver nota de 'Remolacha azucarera' — mismo Kc/fases_pct, el Rto. objetivo no afecta al Kc."
+  },
+  {
+    "nombre": "Caña de azucar",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0649, "dev": 0.1586, "mid": 0.5022, "fin": 0.2743 },
+    "kc": { "ini": 0.4, "mid": 1.2, "fin": 0.8 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'd. Sugar crops', fila 'Sugar cane (Saccharum officinarum)' — 0.40/1.20/0.80. fases_pct: media GDD 'virgin' (primer ciclo de plantación) longitud mínima (350/810/3480/1510=6150) y máxima (830/2110/4990/3450=11380), Tabla 6.12 — existe también variante 'ratoon' (rebrote tras corte) con GDD distinto, no aplicada por ser el catálogo genérico."
+  },
+  {
+    "nombre": "Girasol (aceite)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1974, "dev": 0.3046, "mid": 0.3795, "fin": 0.1185 },
+    "kc": { "ini": 0.35, "mid": 1.15, "fin": 0.3 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.2 'c. Oil Crops', fila 'Sunflower (Helianthus annuus)' — 0.35/1.15/0.30. fases_pct: media GDD corto (345/555/715/175=1790) y largo (385/570/685/265=1905), Tabla 6.11. Mismo Kc/fases aplicado también a 'Girasol (pipa)'."
+  },
+  {
+    "nombre": "Girasol (pipa)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1974, "dev": 0.3046, "mid": 0.3795, "fin": 0.1185 },
+    "kc": { "ini": 0.35, "mid": 1.15, "fin": 0.3 },
+    "_nota": "Ver nota de 'Girasol (aceite)' — el FAO-56 no distingue destino aceite/pipa, mismo Kc/fases_pct."
+  },
+  {
+    "nombre": "Mandioca",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.0903, "dev": 0.1771, "mid": 0.4375, "fin": 0.2951 },
+    "kc": { "ini": 0.3, "mid": 1.0, "fin": 0.6 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, 'Cassava (Manihot esculenta)', fila 'Year 1' — 0.30/1.00/0.60 (existe también 'Year 2', cultivo plurianual, con Kc 0.60/1.10/0.60 — se usa Year 1 por ser el ciclo de cosecha anual más habitual). fases_pct: Tabla 6.12, dato único 260/510/1260/850=2880."
+  },
+  {
+    "nombre": "Ñame chino",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.115, "dev": 0.223, "mid": 0.3737, "fin": 0.2883 },
+    "kc": { "ini": 0.7, "mid": 1.05, "fin": 1.0 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, fila única 'Yam, Taro (Colocasia esculenta)' — 0.70/1.05/1.00, no distingue variedad chino/blanco/amarillo. Sin GDD propio en Tabla 6.11/6.12 — fases_pct aproximado reutilizando el reparto de Batata (tubérculo tropical de ciclo similar). Mismo Kc/fases aplicado a las 3 entradas de Ñame del catálogo."
+  },
+  {
+    "nombre": "Patata",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1709, "dev": 0.2704, "mid": 0.2725, "fin": 0.2862 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.5 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, 'Potato (Solanum tuberosum)' — 'Long season' (0.50/1.10/0.40) y 'Short season' (0.50/1.10/0.60); el catálogo canónico no distingue variedad de ciclo, así que se promedia el Kc end ((0.40+0.60)/2=0.50), manteniendo ini/mid iguales en ambas filas. fases_pct: media GDD short (260/490/525/325=1600) y long (405/530/490/835=2260), Tabla 6.11 (sección Roots)."
+  },
+  {
+    "nombre": "Batata",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.115, "dev": 0.223, "mid": 0.3737, "fin": 0.2883 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.65 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, fila 'Sweet potato (Ipomoea batatas)' — 0.50/1.10/0.65. fases_pct: media GDD longitud mínima (150/300/480/430=1360) y máxima (170/320/560/370=1420), Tabla 6.12."
+  },
+  {
+    "nombre": "Ñame blanco",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.115, "dev": 0.223, "mid": 0.3737, "fin": 0.2883 },
+    "kc": { "ini": 0.7, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Ñame chino' — FAO-56 no distingue variedad, mismo Kc/fases_pct."
+  },
+  {
+    "nombre": "Ñame amarillo",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.115, "dev": 0.223, "mid": 0.3737, "fin": 0.2883 },
+    "kc": { "ini": 0.7, "mid": 1.05, "fin": 1.0 },
+    "_nota": "Ver nota de 'Ñame chino' — FAO-56 no distingue variedad, mismo Kc/fases_pct."
+  },
+  {
+    "nombre": "Chufa",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1709, "dev": 0.2704, "mid": 0.2725, "fin": 0.2862 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.6 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, fila 'Chufa, tigernut (Cyperus esculentus)' — 0.50/1.10/0.60 (match directo de especie, cultivo típico de Valencia). Sin dato GDD propio en Tabla 6.11/6.12 — fases_pct aproximado reutilizando el reparto de Patata (tubérculo de clima templado, ciclo de longitud similar)."
+  },
+  {
+    "nombre": "Avena (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2432, "dev": 0.3216, "mid": 0.2973, "fin": 0.1379 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.25 },
+    "_nota": "Mismo cultivo que 'Avena' (grano) del bloque de cereales — se siega para heno en vez de esperar a grano, pero el FAO-56 no distingue destino para Oats; se reutiliza el mismo Kc/fases_pct."
+  },
+  {
+    "nombre": "Centeno (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.2531, "dev": 0.2315, "mid": 0.3071, "fin": 0.2083 },
+    "kc": { "ini": 0.3, "mid": 1.0, "fin": 0.25 },
+    "_nota": "Mismo cultivo que 'Centeno' (grano) del bloque de cereales — se siega para heno en vez de esperar a grano; se reutiliza el mismo Kc/fases_pct (FAO-56 no distingue destino para Rye)."
+  },
+  {
+    "nombre": "Mijo perla (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.9 },
+    "_nota": "Distinto de 'Mijo perla' (grano) del bloque de cereales — para ensilado se corta en verde antes de la senescencia de grano. Sin fila propia de 'Pearl Millet silage' en FAO-56 — se usa como proxy 'Sorghum (Sorghum bicolor), Silage' (0.30/1.05/0.90, Tabla 6.2), siguiendo el mismo criterio agronómico aplicado a Setaria italica/Poaceae ensilado (gramínea C4 estival, dinámica de corte en verde equivalente). fases_pct: reparto GDD de Sorgo (Tabla 6.11)."
+  },
+  {
+    "nombre": "Setaria italica (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.9 },
+    "_nota": "Sin entrada propia en FAO-56 (mijo cola de zorro/moha). Proxy 'Sorghum (Sorghum bicolor), Silage' (0.30/1.05/0.90, Tabla 6.2) — gramínea C4 de crecimiento estival rápido, corte en verde antes de senescencia completa, dinámica de transpiración y cierre de dosel equivalente a un sorgo forrajero de ciclo corto/medio. fases_pct: reparto GDD de Sorgo (Tabla 6.11)."
+  },
+  {
+    "nombre": "Poaceae (ensilado)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1936, "dev": 0.2107, "mid": 0.4203, "fin": 0.1754 },
+    "kc": { "ini": 0.3, "mid": 1.05, "fin": 0.9 },
+    "_nota": "Entrada genérica del catálogo canónico FertiPRO para gramínea anual de ensilado sin especie determinada. Proxy 'Sorghum (Sorghum bicolor), Silage' (0.30/1.05/0.90, Tabla 6.2) — mismo criterio que 'Setaria italica (ensilado)': cultivo anual de siembra (no perenne de pradera como 'Poaceae (heno)'), por lo que NO se usa el Kc genérico de Tabla 6.4 (0.55 ini) que asumiría cobertura ya establecida. fases_pct: reparto GDD de Sorgo (Tabla 6.11)."
+  },
+  {
+    "nombre": "Nabo",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1709, "dev": 0.2704, "mid": 0.2725, "fin": 0.2862 },
+    "kc": { "ini": 0.5, "mid": 1.05, "fin": 1.0 },
+    "_nota": "FAO-56 rev.2025, Tabla 6.1, fila 'Turnip (Brassica rapa cv. rapa)' — 0.50/1.05/1.00 (nabo forrajero/de mesa, misma especie). Sin GDD propio en Tabla 6.11/6.12 — fases_pct aproximado reutilizando el reparto de Patata (raíz/tubérculo de clima templado, ciclo similar)."
+  },
+  {
+    "nombre": "Veza (verde) en floración",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1039, "dev": 0.2349, "mid": 0.4351, "fin": 0.2261 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 1.05 },
+    "_nota": "Sin fila propia en FAO-56 para veza/vezas forrajeras (Vicia sativa) — Tabla 6.2 solo cubre leguminosas de grano en líneas anchas (haba, guisante...), arquitectura de dosel distinta a una veza sembrada a voleo/líneas estrechas buscando tapiz denso. Criterio aplicado (consulta cruzada con Gemini, 2026-07-11): Kc ini más bajo que el genérico de pradera perenne (0.35 en vez de 0.55) por ser anual desde siembra en suelo desnudo, no rebrote de pradera ya establecida; Kc mid 1.10 por dosel denso de leguminosa; Kc end diferenciado por destino — 'verde en floración' se corta en pleno desarrollo (silage-like), Kc end próximo a Kc mid (1.05), sin senescencia previa al corte. fases_pct: proxy de 'Fava bean (Vicia faba)' (mismo género Vicia, Tabla 6.12, media longitud mín. 80/200/400/220=900 y máx. 120/250/430/210=1010)."
+  },
+  {
+    "nombre": "Veza (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1039, "dev": 0.2349, "mid": 0.4351, "fin": 0.2261 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.85 },
+    "_nota": "Ver nota de 'Veza (verde) en floración' para el criterio general. Para heno el corte es más tardío (floración plena/grano lechoso) y hay secado en campo con senescencia previa — Kc end más bajo (0.85) que la variante 'verde' (1.05), reflejando la caída de transpiración antes del corte. fases_pct: mismo proxy de Fava bean (Tabla 6.12)."
+  },
+  {
+    "nombre": "Veza (heno) en floración",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1039, "dev": 0.2349, "mid": 0.4351, "fin": 0.2261 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.85 },
+    "_nota": "Mismo criterio y valores que 'Veza (heno)' — la especificación 'en floración' fija el momento de corte dentro del proceso de henificado, pero el destino (heno, con secado y senescencia previa) es el mismo, así que se mantiene el mismo Kc end (0.85)."
+  },
+  {
+    "nombre": "Vicia villosa (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1039, "dev": 0.2349, "mid": 0.4351, "fin": 0.2261 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.85 },
+    "_nota": "Veza vellosa (Vicia villosa, distinta especie de 'Veza'=Vicia sativa, mismo género). Mismo criterio y valores que 'Veza (heno)' — leguminosa forrajera anual de porte similar, destino heno con senescencia previa al corte. fases_pct: proxy de Fava bean (mismo género Vicia, Tabla 6.12)."
+  },
+  {
+    "nombre": "Trifolium incarnatum (heno)",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1039, "dev": 0.2349, "mid": 0.4351, "fin": 0.2261 },
+    "kc": { "ini": 0.35, "mid": 1.1, "fin": 0.85 },
+    "_nota": "Trébol carmesí, leguminosa forrajera ANUAL (a diferencia de Trifolium hybridum/pratense/repens, que son perennes de pradera y ya están cubiertos con el genérico de Tabla 6.4 en este mismo fichero). Mismo criterio que 'Veza (heno)': anual desde siembra en suelo desnudo, Kc ini más bajo que el genérico perenne (0.35 vs 0.55), destino heno con senescencia previa al corte (Kc end 0.85). fases_pct: proxy de Fava bean (leguminosa anual de referencia en Tabla 6.12, sin dato propio de Trifolium anual en FAO-56)."
+  },
+  {
+    "nombre": "Tabaco Burley",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.2727, "fin": 0.2727 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.8 },
+    "_nota": "NO aparece en FAO-56 (ni edición 1998 ni rev. 2025, verificado por Claude sobre el texto completo). Fuente real: FAO Land & Water, 'Crop Information: Tobacco' (fao.org/land-water/databases-and-software/crop-information/tobacco/en, basada en FAO Irrigation and Drainage Paper Nº 24, Doorenbos & Pruitt, 'Crop Water Requirements') — tabla de etapas con días reales: Inicial 20d/Desarrollo 30d/Media 30d/Final 30d (110d total), Kc 0.5/1.1/0.8. Esta fuente no distingue Burley/Flue-cured — un único Kc genérico de tabaco, aplicado igual a ambas entradas del catálogo. Nota de precisión pendiente: la dinámica de cosecha difiere entre variedades (Flue-cured se recoge hoja a hoja de forma escalonada, manteniendo transpiración hasta el final; Burley suele cortarse de tallo entero, cayendo la transpiración de golpe) — sin un Kc diferenciado con fuente para separarlas, se usa el mismo valor genérico FAO para las dos. fases_pct: días reales de la tabla FAO (20/30/30/30 sobre 110)."
+  },
+  {
+    "nombre": "Tabaco Flue",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1818, "dev": 0.2727, "mid": 0.2727, "fin": 0.2727 },
+    "kc": { "ini": 0.5, "mid": 1.1, "fin": 0.8 },
+    "_nota": "Ver nota de 'Tabaco Burley' — mismo Kc/fases_pct, la fuente FAO (Doorenbos & Pruitt, Irrigation and Drainage Paper Nº 24) no distingue variedad Flue-cured/Burley."
+  },
+  {
+    "nombre": "Adormidera",
+    "tipo": "fenologico",
+    "fases_pct": { "ini": 0.1894, "dev": 0.2023, "mid": 0.3135, "fin": 0.2948 },
+    "kc": { "ini": 0.3, "mid": 1.0, "fin": 0.3 },
+    "_nota": "NO aparece en FAO-56 (confirmado — ni 1998 ni rev.2025). Kc ini/mid REALES de campo: Cuesta A. et al. (2005), 'Metodología operativa para la obtención del coeficiente de cultivo desde imágenes de satélite', ITEA 101(3): 212-224 — proyecto DEMETER, campañas 2002-2003 en Barrax (Albacete), 43 parcelas de adormidera monitorizadas. Su Tabla 3 confirma explícitamente que Allen et al. (1998) 'No existe referencia' para adormidera, y da los valores corregidos por el Instituto Técnico Agronómico Provincial de Albacete (ITAP) para la zona: Kc,ini=0.30, Kc,med=1.00 (dato de campo real, no analogía). El paper no da Kc final explícito — aproximado a 0.30 por analogía con Cártamo (Tabla 6.2 FAO-56 rev.2025, oleaginosa de ciclo similar con secado completo en pie antes de cosecha mecánica de la cápsula). fases_pct: sin dato de días propio en la fuente — aproximado reutilizando el reparto de Colza (misma dinámica estructural roseta→elongación→floración→secado de silicua/cápsula, oleaginosa de primavera comparable)."
   }
 ]
