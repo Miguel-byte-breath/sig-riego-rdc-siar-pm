@@ -269,15 +269,17 @@ module.exports = async function handler(req, res) {
     // rompa silenciosamente al otro gemelo. Si `origen` no viene (llamadas
     // antiguas), se mantiene el comportamiento combinado de siempre.
     const root = join(__dirname, '..');
-    console.log('[calcular-riego] root path:', root);
 
     async function loadJsonSafe(filename) {
       try {
-        const data = JSON.parse(await readFile(join(root, filename), 'utf8'));
-        console.log(`[calcular-riego] ${filename}: OK, ${data.length} cultivos`);
-        return data;
+        return JSON.parse(await readFile(join(root, filename), 'utf8'));
       } catch (err) {
-        console.error(`[calcular-riego] ${filename}: FALLÓ`, err.code, err.message);
+        // Aviso permanente de bajo coste: antes de la sesión 2026-07-12 un fichero no
+        // encontrado se tragaba en silencio (sin dejar rastro en los logs de Vercel),
+        // lo que costó una sesión entera de diagnóstico cuando el bundling del Lambda
+        // dejó de incluir estos JSON. Con esto, una futura regresión similar se ve
+        // directamente en Vercel → Observability → Functions → Logs.
+        console.error(`[calcular-riego] ${filename}: no se pudo cargar (${err.code || 'error'})`, err.message);
         if (err.code === 'ENOENT') return []; // fichero todavía no creado (categoría pendiente)
         throw err;
       }
