@@ -269,11 +269,15 @@ module.exports = async function handler(req, res) {
     // rompa silenciosamente al otro gemelo. Si `origen` no viene (llamadas
     // antiguas), se mantiene el comportamiento combinado de siempre.
     const root = join(__dirname, '..');
+    console.log('[calcular-riego] root path:', root);
 
     async function loadJsonSafe(filename) {
       try {
-        return JSON.parse(await readFile(join(root, filename), 'utf8'));
+        const data = JSON.parse(await readFile(join(root, filename), 'utf8'));
+        console.log(`[calcular-riego] ${filename}: OK, ${data.length} cultivos`);
+        return data;
       } catch (err) {
+        console.error(`[calcular-riego] ${filename}: FALLÓ`, err.code, err.message);
         if (err.code === 'ENOENT') return []; // fichero todavía no creado (categoría pendiente)
         throw err;
       }
