@@ -242,8 +242,9 @@ function calcularSemanasCorrelativas(mesesCiclo, fIni, fFin) {
 // ─── Handler ─────────────────────────────────────────────────────────────────
 
 module.exports = async function handler(req, res) {
-  // CORS — solo FertiPRO
-  res.setHeader('Access-Control-Allow-Origin',  'https://fertipro.vercel.app');
+  // CORS — abierto: sin cookies/credenciales, endpoint ya público (sin API key).
+  // Cualquier origen puede llamarlo desde el navegador sin coordinación previa.
+  res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
