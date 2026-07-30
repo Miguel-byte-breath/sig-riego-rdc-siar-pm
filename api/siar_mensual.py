@@ -265,6 +265,17 @@ def _is_valid_pack(eto_mensual: dict, pe_mensual: dict) -> bool:
         and len(eto_mensual) > 0
         and len(pe_mensual) > 0
     )
+
+
+def meses_del_ciclo(mes_inicio: int, mes_fin: int) -> set:
+    """
+    Conjunto de meses (1-12) que forman parte del ciclo.
+    Soporta ciclos que cruzan el año natural (ej. Sep->Ago: mes_inicio=9,
+    mes_fin=8) devolviendo sep-dic + ene-ago, en vez de un rango vacío.
+    """
+    if mes_inicio <= mes_fin:
+        return set(range(mes_inicio, mes_fin + 1))
+    return set(range(mes_inicio, 13)) | set(range(1, mes_fin + 1))
 # ==========================================================
 # Intentar obtener pack (ETo+Pe) de una estación concreta
 # ==========================================================
@@ -297,13 +308,15 @@ def fetch_pack_for_station(base_url_data, token, station_code, FechaInicial, Fec
     p_por_mes  = {}
     conteo = {}
 
+    meses_validos = meses_del_ciclo(mes_inicio, mes_fin)
+
     for row in data:
         try:
             mes = int(row.get("Mes"))
         except Exception:
             continue
 
-        if not (mes_inicio <= mes <= mes_fin):
+        if mes not in meses_validos:
             continue
 
         eto = row.get("EtPMon")
@@ -397,9 +410,11 @@ class handler(BaseHTTPRequestHandler):
             # Fallback SIAR Mensual — mosaico por mes
             # Para cada mes del ciclo: estación más cercana con dato.
             # Criterio: proximidad primero, profundidad histórica secundaria.
-            # Nota: asume mes_fin >= mes_inicio (ciclos sin cruce de año).
+            # Soporta ciclos que cruzan el año natural (ej. Sep->Ago) vía
+            # meses_del_ciclo() — antes asumía mes_fin >= mes_inicio y
+            # devolvía un conjunto vacío para esos ciclos (fix 2026-07-30).
             # ==========================================================
-            meses_ciclo = set(range(mes_inicio, mes_fin + 1))
+            meses_ciclo = meses_del_ciclo(mes_inicio, mes_fin)
             meses_cubiertos = set()
             estacion_por_mes = {}   # {mes: {code, nombre, dist_km, anios}}
             estaciones_probadas = []
