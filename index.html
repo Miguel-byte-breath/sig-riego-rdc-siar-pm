@@ -160,6 +160,7 @@
                     </tr>
                 </tfoot>
             </table>
+            <div id="notaTopeRecursos" style="display:none; color:#64748b; font-size:0.95rem; margin-top:8px;"></div>
             <div id="panelRDC" style="display:none; margin: 30px 0 20px 0;">
   <div style="font-weight:800; color:#0f172a; margin-bottom:10px;">
     💧 2B. Ajuste RDC por mes
@@ -603,6 +604,16 @@ cont.innerHTML = `
     </div>
 `;
 }
+
+// Restaurar la última ubicación usada en este navegador (si existe).
+// Si no hay nada guardado, se quedan las coordenadas por defecto del formulario.
+try {
+    const ult = JSON.parse(localStorage.getItem('sigRiego.ultimaUbicacion') || 'null');
+    if (ult && Number.isFinite(ult.lat) && Number.isFinite(ult.lon)) {
+        document.getElementById('lat').value = ult.lat;
+        document.getElementById('lon').value = ult.lon;
+    }
+} catch (e) {}
 
 // Carga inicial de cultivos
 Promise.all([
@@ -1119,6 +1130,9 @@ async function encontrarMasCercana() {
           lonU = parseFloat(document.getElementById('lon').value);
     
     if(isNaN(latU) || isNaN(lonU)) return alert("⚠️ Introduce coordenadas válidas.");
+
+    // Recordar la última ubicación usada (solo en este navegador)
+    try { localStorage.setItem('sigRiego.ultimaUbicacion', JSON.stringify({ lat: latU, lon: lonU })); } catch (e) {}
 
     const res = document.getElementById('resBusqueda');
     res.style.display = "flex";
@@ -1737,8 +1751,10 @@ window._fFin = fFin;
 if (isApiMode) {
   // Calcular m3AsignadoFinal y m3RdcAgro (normalmente los asigna renderBalanceMensual)
   exportDataMensual = [];
+  // Tope: si los recursos superan la necesidad del ciclo, se asigna la necesidad
+  const volEfectivo = Math.min(volV, sumaNHn);
   mesesCiclo.forEach(m => {
-    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volEfectivo : 0;
     const m3RDC = m.rdc_m3 || 0;
     const m3Asignado = m3Base + m3RDC;
     const pct = Math.max(0, Math.min(100, Number(m.rdc_pct || 0)));
@@ -1802,8 +1818,20 @@ function renderBalanceMensual(mesesCiclo, sumaNHn, volV, fIni, fFin) {
   let labels = [], dataPe = [], dataIdeal = [], dataAjustada = [];
   let sumaAsignada = 0, sumaP = 0, sumaPe = 0, sumaRDC = 0;
 
+  // Tope: si los recursos superan la necesidad del ciclo, se asigna la necesidad
+  // (Asignado sigue mandando cuando los recursos son escasos)
+  const volEfectivo = Math.min(volV, sumaNHn);
+  const elNotaTope = document.getElementById('notaTopeRecursos');
+  if (elNotaTope) {
+    const hayTope = volV > sumaNHn && sumaNHn > 0;
+    elNotaTope.style.display = hayTope ? "block" : "none";
+    elNotaTope.innerText = hayTope
+      ? `Recursos (${fmtNum(volV)} m³/ha) superiores a la necesidad del ciclo (${fmtNum(sumaNHn)} m³/ha): se asigna la necesidad.`
+      : "";
+  }
+
   mesesCiclo.forEach(m => {
-    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+    const m3Base = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volEfectivo : 0;
 
 const m3RDC = m.rdc_m3 || 0;
 const m3Asignado = m3Base + m3RDC;

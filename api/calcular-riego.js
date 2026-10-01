@@ -409,8 +409,11 @@ module.exports = async function handler(req, res) {
     }
 
     // ── 5. Asignación proporcional por volumen disponible ─────────────────
+    // Tope: si vol_disponible supera la necesidad del ciclo (ΣNHn), se asigna la
+    // necesidad; si es menor, reparto proporcional (el volumen manda). 2026-10-01.
+    const volEfectivo = Math.min(volV, sumaNHn);
     const balanceMensual = mesesCiclo.map(m => {
-      const m3Asig = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volV : 0;
+      const m3Asig = sumaNHn > 0 ? (m.nhn_m3 / sumaNHn) * volEfectivo : 0;
       m.m3AsignadoFinal = m3Asig;
       m.m3RdcAgro       = m3Asig;   // sin ajuste RDC en esta integración
       // estacionPorMes tiene claves integer en Python → strings en JSON; ambos funcionan en JS
