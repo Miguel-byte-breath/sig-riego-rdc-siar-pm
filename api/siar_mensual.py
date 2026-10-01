@@ -232,22 +232,24 @@ def build_range_from_fIni(payload):
 
 def build_range_from_ciclo(payload):
     """
-    Rango histórico: 3 años anteriores (cerrados) en los meses del ciclo.
+    Climatología mensual para previsión: últimos 36 meses CERRADOS contados
+    desde hoy (no desde el año del ciclo), vía build_range_from_fIni().
+    36 meses contienen cada mes del calendario exactamente 3 veces, así que
+    cada mes del ciclo se promedia con sus 3 valores más recientes disponibles.
+    - Ciclos en años futuros (ej. 2027) funcionan: antes la ventana se anclaba
+      a año(cicloIni)-1 y caía en fechas sin datos todavía.
+    - Ciclos que cruzan el año (ej. Sep->Ago) usan 3 campañas, no 2.
+    Los meses del ciclo (mes_inicio/mes_fin) solo filtran qué meses se usan.
+    Cambio 2026-10-01.
     Devuelve (FechaInicial, FechaFinal, mes_inicio, mes_fin).
     """
     cicloIni = payload["cicloIni"]
     cicloFin = payload["cicloFin"]
 
-    year_base = int(cicloIni[0:4])
     mes_inicio = int(cicloIni[5:7])
     mes_fin = int(cicloFin[5:7])
 
-    year_ini = year_base - 3
-    year_fin = year_base - 1
-
-    FechaInicial = f"{year_ini}-{mes_inicio:02d}-01"
-    last_day = monthrange(year_fin, mes_fin)[1]
-    FechaFinal = f"{year_fin}-{mes_fin:02d}-{last_day:02d}"
+    FechaInicial, FechaFinal = build_range_from_fIni({})  # ancla = hoy
 
     return FechaInicial, FechaFinal, mes_inicio, mes_fin
 
