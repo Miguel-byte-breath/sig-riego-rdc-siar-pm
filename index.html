@@ -615,6 +615,19 @@ try {
     }
 } catch (e) {}
 
+// Restaurar fechas de ciclo y recursos del último cálculo (si existen).
+// El cultivo se restaura más abajo, cuando el selector ya está poblado.
+let ultimoCalculo = null;
+try {
+    ultimoCalculo = JSON.parse(localStorage.getItem('sigRiego.ultimoCalculo') || 'null');
+    const esFecha = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+    if (ultimoCalculo) {
+        if (esFecha(ultimoCalculo.cicloIni)) document.getElementById('cicloIni').value = ultimoCalculo.cicloIni;
+        if (esFecha(ultimoCalculo.cicloFin)) document.getElementById('cicloFin').value = ultimoCalculo.cicloFin;
+        if (Number.isFinite(ultimoCalculo.vol)) document.getElementById('volDisponible').value = ultimoCalculo.vol;
+    }
+} catch (e) {}
+
 // Carga inicial de cultivos
 Promise.all([
     fetch('cultivos_frutales.json').then(r => r.json()),
@@ -647,6 +660,13 @@ document.getElementById('selectCultivo').innerHTML =
     cultivosData.map((c, i) =>
         `<option value="${i}">${c.etiqueta || c.nombre}</option>`
     ).join('');
+
+// Seleccionar el cultivo del último cálculo (se busca por nombre: el índice
+// puede cambiar si el catálogo cambia). Si ya no existe, queda el primero.
+if (ultimoCalculo && typeof ultimoCalculo.cultivo === 'string') {
+    const idx = cultivosData.findIndex(c => c.nombre === ultimoCalculo.cultivo);
+    if (idx >= 0) document.getElementById('selectCultivo').value = String(idx);
+}
 });
 
 // Funciones Auxiliares
@@ -1258,6 +1278,19 @@ async function calcularPlanRiego(opts = {}) {
   const volV = isApiMode
     ? (apiParams.vol_disponible ?? 4000)
     : (parseFloat(document.getElementById('volDisponible').value) || 0);
+
+  // Recordar cultivo, fechas y recursos del último cálculo (solo en este navegador)
+  if (!isApiMode) {
+    try {
+      const c = cultivosData[document.getElementById('selectCultivo').value];
+      localStorage.setItem('sigRiego.ultimoCalculo', JSON.stringify({
+        cultivo:  c ? c.nombre : null,
+        cicloIni: document.getElementById('cicloIni').value,
+        cicloFin: document.getElementById('cicloFin').value,
+        vol:      volV
+      }));
+    } catch (e) {}
+  }
 
   const btn = isApiMode ? null : document.querySelector(".btn-gold");
   if (btn) { btn.disabled = true; btn.innerText = "⏳ Procesando datos agronómicos..."; }
