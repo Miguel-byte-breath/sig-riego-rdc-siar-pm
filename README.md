@@ -223,6 +223,17 @@ El sistema distingue:
 
 No recalcula SIAR ni ET<sub>o</sub>.
 
+### Asignación proporcional con tope en la necesidad
+
+La columna **Asignado** reparte los recursos disponibles en proporción a la necesidad neta mensual (NH<sub>n</sub>):
+
+Asignado<sub>mes</sub> = (NH<sub>n,mes</sub> / ΣNH<sub>n</sub>) × min(Recursos, ΣNH<sub>n</sub>)
+
+- **Recursos escasos** (Recursos < ΣNH<sub>n</sub>, caso habitual en zona mediterránea): se reparte todo el volumen disponible; el volumen manda.
+- **Recursos excedentarios** (Recursos ≥ ΣNH<sub>n</sub>): cada mes recibe exactamente su NH<sub>n</sub>, sin repartir agua que el cultivo no necesita. La interfaz lo indica con una nota bajo la tabla.
+
+El mismo criterio se aplica en el endpoint `/api/calcular-riego`.
+
 ---
 
 ## 📅 8. Programación Semanal
@@ -290,6 +301,8 @@ Garantiza reproducibilidad determinista del cálculo y permite auditoría técni
 - Separación física / hidráulica
 - Resolución mensual coherente con planificación estacional
 - Conservación estricta del volumen mensual
+- Asignación limitada a la necesidad del cultivo cuando los recursos la superan
+- La interfaz recuerda en el navegador la última ubicación, cultivo, fechas de ciclo y recursos usados (solo en ese navegador; sin datos guardados se usan los valores por defecto)
 
 ---
 
