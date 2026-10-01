@@ -634,7 +634,7 @@ cultivosData.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
 // Poblar selector
 document.getElementById('selectCultivo').innerHTML =
     cultivosData.map((c, i) =>
-        `<option value="${i}">${c.nombre}</option>`
+        `<option value="${i}">${c.etiqueta || c.nombre}</option>`
     ).join('');
 });
 

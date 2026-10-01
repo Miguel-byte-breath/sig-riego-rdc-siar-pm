@@ -120,6 +120,7 @@
   },
   {
     "nombre": "Pistacho (sin cáscara)",
+    "etiqueta": "Pistacho",
     "tipo": "fenologico",
     "fases_pct": { "ini": 0.1304, "dev": 0.2174, "mid": 0.4348, "fin": 0.2174 },
     "kc": { "ini": 0.4, "mid": 1.0, "fin": 0.45 },
