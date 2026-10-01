@@ -21,7 +21,7 @@ Proporcionar una estimación robusta, reproducible y auditable de las necesidade
 
 El modelo se basa en:
 
-- Climatología mensual media derivada de los 3 años completos cerrados anteriores al ciclo (~36 meses efectivos)
+- Climatología mensual media de los últimos 36 meses cerrados disponibles (3 valores por mes del calendario), independiente del año del ciclo
 - Datos agroclimáticos oficiales validados institucionalmente
 - Separación explícita entre:
   - Demanda evaporativa (capa física)
@@ -107,11 +107,17 @@ Esto garantiza:
 
 ## 📅 3. Ventana temporal histórica
 
-Se utilizan los **3 años completos cerrados anteriores al ciclo**.
+Se utilizan los **últimos 36 meses cerrados disponibles**, contados desde la fecha de cálculo
+(hasta el último día del mes anterior), independientemente del año del ciclo.
+Cada mes del calendario aparece exactamente 3 veces en esa ventana, de modo que cada mes del
+ciclo se promedia con sus 3 valores más recientes.
 
-Ejemplo:
+Ejemplo (cálculo realizado en octubre de 2026):
 
-Ciclo 2026 → se emplean datos 2023–2025.
+Ventana SIAR → 10/2023 – 09/2026. Un ciclo de marzo a octubre de 2027 usa
+marzo–septiembre de 2024–2026 y octubre de 2023–2025.
+
+Esto permite planificar campañas futuras y ciclos que cruzan el año natural con 3 campañas completas.
 
 Se calcula climatología mensual media para los meses activos del ciclo.
 
